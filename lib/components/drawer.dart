@@ -106,7 +106,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ExercisePlan(title: 'ExercisePlan')),
+                    MaterialPageRoute(builder: (context) => ExercisePlan(title: 'Exercise Plan')),
                   );
                 },
                 child: Align(
