@@ -1,33 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/components/drawer.dart';
-import 'package:wearable_intelligence/styles.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import '../styles.dart';
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wearable Intelligence',
-      theme: AppTheme.theme,
-      home: MyHomePage(title: 'Wearable Intelligence'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class Vitals extends StatefulWidget {
+  Vitals({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _VitalsState createState() => _VitalsState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _VitalsState extends State<Vitals> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: AppTheme.theme.backgroundColor,
         foregroundColor: Colours.darkBlue,
       ),
-      drawer: AppDrawer('Home'),
+      drawer: AppDrawer('Progress'),
       body: Center(),
     );
   }
