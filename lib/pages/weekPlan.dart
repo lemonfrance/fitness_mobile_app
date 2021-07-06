@@ -5,7 +5,7 @@ import 'package:wearable_intelligence/components/drawer.dart';
 import '../styles.dart';
 
 class ExercisePlan extends StatefulWidget {
-  ExercisePlan({Key key, this.title}) : super(key: key);
+  ExercisePlan(this.title) : super();
 
   final String title;
 
