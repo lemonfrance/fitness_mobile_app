@@ -4,7 +4,7 @@ import 'package:wearable_intelligence/components/drawer.dart';
 import '../styles.dart';
 
 class Calender extends StatefulWidget {
-  Calender({Key key, this.title}) : super(key: key);
+  Calender(this.title) : super();
 
   final String title;
 

@@ -4,7 +4,7 @@ import 'package:wearable_intelligence/components/drawer.dart';
 import '../styles.dart';
 
 class Vitals extends StatefulWidget {
-  Vitals({Key key, this.title}) : super(key: key);
+  Vitals(this.title) : super();
 
   final String title;
 

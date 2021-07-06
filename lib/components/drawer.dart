@@ -9,7 +9,7 @@ import '../main.dart';
 
 // Eventually I would like it if this showed the user profile in the nav bar as well.
 class AppDrawer extends StatelessWidget {
-  static String pageName;
+  static String? pageName;
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     padding: EdgeInsets.only(left: 16, right: 16),
     shape: const BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
@@ -66,7 +66,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyHomePage(title: 'Wearable Intelligence')),
+                    MaterialPageRoute(builder: (context) => MyHomePage('Wearable Intelligence')),
                   );
                 },
                 child: Align(
@@ -86,7 +86,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Calender(title: 'Calender')),
+                    MaterialPageRoute(builder: (context) => Calender('Calender')),
                   );
                 },
                 child: Align(
@@ -106,7 +106,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ExercisePlan(title: 'Exercise Plan')),
+                    MaterialPageRoute(builder: (context) => ExercisePlan('Exercise Plan')),
                   );
                 },
                 child: Align(
@@ -126,7 +126,7 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Vitals(title: 'Vitals')),
+                    MaterialPageRoute(builder: (context) => Vitals('Vitals')),
                   );
                 },
                 child: Align(
