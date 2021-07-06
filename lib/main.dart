@@ -13,13 +13,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wearable Intelligence',
       theme: AppTheme.theme,
-      home: MyHomePage(title: 'Wearable Intelligence'),
+      home: MyHomePage('Wearable Intelligence'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage(this.title) : super();
 
   final String title;
 
