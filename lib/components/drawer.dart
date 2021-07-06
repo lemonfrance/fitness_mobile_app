@@ -77,14 +77,14 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CalenderPage('Calender', 70.0)),
+                    MaterialPageRoute(builder: (context) => CalenderPage('Calendar', 70.0)),
                   );
                 },
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Calender",
-                    style: TextStyle(fontWeight: (pageName == "Calender") ? FontWeight.bold : FontWeight.normal, fontSize: 16),
+                    "Calendar",
+                    style: TextStyle(fontWeight: (pageName == "Calendar") ? FontWeight.bold : FontWeight.normal, fontSize: 16),
                   ),
                 ),
                 // style: buttonStyle,
