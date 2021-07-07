@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
-// Eventually I would like it if this showed the user profile in the nav bar as well.
-class Progress extends StatelessWidget {
+class ProgressCircle extends StatelessWidget {
   static double _percentage = 0;
-  static Color? _colour;
+  static Color _colour;
 
-  Progress(double percentage, Color colour) {
+  ProgressCircle(double percentage, Color colour) {
     _percentage = percentage;
     _colour = colour;
   }
