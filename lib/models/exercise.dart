@@ -8,5 +8,4 @@ class Exercises {
 
   Exercises({this.exerciseID, this.name, this.type,
     this.description, this.heartRate, this.duration});
-
 }

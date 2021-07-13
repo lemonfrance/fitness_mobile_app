@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -55,17 +57,21 @@ class DatabaseService {
     }
   }
 
-  Future getExercise(String exerciseId) async {
-    return await wearIntelCollection.doc(exerciseId).get().then((value){
-      print(value.data());
-    });
+  Future getExercise(exerciseId) async {
+    return await wearIntelCollection.doc(exerciseId).get();
   }
 
+  Stream<QuerySnapshot> get weekPlan {
+    return weekPlanCollection.snapshots();
+  }
 
-  Future getWeekPlan() async {
-    return await weekPlanCollection.doc("0").get().then((value){
-      print(value.data());
+  Future getWeekPlan(String day, String weekID) async {
+    var Day;
+    await weekPlanCollection.doc(weekID).get().then((value){
+      Day = value.data();
     });
+    return Day['$day'];
+
   }
 
   Future updateWeekPlan(String day, String exerciseID) async {
