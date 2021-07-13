@@ -1,15 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:html';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wearable_intelligence/Services/auth.dart';
+import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/pages/calender.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
 import 'package:wearable_intelligence/styles.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
+
 
 import '../main.dart';
 
 // Eventually I would like it if this showed the user profile in the nav bar as well.
 class AppDrawer extends StatelessWidget {
   static String pageName;
+  final AuthService _auth = AuthService();
+  final url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=http%3A%2F%2Flocalhost&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
+
   final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
     padding: EdgeInsets.only(left: 16, right: 16),
     shape: const BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
@@ -48,8 +57,8 @@ class AppDrawer extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               child: ElevatedButton(
-                onPressed: () {},
-                child: Text("Login"),
+                onPressed: () async {},
+                child: Text("Login to FitBit"),
                 style: ElevatedButton.styleFrom(
                   primary: Colours.lightBlue,
                   onSurface: Colours.white,
@@ -139,6 +148,16 @@ class AppDrawer extends StatelessWidget {
                 //style: buttonStyle,
               ),
             ),
+            Container(
+              alignment: Alignment.center,
+              child: TextButton.icon(
+                  onPressed: () async {
+                    await _auth.signOut();
+                  },
+                  icon: Icon(Icons.logout, color: Colours.darkBlue,),
+                  label: Text('Logout', style: TextStyle(color: Colours.darkBlue),)
+              ),
+            )
           ],
         ),
       ),
