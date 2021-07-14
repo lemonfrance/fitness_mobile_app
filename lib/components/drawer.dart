@@ -9,11 +9,9 @@ import '../main.dart';
 
 // Eventually I would like it if this showed the user profile in the nav bar as well.
 class AppDrawer extends StatelessWidget {
-  static String pageName;
+  String pageName;
 
-  AppDrawer(String page) {
-    pageName = page;
-  }
+  AppDrawer(this.pageName);
 
   @override
   Widget build(BuildContext context) {
