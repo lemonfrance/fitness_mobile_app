@@ -4,8 +4,8 @@ import 'package:percent_indicator/percent_indicator.dart';
 class ProgressCircle extends StatefulWidget {
   ProgressCircle(this._percentage, this._colour);
 
-  double? _percentage;
-  Color? _colour;
+  double _percentage;
+  Color _colour = Color(0);
 
   @override
   _ProgressState createState() => _ProgressState();
