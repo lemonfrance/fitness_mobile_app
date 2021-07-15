@@ -88,6 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
       appBar: AppBar(
+        centerTitle: false,
+        titleSpacing: 0.0,
         title: Text(
           widget.title,
           style: TextStyle(
