@@ -109,10 +109,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return StreamProvider<QuerySnapshot>.value(
-      value: DatabaseService().weekPlan,
-      initialData: null,
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: AppTheme.theme.backgroundColor,
         appBar: AppBar(
           title: Text(
@@ -191,7 +188,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
             ],
           ),
         ),
-      ),
     );
   }
 }

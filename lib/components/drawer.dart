@@ -15,7 +15,7 @@ import '../main.dart';
 
 // Eventually I would like it if this showed the user profile in the nav bar as well.
 class AppDrawer extends StatelessWidget {
-  static String pageName;
+  static String pageName = '';
   final AuthService _auth = AuthService();
   final url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=http%3A%2F%2Flocalhost&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
 

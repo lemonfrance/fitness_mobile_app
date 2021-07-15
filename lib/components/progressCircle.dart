@@ -3,7 +3,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class ProgressCircle extends StatelessWidget {
   static double _percentage = 0;
-  static Color _colour;
+  static Color _colour = Color(0);
 
   ProgressCircle(double percentage, Color colour) {
     _percentage = percentage;

@@ -6,7 +6,7 @@ import 'package:wearable_intelligence/loading.dart';
 class Register extends StatefulWidget {
 
   final Function toggleView;
-  Register({this.toggleView});
+  Register({required this.toggleView});
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -44,7 +44,7 @@ class _RegisterState extends State<Register> {
                       decoration: const InputDecoration(
                         hintText: 'Enter your email',
                       ),
-                      validator: (val) => val.isEmpty? 'Invalid email': null,
+                      validator: (val) => val!.isEmpty? 'Invalid email': null,
                       onChanged: (val) {
                         setState(() => email = val);
                       }),
@@ -54,7 +54,7 @@ class _RegisterState extends State<Register> {
                       decoration: const InputDecoration(
                         hintText: 'Enter a password',
                       ),
-                      validator: (val) => val.length < 6 ? 'Password must have  6+ characters': null,
+                      validator: (val) => val!.length < 6 ? 'Password must have  6+ characters': null,
                       onChanged: (val) {
                         setState(() => password = val);
                       }),
@@ -74,7 +74,7 @@ class _RegisterState extends State<Register> {
                       child: Text('Register',
                           style: TextStyle( color: Colours.white) ),
                       onPressed: () async {
-                        if(_formKey.currentState.validate()){
+                        if(_formKey.currentState!.validate()){
                           setState(() => loading = true);
                           dynamic result = await _auth.registerUserWithEmailAndPassword(email, password);
                           if (result == null){
