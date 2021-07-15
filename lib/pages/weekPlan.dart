@@ -188,9 +188,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
           style: TextStyle(
             color: Colours.darkBlue,
           ),
-          elevation: 0,
-          backgroundColor: AppTheme.theme.backgroundColor,
-          foregroundColor: Colours.darkBlue,
         ),
         iconTheme: IconThemeData(
           color: Colours.darkBlue,
@@ -213,47 +210,41 @@ class _ExercisePlanState extends State<ExercisePlan> {
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 18)),
               ),
               // This might need to change since they can click on the dates.
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Today's Workout", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 18)),
-                ),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+              style: ElevatedButton.styleFrom(
+                primary: Colours.highlight,
+                onPrimary: Colours.white,
+                minimumSize: Size(width - 40, 45),
+                shape: StadiumBorder(),
+                elevation: 10,
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
-                style: ElevatedButton.styleFrom(
-                  primary: Colours.highlight,
-                  onPrimary: Colours.white,
-                  minimumSize: Size(width - 40, 45),
-                  shape: StadiumBorder(),
-                  elevation: 10,
-                ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: SvgPicture.asset(
+                'assets/images/walking.svg',
+                width: width - 40,
               ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: SvgPicture.asset(
-                  'assets/images/walking.svg',
-                  width: width - 40,
-                ),
-              ),
-              exercisePlan(width - 40, 1000, 75, 150, 30),
-              education(
-                //exercise id get intensity
-                //DatabaseService().getWeekPlan(weekday, id ).toString();
-                "Low impact",
-                "It causes less strain and injuries than most other forms of exercise.",
-              ),
-              education(
-                //get workout name
-                "Muscle workout",
-                "cycling uses all of the major muscle groups as you pedal.",
-              ),
-              education(
-                //get workout type
-                "Strength and stamina",
-                "cycling increases stamina, strength and aerobic fitness.",
+            ),
+            exercisePlan(width - 40, 1000, 75, 150, 30),
+            education(
+              //exercise id get intensity
+              //DatabaseService().getWeekPlan(weekday, id ).toString();
+              "Low impact",
+              "It causes less strain and injuries than most other forms of exercise.",
+            ),
+            education(
+              //get workout name
+              "Muscle workout",
+              "cycling uses all of the major muscle groups as you pedal.",
+            ),
+            education(
+              //get workout type
+              "Strength and stamina",
+              "cycling increases stamina, strength and aerobic fitness.",
               ),
             ],
           ),
