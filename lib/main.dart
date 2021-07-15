@@ -1,4 +1,11 @@
+import 'dart:html';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wearable_intelligence/Screens/wrapper.dart';
+import 'package:wearable_intelligence/Services/auth.dart';
+import 'package:wearable_intelligence/models/user.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wearable_intelligence/components/drawer.dart';
 import 'package:wearable_intelligence/components/progressCircle.dart';
@@ -13,10 +20,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return StreamProvider<Users?>.value(
+      value: AuthService().user,
+      initialData: Users(),
+      child: MaterialApp(
       title: 'Wearable Intelligence',
       theme: AppTheme.theme,
-      home: MyHomePage('Wearable Intelligence'),
+      home: Wrapper(),
+      )
     );
   }
 }

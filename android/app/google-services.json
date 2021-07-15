@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "313446200928",
+    "project_id": "wearable-intelligence",
+    "storage_bucket": "wearable-intelligence.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313446200928:android:2134e5cd7554640ccb7505",
+        "android_client_info": {
+          "package_name": "com.wearable.wearable_intelligence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313446200928-1rrgprcd41s3uor1fbi767eqlq0js7bs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsBMBBePZFBHAX5qPwJk4XRk9OdfyNfRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313446200928-1rrgprcd41s3uor1fbi767eqlq0js7bs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

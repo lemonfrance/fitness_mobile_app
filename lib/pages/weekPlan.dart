@@ -1,7 +1,9 @@
-import 'dart:collection';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:wearable_intelligence/Services/database.dart';
+import 'dart:collection';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/components/drawer.dart';
 
@@ -207,6 +209,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
                 child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 18)),
               ),
+              // This might need to change since they can click on the dates.
             ),
             ElevatedButton(
               onPressed: () {},
@@ -228,20 +231,24 @@ class _ExercisePlanState extends State<ExercisePlan> {
             ),
             exercisePlan(width - 40, 1000, 75, 150, 30),
             education(
+              //exercise id get intensity
+              //DatabaseService().getWeekPlan(weekday, id ).toString();
               "Low impact",
               "It causes less strain and injuries than most other forms of exercise.",
             ),
             education(
+              //get workout name
               "Muscle workout",
               "cycling uses all of the major muscle groups as you pedal.",
             ),
             education(
+              //get workout type
               "Strength and stamina",
               "cycling increases stamina, strength and aerobic fitness.",
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 }
