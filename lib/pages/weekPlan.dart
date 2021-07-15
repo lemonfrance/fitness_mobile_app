@@ -1,16 +1,10 @@
-<<<<<<< HEAD
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:wearable_intelligence/Services/database.dart';
-=======
 import 'dart:collection';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
->>>>>>> origin/master
 import 'package:wearable_intelligence/components/drawer.dart';
 
 import '../styles.dart';
@@ -185,17 +179,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-<<<<<<< HEAD
-        backgroundColor: AppTheme.theme.backgroundColor,
-        appBar: AppBar(
-          title: Text(
-            widget.title,
-            style: TextStyle(
-              color: Colours.darkBlue,
-            ),
-          ),
-          iconTheme: IconThemeData(
-=======
       backgroundColor: AppTheme.theme.backgroundColor,
       appBar: AppBar(
         centerTitle: false,
@@ -203,31 +186,12 @@ class _ExercisePlanState extends State<ExercisePlan> {
         title: Text(
           widget.title,
           style: TextStyle(
->>>>>>> origin/master
             color: Colours.darkBlue,
           ),
           elevation: 0,
           backgroundColor: AppTheme.theme.backgroundColor,
           foregroundColor: Colours.darkBlue,
         ),
-<<<<<<< HEAD
-        drawer: AppDrawer('Exercise Plan'),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              // TODO: Don't make this static and make it scrollable for weeks to come
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  date("2", "MON", false),
-                  date("3", "TUE", false),
-                  date("4", "WED", false),
-                  date("5", "THU", false),
-                  date("6", "FRI", true),
-                  date("7", "SAT", false),
-                  date("8", "SUN", false),
-                ],
-=======
         iconTheme: IconThemeData(
           color: Colours.darkBlue,
         ),
@@ -247,7 +211,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
                 alignment: Alignment.centerLeft,
                 child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 18)),
->>>>>>> origin/master
               ),
               // This might need to change since they can click on the dates.
               Padding(
