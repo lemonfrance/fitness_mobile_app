@@ -1,6 +1,4 @@
-import 'dart:html';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wearable_intelligence/Screens/wrapper.dart';
@@ -12,7 +10,9 @@ import 'package:wearable_intelligence/components/progressCircle.dart';
 import 'package:wearable_intelligence/components/progressTile.dart';
 import 'package:wearable_intelligence/styles.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -24,9 +24,9 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: Users(),
       child: MaterialApp(
-      title: 'Wearable Intelligence',
-      theme: AppTheme.theme,
-      home: Wrapper(),
+        title: 'Wearable Intelligence',
+        theme: AppTheme.theme,
+        home: Wrapper(),
       )
     );
   }

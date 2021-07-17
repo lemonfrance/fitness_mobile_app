@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:313446200928:android:2134e5cd7554640ccb7505",
+        "mobilesdk_app_id": "1:313446200928:android:56316bec1903d5becb7505",
         "android_client_info": {
-          "package_name": "com.wearable.wearable_intelligence"
+          "package_name": "com.example.wearable_intelligence"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "313446200928-1rrgprcd41s3uor1fbi767eqlq0js7bs.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "313446200928-bobe7d0718i2f3dv4aouj5sdh9r661gh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wearable.wearableIntelligence"
+              }
             }
           ]
         }
