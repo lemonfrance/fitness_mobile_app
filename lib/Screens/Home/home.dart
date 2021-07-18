@@ -16,10 +16,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<QuerySnapshot>.value(
-      value: DatabaseService().users,
-      initialData: null,
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colours.white,
         appBar: AppBar(
           title: Text('Signed In'),
@@ -50,7 +47,7 @@ class Home extends StatelessWidget {
                       //FitBitService().getAuthToken();
                       // ^^ get the Bearer token from getAuthToken response
                       FitBitService().getFitBitData('Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyM0I4MksiLCJzdWIiOiI5RzQ0TlIiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJhY3QgcnNldCBybG9jIHJ3ZWkgcmhyIHJwcm8gcm51dCByc2xlIiwiZXhwIjoxNjI1NTYzMzk2LCJpYXQiOjE2MjU1MzQ1OTZ9.C782mk3y9Ri9TYMnZr_oO_v8WV6gHQy7jny08n4cyes', uid);
-                      final plan = DatabaseService().getWeekPlan('Monday', '0');
+                      //final plan = DatabaseService().getWeekPlan('Monday', '0');
 
 
                     },
@@ -69,7 +66,6 @@ class Home extends StatelessWidget {
                 )
             )
           )
-        )
     );
   }
 }

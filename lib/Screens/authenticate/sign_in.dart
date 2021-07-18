@@ -9,7 +9,7 @@ import '../../Services/fitbit.dart';
 class SignIn extends StatefulWidget {
 
   final Function toggleView;
-  SignIn({this.toggleView});
+  SignIn({required this.toggleView});
 
   @override
   _SignInState createState() => _SignInState();
@@ -50,7 +50,7 @@ class _SignInState extends State<SignIn> {
                               hintText: 'Enter your email',
                             ),
                             validator: (val) =>
-                                val.isEmpty ? 'Enter your email' : null,
+                                val!.isEmpty ? 'Enter your email' : null,
                             onChanged: (val) {
                               setState(() => email = val);
                             }),
@@ -60,7 +60,7 @@ class _SignInState extends State<SignIn> {
                             decoration: const InputDecoration(
                               hintText: 'Enter your password',
                             ),
-                            validator: (val) => val.length < 6
+                            validator: (val) => val!.length < 6
                                 ? 'Enter a password with 6+ chars'
                                 : null,
                             onChanged: (val) {
@@ -73,7 +73,7 @@ class _SignInState extends State<SignIn> {
                                 style: TextStyle(color: Colours.white)),
                             onPressed: () async {
 
-                              if (_formKey.currentState.validate()) {
+                              if (_formKey.currentState!.validate()) {
                                 setState(() => loading = true);
                                 dynamic result =
                                     await _auth.signInWithEmailAndPassword(

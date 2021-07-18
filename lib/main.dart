@@ -1,6 +1,4 @@
-import 'dart:html';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wearable_intelligence/Screens/wrapper.dart';
@@ -12,7 +10,9 @@ import 'package:wearable_intelligence/components/progressCircle.dart';
 import 'package:wearable_intelligence/components/progressTile.dart';
 import 'package:wearable_intelligence/styles.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Users>.value(
+    return StreamProvider<Users?>.value(
       value: AuthService().user,
-      initialData: null,
+      initialData: Users(),
       child: MaterialApp(
-      title: 'Wearable Intelligence',
-      theme: AppTheme.theme,
-      home: Wrapper(),
+        title: 'Wearable Intelligence',
+        theme: AppTheme.theme,
+        home: Wrapper(),
       )
     );
   }
@@ -99,6 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
       appBar: AppBar(
+        centerTitle: false,
+        titleSpacing: 0.0,
         title: Text(
           widget.title,
           style: TextStyle(

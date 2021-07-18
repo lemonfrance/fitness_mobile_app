@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:html';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
@@ -15,24 +14,12 @@ import '../main.dart';
 
 // Eventually I would like it if this showed the user profile in the nav bar as well.
 class AppDrawer extends StatelessWidget {
-  static String pageName;
+  String? pageName;
   final AuthService _auth = AuthService();
   final url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=http%3A%2F%2Flocalhost&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
+  
+  AppDrawer(this.pageName);
 
-  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-    padding: EdgeInsets.only(left: 16, right: 16),
-    shape: const BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
-    primary: Colors.red,
-    onPrimary: Colors.black,
-    onSurface: Colors.transparent,
-    shadowColor: Colors.transparent,
-    elevation: 0,
-  );
-
-  AppDrawer(String page) {
-    pageName = page;
-    print(page);
-  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -57,7 +44,11 @@ class AppDrawer extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               child: ElevatedButton(
-                onPressed: () async {},
+                onPressed: () async {
+                  String code = await FitBitService().getCode();
+                  String authToken = await FitBitService().getAuthToken(code);
+                  print(authToken);
+                },
                 child: Text("Login to FitBit"),
                 style: ElevatedButton.styleFrom(
                   primary: Colours.lightBlue,
@@ -95,14 +86,14 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Calender('Calender')),
+                    MaterialPageRoute(builder: (context) => CalenderPage('Calendar', 70.0)),
                   );
                 },
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Calender",
-                    style: TextStyle(fontWeight: (pageName == "Calender") ? FontWeight.bold : FontWeight.normal, fontSize: 16),
+                    "Calendar",
+                    style: TextStyle(fontWeight: (pageName == "Calendar") ? FontWeight.bold : FontWeight.normal, fontSize: 16),
                   ),
                 ),
                 // style: buttonStyle,
