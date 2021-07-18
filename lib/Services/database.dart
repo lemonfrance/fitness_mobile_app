@@ -16,7 +16,7 @@ class DatabaseService {
   }
 
   Future updateUserData(String username, String email) async {
-    return await wearIntelCollection.doc(uid).update({
+    return await wearIntelCollection.doc(uid).set({
       'username': username,
       'email': email,
     });
@@ -53,26 +53,23 @@ class DatabaseService {
     }
   }
 
-  Future getExercise(exerciseId) async {
-    return await wearIntelCollection.doc(exerciseId).get();
+  Future getExercise(weekID) async {
+    final ID = await DatabaseService(uid: uid).getWeekPlan(weekID);
+    String exerciseId = ID.toString();
+    final value = await exerciseCollection.doc(exerciseId).get();
+    var data = value.get('description');
+    return data;
   }
 
-  Stream<QuerySnapshot> get weekPlan {
-    return weekPlanCollection.snapshots();
+  Future getWeekPlan(int weekID) async {
+   final value = await wearIntelCollection.doc(uid).get();
+   var weekPlan = value.get('weekPlanID');
+   return weekPlan[weekID];
   }
 
-  Future getWeekPlan(String day, String weekID) async {
-    var Day;
-    await weekPlanCollection.doc(weekID).get().then((value){
-      Day = value.data();
-    });
-    return Day['$day'];
-
-  }
-
-  Future updateWeekPlan(String day, String exerciseID) async {
-    return await weekPlanCollection.doc("0").set({
-      '$day': exerciseID
+  Future updateWeekPlan(String weekID, String exerciseID) async {
+    return await wearIntelCollection.doc(uid).set({
+    'weekPlanID': {'$weekID': exerciseID}
     });
   }
 

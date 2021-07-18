@@ -51,7 +51,7 @@ class FitBitService {
     );
     final responseBody = (jsonDecode(response.body)["user"]);
     await DatabaseService(uid: uid).updateUserFitBitData(responseBody["firstName"], responseBody["lastName"], responseBody["age"], responseBody["height"], responseBody["weight"],
-        responseBody["gender"], responseBody["dateOfBirth"],responseBody["weekPlan"], 50, 20);
+        responseBody["gender"], responseBody["dateOfBirth"]);
   }
 
 }

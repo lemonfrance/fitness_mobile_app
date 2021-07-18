@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Users {
   String? username;
   String? email;
@@ -11,13 +9,13 @@ class Users {
   int? weight;
   String? gender;
   String? birthDate;
-  String? weekPlanID;
+  List<String>? weekPlan;
   int? questionnaireScore;
   int? totalHours;
 
 
   Users({this.username, this.email, this.uid, this.firstName, this.lastName,
          this.age, this.height, this.weight, this.gender, this.birthDate,
-         this.weekPlanID, this.questionnaireScore, this.totalHours});
+         this.weekPlan, this.questionnaireScore, this.totalHours});
 
 }
