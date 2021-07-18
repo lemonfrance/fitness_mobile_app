@@ -10,7 +10,6 @@ class DatabaseService {
 
   final CollectionReference wearIntelCollection = FirebaseFirestore.instance.collection('wearIntel');
   final CollectionReference exerciseCollection = FirebaseFirestore.instance.collection('exercises');
-  final CollectionReference weekPlanCollection = FirebaseFirestore.instance.collection('weekPlans');
 
   Stream<QuerySnapshot> get users {
     return wearIntelCollection.snapshots();
@@ -24,7 +23,7 @@ class DatabaseService {
   }
 
   Future updateUserFitBitData(String firstName, String lastName, int age, int height, int weight,
-  String gender, String birthDate,String weekPlanID, int questionnaireScore, int totalHours) async {
+  String gender, String birthDate) async {
     return await wearIntelCollection.doc(uid).update({
       'firstName': firstName,
       'lastName': lastName,
@@ -33,9 +32,6 @@ class DatabaseService {
       'weight': weight,
       'gender': gender,
       'birthDate': birthDate,
-      'weekPlanID': weekPlanID,
-      'questionnaireScore': questionnaireScore,
-      'totalHours': totalHours
     });
   }
 
