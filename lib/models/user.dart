@@ -5,8 +5,8 @@ class Users {
   String? firstName;
   String? lastName;
   int? age;
-  int? height;
-  int? weight;
+  double? height;
+  double? weight;
   String? gender;
   String? birthDate;
   List<String>? weekPlan;
