@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -10,21 +8,20 @@ class DatabaseService {
 
   final CollectionReference wearIntelCollection = FirebaseFirestore.instance.collection('wearIntel');
   final CollectionReference exerciseCollection = FirebaseFirestore.instance.collection('exercises');
-  final CollectionReference weekPlanCollection = FirebaseFirestore.instance.collection('weekPlans');
 
   Stream<QuerySnapshot> get users {
     return wearIntelCollection.snapshots();
   }
 
   Future updateUserData(String username, String email) async {
-    return await wearIntelCollection.doc(uid).update({
+    return await wearIntelCollection.doc(uid).set({
       'username': username,
       'email': email,
     });
   }
 
-  Future updateUserFitBitData(String firstName, String lastName, int age, int height, int weight,
-  String gender, String birthDate,String weekPlanID, int questionnaireScore, int totalHours) async {
+  Future updateUserFitBitData(String firstName, String lastName, int age, double height, double weight,
+  String gender, String birthDate) async {
     return await wearIntelCollection.doc(uid).update({
       'firstName': firstName,
       'lastName': lastName,
@@ -33,15 +30,59 @@ class DatabaseService {
       'weight': weight,
       'gender': gender,
       'birthDate': birthDate,
-      'weekPlanID': weekPlanID,
-      'questionnaireScore': questionnaireScore,
-      'totalHours': totalHours
     });
   }
 
-  Future getUserData(String uid) async {
+  Future getUserData() async {
     return await wearIntelCollection.doc(uid).get().then((value){
       print(value.data());
+    });
+  }
+
+  Future getFirstName() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('firstName').toString();
+  }
+
+  Future getLastName() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('lastName').toString();
+  }
+
+  Future getAge() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('age').toString();
+  }
+
+  Future getHeight() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('height').toString();
+  }
+
+  Future getWeight() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('weight').toString();
+  }
+
+  Future getGender() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('gender').toString();
+  }
+
+  Future getBirthDate() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('dateOfBirth').toString();
+  }
+
+  Future getWeekPlan(int weekID) async {
+    final value = await wearIntelCollection.doc(uid).get();
+    var weekPlan = value.get('weekPlanID');
+    return weekPlan[weekID];
+  }
+
+  Future updateWeekPlan(String weekID, String exerciseID) async {
+    return await wearIntelCollection.doc(uid).set({
+      'weekPlanID': {'$weekID': exerciseID}
     });
   }
 
@@ -57,28 +98,40 @@ class DatabaseService {
     }
   }
 
-  Future getExercise(exerciseId) async {
-    return await wearIntelCollection.doc(exerciseId).get();
+  Future getExercise(weekID) async {
+    final ID = await DatabaseService(uid: uid).getWeekPlan(weekID);
+    String exerciseId = ID.toString();
+    final value = await exerciseCollection.doc(exerciseId).get();
+    var data = value.get('name');
+    return data;
   }
 
-  Stream<QuerySnapshot> get weekPlan {
-    return weekPlanCollection.snapshots();
+  Future getExerciseDescription(weekID) async {
+    final ID = await DatabaseService(uid: uid).getWeekPlan(weekID);
+    String exerciseId = ID.toString();
+    final value = await exerciseCollection.doc(exerciseId).get();
+    var data = value.get('description');
+    return data;
   }
-
-  Future getWeekPlan(String day, String weekID) async {
-    var Day;
-    await weekPlanCollection.doc(weekID).get().then((value){
-      Day = value.data();
-    });
-    return Day['$day'];
-
+  Future getExerciseRate(weekID) async {
+    final ID = await DatabaseService(uid: uid).getWeekPlan(weekID);
+    String exerciseId = ID.toString();
+    final value = await exerciseCollection.doc(exerciseId).get();
+    var data = value.get('heartRate');
+    return data;
   }
-
-  Future updateWeekPlan(String day, String exerciseID) async {
-    return await weekPlanCollection.doc("0").set({
-      '$day': exerciseID
-    });
+  Future getExerciseDuration(weekID) async {
+    final ID = await DatabaseService(uid: uid).getWeekPlan(weekID);
+    String exerciseId = ID.toString();
+    final value = await exerciseCollection.doc(exerciseId).get();
+    var data = value.get('duration');
+    return data;
   }
-
-
+  Future getExerciseType(weekID) async {
+    final ID = await DatabaseService(uid: uid).getWeekPlan(weekID);
+    String exerciseId = ID.toString();
+    final value = await exerciseCollection.doc(exerciseId).get();
+    var data = value.get('type');
+    return data;
+  }
 }

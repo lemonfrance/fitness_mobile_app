@@ -10,7 +10,7 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="com.example.wearable_intelligence" />
+            <data android:host="myapp" android:scheme="wearintel" />
         </intent-filter>
     </activity>
     </application>

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'dart:collection';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,6 +13,7 @@ import '../styles.dart';
 class ExercisePlan extends StatefulWidget {
   ExercisePlan(this.title) : super();
 
+
   final String title;
 
   @override
@@ -19,18 +21,25 @@ class ExercisePlan extends StatefulWidget {
 }
 
 class _ExercisePlanState extends State<ExercisePlan> {
+  final AuthService _auth = AuthService();
   late final ValueNotifier<List<Event>> _selectedEvents;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
+  //Future<dynamic>? _workout;
+  int? _weekID;
+
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _weekID = (_focusedDay.weekday - 1);
+
+    // _workout = DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(weekID);
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -212,7 +221,10 @@ class _ExercisePlanState extends State<ExercisePlan> {
               // This might need to change since they can click on the dates.
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
+                print(value);
+              },
               child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
               style: ElevatedButton.styleFrom(
                 primary: Colours.highlight,
@@ -232,7 +244,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
             exercisePlan(width - 40, 1000, 75, 150, 30),
             education(
               //exercise id get intensity
-              //DatabaseService().getWeekPlan(weekday, id ).toString();
               "Low impact",
               "It causes less strain and injuries than most other forms of exercise.",
             ),
