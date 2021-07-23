@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'dart:html';
 import 'package:http/http.dart' as http;
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 
 import 'database.dart';
@@ -16,11 +15,10 @@ class FitBitService {
 
   Future getCode() async {
     const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=http%3A%2F%2Flocalhost&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
-    String current_url = window.location.href;
 
     final result = await FlutterWebAuth.authenticate(
         url: url,
-        callbackUrlScheme: current_url);
+        callbackUrlScheme: 'com.example.wearable_intelligence');
 
     //get auth code
     return Uri.parse(result).queryParameters['code'];

@@ -3,5 +3,17 @@
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
+
+    <application>
+    <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" >
+        <intent-filter android:label="flutter_web_auth">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="com.example.wearable_intelligence" />
+        </intent-filter>
+    </activity>
+    </application>
+
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

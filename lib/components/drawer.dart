@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:html';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
@@ -45,7 +44,11 @@ class AppDrawer extends StatelessWidget {
             Container(
               alignment: Alignment.center,
               child: ElevatedButton(
-                onPressed: () async {},
+                onPressed: () async {
+                  String code = await FitBitService().getCode();
+                  String authToken = await FitBitService().getAuthToken(code);
+                  print(authToken);
+                },
                 child: Text("Login to FitBit"),
                 style: ElevatedButton.styleFrom(
                   primary: Colours.lightBlue,
