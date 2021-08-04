@@ -5,7 +5,7 @@ import 'package:wearable_intelligence/Screens/wrapper.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/models/user.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:wearable_intelligence/components/drawer.dart';
+import 'package:wearable_intelligence/components/drawer_state.dart';
 import 'package:wearable_intelligence/components/progressCircle.dart';
 import 'package:wearable_intelligence/components/progressTile.dart';
 import 'package:wearable_intelligence/styles.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wearable_intelligence/components/drawer.dart';
+import 'package:wearable_intelligence/components/drawer_state.dart';
 
 import '../styles.dart';
 

@@ -31,16 +31,17 @@ class FitBitService {
         'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
         'Content-Type' : 'application/x-www-form-urlencoded',
       });
-    return (jsonDecode(response.body)["refresh_token"]);
+    return (jsonDecode(response.body)["access_token"]);
 
   }
 
-  Future<http.Response> getRefreshToken(refresh_token) {
-    return http.post(Uri.parse('https://api.fitbit.com/oauth2/token?refresh_token=$refresh_token&grant_type=refresh_token'),
+  Future getRefreshToken(refresh_token) async {
+    http.Response response = await http.post(Uri.parse('https://api.fitbit.com/oauth2/token?refresh_token=$refresh_token&grant_type=refresh_token'),
         headers: {
           'refresh_token': refresh_token,
           'grant_type' : 'refresh_token',
         });
+
   }
 
   Future getFitBitData(auth_code, uid) async{

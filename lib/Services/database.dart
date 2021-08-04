@@ -17,6 +17,16 @@ class DatabaseService {
     return await wearIntelCollection.doc(uid).set({
       'username': username,
       'email': email,
+      'firstName': '',
+      'lastName': '',
+      'age': '',
+      'height': '',
+      'weight': '',
+      'gender': '',
+      'birthDate': '',
+      'weekPlan':[],
+      'questionnaireScore':0,
+      'totalHours':0,
     });
   }
 

@@ -6,7 +6,7 @@ import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'dart:collection';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:wearable_intelligence/components/drawer.dart';
+import 'package:wearable_intelligence/components/drawer_state.dart';
 
 import '../styles.dart';
 
