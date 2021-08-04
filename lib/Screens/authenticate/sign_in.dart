@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/loading.dart';
+import 'package:wearable_intelligence/main.dart';
 import 'package:wearable_intelligence/styles.dart';
 
 class SignIn extends StatefulWidget {
@@ -85,6 +86,11 @@ class _SignInState extends State<SignIn> {
                                 error = 'invalid credentials';
                                 loading = false;
                               });
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => MyHomePage('Wearable Intelligence')),
+                              );
                             }
                           }
                         }),
