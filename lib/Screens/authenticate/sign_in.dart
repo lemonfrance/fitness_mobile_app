@@ -27,19 +27,21 @@ class _SignInState extends State<SignIn> {
         ? Loading()
         : Scaffold(
             backgroundColor: Colours.white,
-            appBar: AppBar(
-              backgroundColor: Colours.white,
-              elevation: 0.0,
-              title: Text('Sign In'),
-            ),
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20.0),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, bottom: 20),
+                      child: Text(
+                        'Sign In',
+                        style: AppTheme.theme.textTheme.headline2!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -68,7 +70,7 @@ class _SignInState extends State<SignIn> {
                     ),
                     SizedBox(height: 20.0),
                     MaterialButton(
-                        minWidth: 500,
+                        minWidth: double.infinity,
                         height: 60,
                         elevation: 10,
                         shape: StadiumBorder(),
@@ -88,9 +90,10 @@ class _SignInState extends State<SignIn> {
                         }),
                     SizedBox(height: 10.0),
                     MaterialButton(
+                      minWidth: double.infinity,
                       onPressed: (() => widget.toggleView()),
                       child: Text(
-                        'Done have an account? Sign Up',
+                        "Don't have an account? Sign Up",
                         style: TextStyle(color: Colours.black),
                       ),
                     ),

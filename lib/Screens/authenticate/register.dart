@@ -28,19 +28,21 @@ class _RegisterState extends State<Register> {
         ? Loading()
         : Scaffold(
             backgroundColor: Colours.white,
-            appBar: AppBar(
-              backgroundColor: Colours.white,
-              elevation: 0.0,
-              title: Text('Sign up to Wearable Intel'),
-            ),
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20.0),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, bottom: 20),
+                      child: Text(
+                        'Sign Up',
+                        style: AppTheme.theme.textTheme.headline2!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -83,7 +85,7 @@ class _RegisterState extends State<Register> {
                     ),
                     SizedBox(height: 20.0),
                     MaterialButton(
-                      minWidth: 500,
+                      minWidth: double.infinity,
                       height: 60,
                       elevation: 10,
                       shape: StadiumBorder(),
@@ -103,7 +105,7 @@ class _RegisterState extends State<Register> {
                       },
                     ),
                     SizedBox(height: 10.0),
-                    MaterialButton(child: Text('Have an account? Sign In'), onPressed: (() => widget.toggleView())),
+                    MaterialButton(minWidth: double.infinity, child: Text('Have an account? Sign In'), onPressed: (() => widget.toggleView())),
                     SizedBox(height: 12.0),
                     Text(error, style: TextStyle(color: Colors.red, fontSize: 14.0))
                   ],
