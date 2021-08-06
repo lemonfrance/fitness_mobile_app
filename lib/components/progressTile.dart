@@ -3,7 +3,7 @@ import 'package:wearable_intelligence/styles.dart';
 
 class ProgressTile extends StatelessWidget {
   String title = "";
-  int data = 0;
+  int? data = 0;
 
   ProgressTile(this.title, this.data);
 

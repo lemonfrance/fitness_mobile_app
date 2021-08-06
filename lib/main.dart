@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wearable_intelligence/Screens/wrapper.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
+import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/models/user.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:wearable_intelligence/components/drawer_state.dart';
 import 'package:wearable_intelligence/components/progressCircle.dart';
 import 'package:wearable_intelligence/components/progressTile.dart';
 import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/globals.dart' as global;
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,10 +19,22 @@ void main() async{
   runApp(MyApp());
 }
 
+Future getRefreshToken() async {
+   await FitBitService().getRefreshToken(global.refreshToken);
+}
+
+Future getDailyStats() async {
+  await FitBitService().getDailyGoals();
+  //await FitBitService().getHeartRates();
+}
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    if(global.fitBitAccount){
+      getRefreshToken();
+    }
     return StreamProvider<Users?>.value(
       value: AuthService().user,
       initialData: Users(),
@@ -96,6 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(global.fitBitAccount){
+      getDailyStats();
+    }
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
       appBar: AppBar(
@@ -115,14 +133,14 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colours.darkBlue,
       ),
       drawer: AppDrawer('Home'),
-      body: SingleChildScrollView(
+      body: SingleChildScrollView(  // !global.fitBitAccount? Text('hello'):  something for when they haven't signed into fitbit
         child: Column(
           children: [
             Container(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ProgressTile("Calories Burned", 100),
+                ProgressTile("Calories Burned", global.calories),
                 ProgressTile("Maximum Heart Rate (bpm)", 170),
               ],
             ),
@@ -131,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ProgressTile("kg's Lost", 5),
-                ProgressTile("Total Hours", 63),
+                ProgressTile("Total Hours", global.totalHours),
               ],
             ),
             Container(height: 40),

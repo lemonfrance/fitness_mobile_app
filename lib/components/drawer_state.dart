@@ -8,14 +8,14 @@ import 'package:wearable_intelligence/pages/calender.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
 import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/globals.dart' as global;
 
 import '../loading.dart';
 
 class AppDrawer extends StatefulWidget {
   AppDrawer(this.pageName) : super();
   final String pageName;
-  bool account = false;
-  String name = '';
+
 
   @override
   _AppDrawerState createState() => _AppDrawerState();
@@ -23,38 +23,12 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   final AuthService _auth = AuthService();
-  final url =
-      'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=http%3A%2F%2Flocalhost&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
   bool loading = false;
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  late Future<bool> _FitBitAccount = getAccount();
-  SharedPreferences? prefs;
 
-  Future<bool> getAccount() async {
-    prefs = await _prefs;
-    widget.account = prefs!.getBool('account') ?? false;
-    return widget.account;
-  }
-
-  Future<String> getName() async {
-    prefs = await _prefs;
-    widget.name = prefs!.getString('name') ?? '';
-    return widget.name;
-  }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.name);
-    getAccount();
-    getName();
-    return Container(
-        child: FutureBuilder<bool>(
-      future: _FitBitAccount,
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          return Drawer(
+    return Drawer(
             child: Padding(
               padding: EdgeInsets.only(top: 80),
               child: Column(
@@ -77,30 +51,19 @@ class _AppDrawerState extends State<AppDrawer> {
                       ? Loading()
                       : Container(
                           alignment: Alignment.center,
-                          child: widget.account
-                              ? Text("Welcome ${widget.name}")
+                          child: global.fitBitAccount
+                              ? Text("Welcome ${global.name}")
                               : ElevatedButton(
                                   onPressed: () async {
                                     setState(() => loading = true);
-                                    final user = await _auth.getUser();
-                                    final uid = user.uid;
-                                    String code =
-                                        await FitBitService().getCode();
-                                    String authToken = await FitBitService()
-                                        .getAuthToken(code);
 
-                                    widget.account = await FitBitService()
-                                        .getFitBitData(authToken, uid);
-                                    widget.name =
-                                        await DatabaseService(uid: uid)
-                                            .getFirstName();
+                                    await FitBitService().getCode();
+                                    await FitBitService().getAuthToken(global.accessToken!);
 
-                                    setState(() => {
-                                          widget.account = widget.account,
-                                          _FitBitAccount = prefs!.setBool(
-                                              'account', widget.account),
-                                          loading = false,
-                                        });
+                                    global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, 'IE1RWrKTEraSuUt7favSdCOg0N83'); //global.uid
+                                    global.name = await DatabaseService(uid: global.uid!).getFirstName();
+
+                                    setState(() => {loading = false});
                                   },
                                   child: Text("Login to FitBit"),
                                   style: ElevatedButton.styleFrom(
@@ -234,8 +197,8 @@ class _AppDrawerState extends State<AppDrawer> {
               ),
             ),
           );
-        }
-      },
-    ));
+  //      },
+ //     },
+ //   ));
   }
 }
