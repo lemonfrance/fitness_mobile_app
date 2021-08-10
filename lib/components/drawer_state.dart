@@ -60,7 +60,7 @@ class _AppDrawerState extends State<AppDrawer> {
                                     await FitBitService().getCode();
                                     await FitBitService().getAuthToken(global.accessToken!);
 
-                                    global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, 'IE1RWrKTEraSuUt7favSdCOg0N83'); //global.uid
+                                    global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, global.uid);
                                     global.name = await DatabaseService(uid: global.uid!).getFirstName();
 
                                     setState(() => {loading = false});
