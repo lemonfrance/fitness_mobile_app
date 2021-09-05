@@ -1,0 +1,11 @@
+String? authToken;
+String? uid;
+String? accessToken;
+String? refreshToken;
+String? name;
+bool fitBitAccount = false;
+int? heartRate;
+int? calories;
+int? weightloss;
+int? totalHours;
+String? user_id;

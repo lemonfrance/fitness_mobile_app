@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/models/user.dart';
+import 'package:wearable_intelligence/utils/globals.dart' as global;
 
 class AuthService {
 
@@ -39,6 +40,7 @@ class AuthService {
     try{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      global.uid = user!.uid;
       return _userFromUser(user);
     } catch(e){
       print(e.toString());
@@ -51,9 +53,9 @@ class AuthService {
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
-      
+      global.uid = user!.uid;
       //create a new doc for the user with this uid
-      await DatabaseService(uid: user!.uid).updateUserData(email.split("@")[0], email);
+      await DatabaseService(uid: user.uid).updateUserData(email.split("@")[0], email);
       return _userFromUser(user);
     } catch(e){
       print(e.toString());

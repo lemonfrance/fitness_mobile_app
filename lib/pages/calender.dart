@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:wearable_intelligence/components/drawer.dart';
+import 'package:wearable_intelligence/components/drawer_state.dart';
 import 'package:wearable_intelligence/components/progressCircle.dart';
 
 import '../styles.dart';
