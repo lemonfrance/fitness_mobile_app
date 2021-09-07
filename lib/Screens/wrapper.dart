@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wearable_intelligence/Screens/Home/home.dart';
 import 'package:wearable_intelligence/Screens/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/models/user.dart';
+import 'package:wearable_intelligence/pages/homepage.dart';
 
 import '../main.dart';
 

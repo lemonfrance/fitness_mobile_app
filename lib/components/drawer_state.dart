@@ -5,6 +5,7 @@ import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/main.dart';
 import 'package:wearable_intelligence/pages/calender.dart';
+import 'package:wearable_intelligence/pages/homepage.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
 import 'package:wearable_intelligence/styles.dart';
@@ -62,6 +63,8 @@ class _AppDrawerState extends State<AppDrawer> {
 
                                     global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, global.uid);
                                     global.name = await DatabaseService(uid: global.uid!).getFirstName();
+                                    await FitBitService().getDailyGoals();
+                                    await FitBitService().getHeartRates();
 
                                     setState(() => {loading = false});
                                   },

@@ -17,7 +17,7 @@ const Map config = const {
 class FitBitService {
 
   Future getCode() async {
-    const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=604800';
+    const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
 
     final result = await FlutterWebAuth.authenticate(
         url: url,
@@ -75,13 +75,18 @@ class FitBitService {
   }
 
   Future getHeartRates() async {
-    final http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/1d.json'),
-      headers: {
-      'Authorization': 'Bearer ${global.authToken}'
-      });
-
-    print(response.body);
-
+    var formatter = new DateFormat('yyyy-MM-dd');
+    int index = 0;
+    for(int i=6; i>=0; i--){
+      http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/${formatter.format(DateTime.now().subtract(Duration(days: i)))}/1d.json'),
+          headers: {
+            'Authorization': 'Bearer ${global.authToken}'
+          });
+      global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][1]["min"];
+      global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][1]["max"];
+     //don't have data that can be received yet // global.weekActivityMinutes[index] = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][1]["minutes"];
+      index ++;
+    }
   }
 
 }
