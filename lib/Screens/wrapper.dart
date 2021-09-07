@@ -4,6 +4,7 @@ import 'package:wearable_intelligence/Screens/Home/home.dart';
 import 'package:wearable_intelligence/Screens/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/models/user.dart';
 import 'package:wearable_intelligence/pages/homepage.dart';
+import 'package:wearable_intelligence/pages/welcome.dart';
 
 import '../main.dart';
 
@@ -18,7 +19,7 @@ class Wrapper extends StatelessWidget {
     if(user == null){
       return Authenticate();
     } else {
-      return MyHomePage('Wearable Intelligence');
+      return WelcomePage();
     }
   }
 }

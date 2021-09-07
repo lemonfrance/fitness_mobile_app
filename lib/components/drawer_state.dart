@@ -52,29 +52,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       ? Loading()
                       : Container(
                           alignment: Alignment.center,
-                          child: global.fitBitAccount
-                              ? Text("Welcome ${global.name}")
-                              : ElevatedButton(
-                                  onPressed: () async {
-                                    setState(() => loading = true);
-
-                                    await FitBitService().getCode();
-                                    await FitBitService().getAuthToken(global.accessToken!);
-
-                                    global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, global.uid);
-                                    global.name = await DatabaseService(uid: global.uid!).getFirstName();
-                                    await FitBitService().getDailyGoals();
-                                    await FitBitService().getHeartRates();
-
-                                    setState(() => {loading = false});
-                                  },
-                                  child: Text("Login to FitBit"),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colours.lightBlue,
-                                    onSurface: Colours.white,
-                                  ),
-                                ),
-                        ),
+                          child: Text("Welcome ${global.name}")
+                  ),
                   SizedBox(
                     height: 20,
                   ),

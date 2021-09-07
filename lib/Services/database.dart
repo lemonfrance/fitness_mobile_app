@@ -27,6 +27,9 @@ class DatabaseService {
       'weekPlan':[],
       'questionnaireScore':0,
       'totalHours':0,
+      'refreshToken':'',
+      'authToken':'',
+      'fitbitId':'',
     });
   }
 
@@ -41,6 +44,23 @@ class DatabaseService {
       'gender': gender,
       'birthDate': birthDate,
     });
+  }
+
+  Future updateToken(String refreshToken, String authToken, String userId) async {
+    return await wearIntelCollection.doc(uid).update({
+      'refreshToken': refreshToken,
+      'authToken': authToken,
+      'fitbitId': userId
+    });
+  }
+
+  Future getFitbitUser() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('fitbitId').toString();
+  }
+  Future getRefreshToken() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    return value.get('refreshToken').toString();
   }
 
   Future getUserData() async {
