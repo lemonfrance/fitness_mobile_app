@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/styles.dart';
 
 class ProgressTile extends StatelessWidget {
-  String title = "";
-  int? data = 0;
+  String title;
+  int data;
 
   ProgressTile(this.title, this.data);
 
@@ -30,7 +30,7 @@ class ProgressTile extends StatelessWidget {
         children: [
           Text(
             data.toString(),
-            style: TextStyle(fontSize: 72, color: Colours.darkBlue),
+            style: TextStyle(fontSize: 30, color: Colours.darkBlue),
             textAlign: TextAlign.center,
           ),
           Text(

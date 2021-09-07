@@ -1,18 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
-import 'dart:collection';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/components/drawer_state.dart';
 
 import '../styles.dart';
 
 class ExercisePlan extends StatefulWidget {
   ExercisePlan(this.title) : super();
-
 
   final String title;
 
@@ -30,9 +28,8 @@ class _ExercisePlanState extends State<ExercisePlan> {
   //Future<dynamic>? _workout;
   int? _weekID;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     _selectedDay = _focusedDay;
@@ -256,10 +253,10 @@ class _ExercisePlanState extends State<ExercisePlan> {
               //get workout type
               "Strength and stamina",
               "cycling increases stamina, strength and aerobic fitness.",
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }
