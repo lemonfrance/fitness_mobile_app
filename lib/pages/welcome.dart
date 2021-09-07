@@ -15,7 +15,6 @@ Future verifyFitbit() async {
   final refreshToken = await DatabaseService(uid: mAuth.currentUser!.uid).getRefreshToken();
   global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
   if (user != '') {
-    print(refreshToken);
     await FitBitService().getRefreshToken(refreshToken);
     await FitBitService().getDailyGoals();
     await FitBitService().getHeartRates();

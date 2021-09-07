@@ -28,7 +28,6 @@ class FitBitService {
 
     //get auth code
     global.accessToken = Uri.parse(result).queryParameters['code'].toString();
-
   }
 
   Future getAuthToken(String code) async{
@@ -48,19 +47,25 @@ class FitBitService {
   }
 
   Future getRefreshToken(refresh_token) async {
-    http.Response response = await http.post(Uri.parse('https://api.fitbit.com/oauth2/token?refresh_token=$refresh_token&grant_type=refresh_token'),
-    headers: {
-    'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
-    'Content-Type' : 'application/x-www-form-urlencoded',
-    });
+    try{
+      http.Response response = await http.post(Uri.parse('https://api.fitbit.com/oauth2/token?refresh_token=$refresh_token&grant_type=refresh_token'),
+          headers: {
+            'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
+            'Content-Type' : 'application/x-www-form-urlencoded',
+          });
 
-    global.authToken = jsonDecode(response.body)["access_token"];
-    global.refreshToken = jsonDecode(response.body)["refresh_token"];
-    global.user_id = jsonDecode(response.body)["user_id"];
-    global.fitBitAccount = true;
+      global.authToken = jsonDecode(response.body)["access_token"];
+      global.refreshToken = jsonDecode(response.body)["refresh_token"];
+      global.user_id = jsonDecode(response.body)["user_id"];
+      global.fitBitAccount = true;
 
-    final responseBody = (jsonDecode(response.body));
-    await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"],responseBody["user_id"]);
+      final responseBody = (jsonDecode(response.body));
+      print(responseBody);
+      await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"],responseBody["user_id"]);
+    }catch(e){
+      await getCode();
+      await getAuthToken(global.accessToken!);
+  }
   }
 
   Future getFitBitData(auth_code, uid) async{
