@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/components/drawer_state.dart';
+import 'package:wearable_intelligence/components/exercisePlanTile.dart';
 
 import '../styles.dart';
 
@@ -112,53 +113,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
             date,
             style: TextStyle(fontWeight: FontWeight.bold, color: selected ? Colours.white : Colours.black),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget exercisePlan(double width, int steps, int heartRate, int calories, int time) {
-    TextStyle textStyle = TextStyle(color: Colours.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1);
-    return Container(
-      height: 220,
-      width: width,
-      padding: EdgeInsets.only(left: 20),
-      decoration: BoxDecoration(
-        color: Colours.lightBlue,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SvgPicture.asset(
-                'assets/images/man.svg',
-              ),
-              SvgPicture.asset(
-                'assets/images/heartBeat.svg',
-              ),
-              SvgPicture.asset(
-                'assets/images/calories.svg',
-              ),
-              SvgPicture.asset(
-                'assets/images/time.svg',
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(steps.toString() + " Steps", style: textStyle),
-                Text(heartRate.toString() + "% Max Heart Rate", style: textStyle),
-                Text(calories.toString() + " Calories", style: textStyle),
-                Text(time.toString() + " Minutes", style: textStyle),
-              ],
-            ),
-          )
         ],
       ),
     );

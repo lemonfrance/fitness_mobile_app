@@ -1,14 +1,14 @@
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:wearable_intelligence/components/drawer_state.dart';
-import 'package:wearable_intelligence/components/progressCircle.dart';
-import 'package:wearable_intelligence/components/progressTile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
+import 'package:wearable_intelligence/components/drawer_state.dart';
+import 'package:wearable_intelligence/components/exercisePlanTile.dart';
+import 'package:wearable_intelligence/components/progressCircle.dart';
+import 'package:wearable_intelligence/utils/globals.dart' as global;
+
 import '../loading.dart';
 import '../styles.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as global;
-import 'package:flutter/material.dart';
-
-
 
 Future getDailyStats() async {
   await FitBitService().getDailyGoals();
@@ -25,65 +25,84 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  FirebaseAuth mAuth = FirebaseAuth.instance;
   bool loading = false;
 
-  Widget goals() {
-    double width = MediaQuery.of(context).size.width;
+  Widget logInScreen() {
     return Container(
-      width: width,
-      padding: EdgeInsets.all(10),
+      width: double.infinity,
+      height: double.infinity,
       decoration: BoxDecoration(
-        color: Colours.lightBlue,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('assets/images/runner.png'),
+        ),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "Goal: Exercise 5 times",
-            style: TextStyle(color: Colours.white, fontSize: 26, fontWeight: FontWeight.bold),
-          ),
-          Container(height: 20),
           Container(
-            width: width,
-            padding: EdgeInsets.only(left: 16),
-            child: Text(
-              "Weekly Average",
-              style: TextStyle(color: Colours.white, fontSize: 18),
-              textAlign: TextAlign.start,
+            child: Column(
+              children: [
+                Text('Welcome', style: TextStyle(fontSize: 60, color: Colours.darkBlue, fontWeight: FontWeight.w700)),
+                Text('Log in to Fitbit to get started', style: TextStyle(fontSize: 20, color: Colours.darkBlue, fontWeight: FontWeight.w300)),
+              ],
             ),
           ),
-          Container(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "0",
-                style: TextStyle(color: Colours.white, fontSize: 18, height: 1.1),
+          Padding(
+            padding: EdgeInsets.only(bottom: 70),
+            child: ElevatedButton(
+              onPressed: () async {
+                setState(() => loading = true);
+
+                await FitBitService().getCode();
+                await FitBitService().getAuthToken(global.accessToken!);
+
+                global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
+                global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
+                await FitBitService().getDailyGoals();
+                await FitBitService().getHeartRates();
+
+                setState(() => {loading = false});
+              },
+              child: Text(
+                "Log in",
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
               ),
-              LinearPercentIndicator(
-                width: width * 0.8,
-                lineHeight: 6,
-                percent: 0.8,
-                backgroundColor: Colors.white,
-                progressColor: Colours.darkBlue,
+              style: ElevatedButton.styleFrom(
+                primary: Colours.highlight,
+                onPrimary: Colours.white,
+                minimumSize: Size(MediaQuery.of(context).size.width - 40, 45),
+                shape: StadiumBorder(),
+                elevation: 10,
               ),
-              Text(
-                "5",
-                style: TextStyle(color: Colours.white, fontSize: 18, height: 1.1),
-              ),
-            ],
+            ),
           ),
-          Container(height: 20),
         ],
       ),
     );
   }
 
+  Widget homeScreen() {
+    return loading
+        ? Loading()
+        : Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                exercisePlan(MediaQuery.of(context).size.width - 40, 1000, 75, 150, 30),
+                ProgressCircle(90.0, Colours.highlight),
+              ],
+            ),
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
-    if(global.fitBitAccount){
-      getDailyStats();
-    }
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
       appBar: AppBar(
@@ -103,33 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colours.darkBlue,
       ),
       drawer: AppDrawer('Home'),
-      body: !global.fitBitAccount ? Text('hello'):
-      SingleChildScrollView(  //   something for when they haven't signed into fitbit
-        child: loading ? Loading(): Column(
-          children: [
-            Container(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ProgressTile("Calories Burned", global.calories),
-                ProgressTile("Maximum Heart Rate (bpm)", 170),
-              ],
-            ),
-            Container(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ProgressTile("kg's Lost", 5),
-                ProgressTile("Total Hours", global.totalHours),
-              ],
-            ),
-            Container(height: 40),
-            ProgressCircle(90.0, Colours.highlight),
-            Container(height: 40),
-            goals(),
-          ],
-        ),
-      ),
+      body: !(global.fitBitAccount == true) ? logInScreen() : homeScreen(),
     );
   }
 }

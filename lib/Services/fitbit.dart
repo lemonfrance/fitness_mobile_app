@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
 import 'package:intl/intl.dart';
 
@@ -15,6 +17,7 @@ const Map config = const {
 };
 
 class FitBitService {
+  FirebaseAuth mAuth = FirebaseAuth.instance;
 
   Future getCode() async {
     const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
@@ -25,7 +28,6 @@ class FitBitService {
 
     //get auth code
     global.accessToken = Uri.parse(result).queryParameters['code'].toString();
-
   }
 
   Future getAuthToken(String code) async{
@@ -37,18 +39,33 @@ class FitBitService {
     global.authToken = jsonDecode(response.body)["access_token"];
     global.refreshToken = jsonDecode(response.body)["refresh_token"];
     global.user_id = jsonDecode(response.body)["user_id"];
+    global.fitBitAccount = true;
+
+    final responseBody = (jsonDecode(response.body));
+    await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"],responseBody["user_id"]);
+
   }
 
   Future getRefreshToken(refresh_token) async {
-    http.Response response = await http.post(Uri.parse('https://api.fitbit.com/oauth2/token?refresh_token=$refresh_token&grant_type=refresh_token'),
-    headers: {
-    'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
-    'Content-Type' : 'application/x-www-form-urlencoded',
-    });
+    try{
+      http.Response response = await http.post(Uri.parse('https://api.fitbit.com/oauth2/token?refresh_token=$refresh_token&grant_type=refresh_token'),
+          headers: {
+            'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
+            'Content-Type' : 'application/x-www-form-urlencoded',
+          });
 
-    global.authToken = jsonDecode(response.body)["access_token"];
-    global.refreshToken = jsonDecode(response.body)["refresh_token"];
-    global.user_id = jsonDecode(response.body)["user_id"];
+      global.authToken = jsonDecode(response.body)["access_token"];
+      global.refreshToken = jsonDecode(response.body)["refresh_token"];
+      global.user_id = jsonDecode(response.body)["user_id"];
+      global.fitBitAccount = true;
+
+      final responseBody = (jsonDecode(response.body));
+      print(responseBody);
+      await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"],responseBody["user_id"]);
+    }catch(e){
+      await getCode();
+      await getAuthToken(global.accessToken!);
+  }
   }
 
   Future getFitBitData(auth_code, uid) async{
