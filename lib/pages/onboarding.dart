@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wearable_intelligence/styles.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
-
-import 'homepage.dart';
+import 'package:wearable_intelligence/wearableIntelligence.dart';
 
 class Onboarding extends StatefulWidget {
   Onboarding() : super();
@@ -273,9 +272,9 @@ class _OnboardingState extends State<Onboarding> {
                       }
                     });
                     if (finished) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => MyHomePage('Wearable Intelligence')),
+                        MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
                       );
                     }
                   },

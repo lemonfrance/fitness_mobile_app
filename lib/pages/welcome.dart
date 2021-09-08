@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
-import 'package:wearable_intelligence/pages/homepage.dart';
-import '../loading.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
-import 'package:flutter/material.dart';
+import 'package:wearable_intelligence/wearableIntelligence.dart';
+
+import '../loading.dart';
 
 Future verifyFitbit() async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
@@ -18,7 +19,7 @@ Future verifyFitbit() async {
     await FitBitService().getRefreshToken(refreshToken);
     await FitBitService().getDailyGoals();
     await FitBitService().getHeartRates();
-    global.fitBitAccount=true;
+    global.fitBitAccount = true;
   }
 }
 
@@ -30,20 +31,13 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-
   @override
   void initState() {
     super.initState();
     Timer(Duration(seconds: 10),
-            () =>
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder:
-                    (context) =>
-                    MyHomePage('Wearable Intelligence')
-                )
-            )
-    );
+        () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence'))));
   }
+
   @override
   Widget build(BuildContext context) {
     verifyFitbit();

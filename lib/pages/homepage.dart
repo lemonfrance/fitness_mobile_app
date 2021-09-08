@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
-import 'package:wearable_intelligence/components/drawer_state.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
 import 'package:wearable_intelligence/components/progressCircle.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
@@ -16,9 +15,7 @@ Future getDailyStats() async {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage(this.title) : super();
-
-  final String title;
+  MyHomePage() : super();
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -38,11 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
           image: AssetImage('assets/images/runner.png'),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Container(
+          Positioned(
             child: Column(
               children: [
                 Text('Welcome', style: TextStyle(fontSize: 60, color: Colours.darkBlue, fontWeight: FontWeight.w700)),
@@ -50,32 +46,35 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 70),
-            child: ElevatedButton(
-              onPressed: () async {
-                setState(() => loading = true);
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
+              child: ElevatedButton(
+                onPressed: () async {
+                  setState(() => loading = true);
 
-                await FitBitService().getCode();
-                await FitBitService().getAuthToken(global.accessToken!);
+                  await FitBitService().getCode();
+                  await FitBitService().getAuthToken(global.accessToken!);
 
-                global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
-                global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
-                await FitBitService().getDailyGoals();
-                await FitBitService().getHeartRates();
+                  global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
+                  global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
+                  await FitBitService().getDailyGoals();
+                  await FitBitService().getHeartRates();
 
-                setState(() => {loading = false});
-              },
-              child: Text(
-                "Log in",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colours.highlight,
-                onPrimary: Colours.white,
-                minimumSize: Size(MediaQuery.of(context).size.width - 40, 45),
-                shape: StadiumBorder(),
-                elevation: 10,
+                  setState(() => {loading = false});
+                },
+                child: Text(
+                  "Log into Fitbit",
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colours.highlight,
+                  onPrimary: Colours.white,
+                  minimumSize: Size(MediaQuery.of(context).size.width, 60),
+                  shape: StadiumBorder(),
+                  elevation: 10,
+                ),
               ),
             ),
           ),
@@ -94,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text("Welcome ${global.name}"),
                 exercisePlan(MediaQuery.of(context).size.width - 40, 1000, 75, 150, 30),
                 ProgressCircle(90.0, Colours.highlight),
               ],
@@ -105,23 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      appBar: AppBar(
-        centerTitle: false,
-        titleSpacing: 0.0,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Colours.darkBlue,
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Colours.darkBlue,
-        ),
-        elevation: 0,
-        backgroundColor: AppTheme.theme.backgroundColor,
-        foregroundColor: Colours.darkBlue,
-      ),
-      drawer: AppDrawer('Home'),
       body: !(global.fitBitAccount == true) ? logInScreen() : homeScreen(),
     );
   }
