@@ -53,15 +53,14 @@ class _CalenderPageState extends State<CalenderPage> {
         title: Text(
           widget.title,
           style: TextStyle(
-            color: Colours.darkBlue,
+            color: Colours.grey,
           ),
         ),
         iconTheme: IconThemeData(
-          color: Colours.darkBlue,
+          color: Colours.grey,
         ),
         elevation: 0,
         backgroundColor: AppTheme.theme.backgroundColor,
-        foregroundColor: Colours.darkBlue,
       ),
       drawer: AppDrawer('Calender'),
       body: Column(

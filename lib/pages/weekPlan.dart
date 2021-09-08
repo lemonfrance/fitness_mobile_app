@@ -7,6 +7,7 @@ import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/components/drawer_state.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
+import 'package:wearable_intelligence/pages/tracker.dart';
 
 import '../styles.dart';
 
@@ -175,6 +176,10 @@ class _ExercisePlanState extends State<ExercisePlan> {
               onPressed: () async {
                 final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
                 print(value);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Tracker('Timer', 1800)),
+                );
               },
               child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
               style: ElevatedButton.styleFrom(

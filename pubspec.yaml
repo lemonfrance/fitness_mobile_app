@@ -41,6 +41,8 @@ dependencies:
   flutter_web_auth: ^0.3.0
   shared_preferences: ^2.0.6
   syncfusion_flutter_charts: ^19.2.59
+  circular_countdown_timer: ^0.2.0
+  flutter_vibrate: ^1.1.0
 
 
 
