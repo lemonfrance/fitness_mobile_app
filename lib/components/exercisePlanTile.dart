@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 Widget exercisePlan(double width, int steps, int heartRate, int calories, int time) {
   TextStyle textStyle = TextStyle(color: Colours.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1);

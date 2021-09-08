@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:wearable_intelligence/styles.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as globals;
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class ActiveMinutesGraph extends StatefulWidget {
   const ActiveMinutesGraph({Key? key}) : super(key: key);
@@ -28,7 +27,7 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
 
     return Container(
         width: width,
-        height: width/1.5,
+        height: width / 1.5,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -41,54 +40,47 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
             ),
           ],
         ),
-            child: SfCartesianChart(
-                title: ChartTitle(
-                    text: 'Active minutes this week',
-                    alignment: ChartAlignment.near,
-                    textStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colours.black)),
-                primaryYAxis: NumericAxis(
-                  maximum: 55,
-                  labelFormat: '{value} min',
-                  plotBands: <PlotBand>[
-                    PlotBand(
-                      isVisible: true,
-                      start: 35,
-                      end: 35,
-                      dashArray: <double>[5, 10],
-                      borderColor: Colors.grey,
-                      borderWidth: 2,
-                      opacity: 0.4,
-                    ),
-                  ],
-                  axisLine: AxisLine(width: 0),
-                  majorGridLines: MajorGridLines(width: 0),
-                  majorTickLines: MajorTickLines(width: 0),
-                  interval: 10,
+        child: SfCartesianChart(
+            title: ChartTitle(
+                text: 'Active minutes this week',
+                alignment: ChartAlignment.near,
+                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colours.black)),
+            primaryYAxis: NumericAxis(
+              maximum: 55,
+              labelFormat: '{value} min',
+              plotBands: <PlotBand>[
+                PlotBand(
+                  isVisible: true,
+                  start: 35,
+                  end: 35,
+                  dashArray: <double>[5, 10],
+                  borderColor: Colors.grey,
+                  borderWidth: 2,
+                  opacity: 0.4,
                 ),
-                primaryXAxis: CategoryAxis(
-                  axisLine: AxisLine(width: 0),
-                  majorGridLines: MajorGridLines(width: 0),
-                  majorTickLines: MajorTickLines(width: 0),
-                  labelStyle:
-                      TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-                ),
-                plotAreaBorderWidth: 0,
-                series: <ChartSeries>[
-                  ColumnSeries<_SalesData, String>(
-                      dataSource: data,
-                      xValueMapper: (_SalesData sales, _) => sales.year,
-                      yValueMapper: (_SalesData sales, _) => sales.sales,
-                      pointColorMapper: (_SalesData sales, _) =>
-                          (sales.sales > 35)
-                              ? Colours.lightBlue
-                              : Colours.highlight,
-                      // Sets the corner radius
-                      width: 0.2,
-                      borderRadius: BorderRadius.all(Radius.circular(30)))
-                ]));
+              ],
+              axisLine: AxisLine(width: 0),
+              majorGridLines: MajorGridLines(width: 0),
+              majorTickLines: MajorTickLines(width: 0),
+              interval: 10,
+            ),
+            primaryXAxis: CategoryAxis(
+              axisLine: AxisLine(width: 0),
+              majorGridLines: MajorGridLines(width: 0),
+              majorTickLines: MajorTickLines(width: 0),
+              labelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+            ),
+            plotAreaBorderWidth: 0,
+            series: <ChartSeries>[
+              ColumnSeries<_SalesData, String>(
+                  dataSource: data,
+                  xValueMapper: (_SalesData sales, _) => sales.year,
+                  yValueMapper: (_SalesData sales, _) => sales.sales,
+                  pointColorMapper: (_SalesData sales, _) => (sales.sales > 35) ? Colours.lightBlue : Colours.highlight,
+                  // Sets the corner radius
+                  width: 0.2,
+                  borderRadius: BorderRadius.all(Radius.circular(30)))
+            ]));
   }
 }
 

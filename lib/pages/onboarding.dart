@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:wearable_intelligence/styles.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
 
 class Onboarding extends StatefulWidget {

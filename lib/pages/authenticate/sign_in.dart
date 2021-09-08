@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/loading.dart';
-import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
 
 class SignIn extends StatefulWidget {

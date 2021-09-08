@@ -3,8 +3,7 @@ import 'package:wearable_intelligence/components/activeMinutesGaph.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
 import 'package:wearable_intelligence/components/progressTile.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as globals;
-
-import '../styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class Vitals extends StatefulWidget {
   Vitals() : super();

@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/utils/wrapper.dart';
 
 void main() async {

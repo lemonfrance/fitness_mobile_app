@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/pages/onboarding.dart';
-import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;

@@ -5,8 +5,8 @@ import 'package:wearable_intelligence/pages/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/pages/homepage.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
-import 'package:wearable_intelligence/styles.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
+import 'package:wearable_intelligence/utils/styles.dart';
 
 import 'Services/auth.dart';
 
@@ -35,8 +35,10 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
       MyHomePage(),
       ExercisePlan(),
     ];
+
     return Scaffold(
-        backgroundColor: AppTheme.theme.backgroundColor,
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: _currentIndex == 1 ? true : false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
@@ -46,16 +48,16 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
             child: Text(
               widget.title,
               style: TextStyle(
-                color: Colours.darkBlue,
+                color: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
               ),
             ),
           ),
           iconTheme: IconThemeData(
-            color: Colours.darkBlue,
+            color: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
           ),
           elevation: 0,
-          backgroundColor: AppTheme.theme.backgroundColor,
-          foregroundColor: Colours.darkBlue,
+          backgroundColor: _currentIndex == 1 ? Colors.transparent : AppTheme.theme.backgroundColor,
+          foregroundColor: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 20.0),

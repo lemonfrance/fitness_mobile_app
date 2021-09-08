@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class ProgressTile extends StatelessWidget {
   String title;

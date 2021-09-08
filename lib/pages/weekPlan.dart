@@ -6,8 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
-
-import '../styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class ExercisePlan extends StatefulWidget {
   ExercisePlan() : super();
