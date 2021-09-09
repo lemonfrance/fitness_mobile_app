@@ -73,21 +73,17 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
               child: ElevatedButton(
                 onPressed: () async {
-                  print("hi");
                   setState(() => loading = true);
 
                   await FitBitService().getCode();
                   await FitBitService().getAuthToken(global.accessToken!);
-                  print("hey");
                   global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
-                  print((global.fitBitAccount == true).toString());
+
                   global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
                   await FitBitService().getDailyGoals();
                   await FitBitService().getHeartRates();
 
-                  print("yo");
                   setState(() => loading = false);
-                  print("lets go");
                 },
                 child: Text(
                   "Log into Fitbit",

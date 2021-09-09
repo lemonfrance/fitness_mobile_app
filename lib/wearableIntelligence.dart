@@ -38,7 +38,7 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
 
     return Scaffold(
         backgroundColor: Colors.transparent,
-        extendBodyBehindAppBar: (_currentIndex == 1 && global.fitBitAccount == true) ? true : false,
+        extendBodyBehindAppBar: (_currentIndex == 1) ? true : false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
@@ -56,8 +56,8 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
             color: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
           ),
           elevation: 0,
-          backgroundColor: (_currentIndex == 1 && global.fitBitAccount == true) ? Colors.transparent : AppTheme.theme.backgroundColor,
-          foregroundColor: (_currentIndex == 1 && global.fitBitAccount == true) ? Colours.white : Colours.darkBlue,
+          backgroundColor: (_currentIndex == 1) ? Colors.transparent : AppTheme.theme.backgroundColor,
+          foregroundColor: (_currentIndex == 1) ? Colours.white : Colours.darkBlue,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 20.0),
