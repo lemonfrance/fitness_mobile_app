@@ -9,7 +9,7 @@ import 'package:wearable_intelligence/wearableIntelligence.dart';
 
 import '../loading.dart';
 
-Future verifyFitbit() async {
+Future verifyFitbit(BuildContext context) async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
   final user = await DatabaseService(uid: mAuth.currentUser!.uid).getFitbitUser();
@@ -20,6 +20,7 @@ Future verifyFitbit() async {
     await FitBitService().getDailyGoals();
     await FitBitService().getHeartRates();
     global.fitBitAccount = true;
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
   }
 }
 
@@ -34,13 +35,15 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 10),
-        () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence'))));
+    Timer(Duration(seconds: 10), () {
+      print("PushNavigation");
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    verifyFitbit();
+    verifyFitbit(context);
     return Loading();
   }
 }

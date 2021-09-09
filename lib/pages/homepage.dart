@@ -4,10 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
+import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 
-import '../loading.dart';
 import '../utils/styles.dart';
 
 Future getDailyStats() async {
@@ -73,17 +73,21 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
               child: ElevatedButton(
                 onPressed: () async {
+                  print("hi");
                   setState(() => loading = true);
 
                   await FitBitService().getCode();
                   await FitBitService().getAuthToken(global.accessToken!);
-
+                  print("hey");
                   global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
+                  print((global.fitBitAccount == true).toString());
                   global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
                   await FitBitService().getDailyGoals();
                   await FitBitService().getHeartRates();
 
-                  setState(() => {loading = false});
+                  print("yo");
+                  setState(() => loading = false);
+                  print("lets go");
                 },
                 child: Text(
                   "Log into Fitbit",
@@ -129,10 +133,16 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SvgPicture.asset(_typeAssets[index]["icon"], color: exerciseTypes[index]["selected"] ? Colours.white : Colours.darkBlue),
+            SvgPicture.asset(
+              _typeAssets[index]["icon"],
+              color: exerciseTypes[index]["selected"] ? Colours.white : Colours.darkBlue,
+            ),
             Text(
               exerciseTypes[index]["type"],
-              style: TextStyle(color: exerciseTypes[index]["selected"] ? Colours.white : Colours.black),
+              style: AppTheme.theme.textTheme.headline6!.copyWith(
+                color: exerciseTypes[index]["selected"] ? Colours.white : Colours.black,
+                fontSize: 12,
+              ),
             )
           ],
         ),
@@ -153,8 +163,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // Check if the icon name matches the type of exercise
       if (_typeAssets[x]["type"] == _weekPlan[index]["exercise"]) {
         icon = _typeAssets[x]["icon"];
+      } else {
+        x++;
       }
-      x++;
     }
 
     // TODO: wrap in gesture detector and take them to the detailed day they have selected
@@ -177,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: SvgPicture.asset(
             icon,
             color: Colours.darkBlue,
-            width: 30,
+            width: (_weekPlan[index]["exercise"] == "walking") ? 25 : 30,
           ),
         ),
         Text(
