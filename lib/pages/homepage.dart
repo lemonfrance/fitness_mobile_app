@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   await FitBitService().getDailyGoals();
                   await FitBitService().getHeartRates();
 
-                  setState(() => loading = false);
+                  setState(() => {loading = false});
                 },
                 child: Text(
                   "Log into Fitbit",
@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
     int x = 0;
 
     // Dynamically get the icon
-    while (icon == "" || x == (_typeAssets.length - 1)) {
+    while (icon == "" && x < (_typeAssets.length)) {
       // Check if the icon name matches the type of exercise
       if (_typeAssets[x]["type"] == _weekPlan[index]["exercise"]) {
         icon = _typeAssets[x]["icon"];
@@ -180,11 +180,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(left: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 20, right: 20),
           child: SvgPicture.asset(
             icon,
             color: Colours.darkBlue,
-            width: (_weekPlan[index]["exercise"] == "walking") ? 25 : 30,
+            width: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 30,
           ),
         ),
         Text(
