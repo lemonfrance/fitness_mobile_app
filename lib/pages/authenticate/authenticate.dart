@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wearable_intelligence/Screens/authenticate/register.dart';
-import 'package:wearable_intelligence/Screens/authenticate/sign_in.dart';
+import 'package:wearable_intelligence/pages/authenticate/register.dart';
+import 'package:wearable_intelligence/pages/authenticate/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   @override

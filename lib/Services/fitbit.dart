@@ -3,23 +3,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
+import 'package:wearable_intelligence/pages/welcome.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
 import 'package:intl/intl.dart';
-
-
-
-
+import 'package:flutter/material.dart';
 import 'database.dart';
+
 
 const Map config = const {
   'clientID': '<OAuth 2.0 Client ID>',
   'clientSecret': '<Client Secret>',
 };
 
+
 class FitBitService {
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
-  Future getCode() async {
+  Future getCode(BuildContext context) async {
+    const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&prompt=login%20consent';
+
+    final result = await FlutterWebAuth.authenticate(
+        url: url,
+        callbackUrlScheme: 'wearintel');
+
+    //get auth code
+    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
+    global.accessToken = Uri.parse(result).queryParameters['code'].toString();
+    await FitBitService().getAuthToken(global.accessToken!);
+  }
+
+  Future reGetCode() async {
     const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight';
 
     final result = await FlutterWebAuth.authenticate(
@@ -60,12 +73,25 @@ class FitBitService {
       global.fitBitAccount = true;
 
       final responseBody = (jsonDecode(response.body));
-      print(responseBody);
       await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"],responseBody["user_id"]);
     }catch(e){
-      await getCode();
+      await reGetCode();
       await getAuthToken(global.accessToken!);
+    }
   }
+
+  Future logoutFitBit() async {
+    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${global.refreshToken}'),
+    headers: {
+    'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
+    'Content-Type' : 'application/x-www-form-urlencoded',
+    });
+
+    global.authToken = '';
+    global.refreshToken = '';
+    global.user_id = '';
+    await DatabaseService(uid: mAuth.currentUser!.uid).updateToken('', '','');
+    global.fitBitAccount = false;
   }
 
   Future getFitBitData(auth_code, uid) async{

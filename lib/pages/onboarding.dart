@@ -285,9 +285,8 @@ class _OnboardingState extends State<Onboarding> {
                     if (finished) {
                       setLevel(globals.level);
                       Navigator.pushReplacement(
-
                         context,
-                        MaterialPageRoute(builder: (context) => MyHomePage('Wearable Intelligence')),
+                        MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
                       );
                     }
                   },
