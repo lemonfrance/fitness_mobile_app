@@ -75,13 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   setState(() => loading = true);
 
-                  await FitBitService().getCode();
-                  await FitBitService().getAuthToken(global.accessToken!);
-                  global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
+                  await FitBitService().getCode(context);
 
-                  global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
-                  await FitBitService().getDailyGoals();
-                  await FitBitService().getHeartRates();
 
                   setState(() => {loading = false});
                 },

@@ -5,15 +5,12 @@ import 'package:wearable_intelligence/pages/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/pages/homepage.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
+import 'package:wearable_intelligence/pages/welcome.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
 import 'package:wearable_intelligence/utils/styles.dart';
 
 import 'Services/auth.dart';
 
-Future getDailyStats() async {
-  await FitBitService().getDailyGoals();
-  await FitBitService().getHeartRates();
-}
 
 class WearableIntelligence extends StatefulWidget {
   WearableIntelligence(this.title) : super();
@@ -62,13 +59,16 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
             Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: PopupMenuButton<int>(
-                shape: StadiumBorder(),
-                onSelected: (item) async {
-                  await _auth.signOut();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Authenticate()),
-                  );
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                onSelected: (value) async {
+                 if(value ==0){
+                   await _auth.signOut();
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()));
+                 } else {
+                   await FitBitService().logoutFitBit();
+                   Navigator.push(context,
+                       MaterialPageRoute(builder: (context) => WelcomePage()));
+                 }
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem<int>(
@@ -84,7 +84,25 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
                           width: 7,
                         ),
                         Text(
-                          "Logout",
+                          "Logout App",
+                          style: TextStyle(color: Colours.highlight),
+                        )
+                      ],
+                    ),
+                  ),PopupMenuItem<int>(
+                    value: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: Colours.highlight,
+                        ),
+                        const SizedBox(
+                          width: 7,
+                        ),
+                        Text(
+                          "Logout Fitbit",
                           style: TextStyle(color: Colours.highlight),
                         )
                       ],

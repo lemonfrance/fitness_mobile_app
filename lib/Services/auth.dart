@@ -66,6 +66,12 @@ class AuthService {
   // sign out
   Future signOut() async{
     try{
+      global.authToken ='';
+      global.name = '';
+      global.fitBitAccount = false;
+      global.user_id = '';
+      global.authToken = '';
+      global.refreshToken = '';
       return await _auth.signOut();
     }catch(e){
       print(e.toString());
