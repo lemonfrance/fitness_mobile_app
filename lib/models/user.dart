@@ -15,10 +15,10 @@ class Users {
   String? refreshToken;
   String? authToken;
   String? fitbitId;
-
+  int? fitnessLevel;
 
   Users({this.username, this.email, this.uid, this.firstName, this.lastName,
          this.age, this.height, this.weight, this.gender, this.birthDate,
-         this.weekPlan, this.questionnaireScore, this.totalHours, this.refreshToken, this.authToken, this.fitbitId});
+         this.weekPlan, this.questionnaireScore, this.totalHours, this.refreshToken, this.authToken, this.fitbitId, this.fitnessLevel});
 
 }
