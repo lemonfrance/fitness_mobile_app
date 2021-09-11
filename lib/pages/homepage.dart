@@ -201,26 +201,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: (4.5 * height) / 9,
                     child: Stack(
                       children: [
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40)),
-                        //   child: Container(
-                        //     height: height / 2.5,
-                        //     width: double.infinity,
-                        //     decoration: BoxDecoration(
-                        //       gradient: LinearGradient(
-                        //         begin: Alignment.topCenter,
-                        //         end: Alignment.bottomCenter,
-                        //         stops: [0.01, 0.5],
-                        //         colors: [
-                        //           Color.fromRGBO(252, 105, 140, 1),
-                        //           Color.fromRGBO(255, 148, 112, 1),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                         Padding(
-                          padding: EdgeInsets.only(top: 130, left: 30),
+                          padding: EdgeInsets.only(top: 120, left: 30),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
