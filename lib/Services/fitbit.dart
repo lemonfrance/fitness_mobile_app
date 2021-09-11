@@ -30,6 +30,7 @@ class FitBitService {
     Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
     global.accessToken = Uri.parse(result).queryParameters['code'].toString();
     await FitBitService().getAuthToken(global.accessToken!);
+    await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
   }
 
   Future reGetCode() async {

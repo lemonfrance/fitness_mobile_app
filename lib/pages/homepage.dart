@@ -74,10 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ElevatedButton(
                 onPressed: () async {
                   setState(() => loading = true);
-
                   await FitBitService().getCode(context);
-
-
                   setState(() => {loading = false});
                 },
                 child: Text(
