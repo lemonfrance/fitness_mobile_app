@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
-import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
 import 'package:wearable_intelligence/pages/tracker.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 class ExercisePlan extends StatefulWidget {
@@ -153,13 +153,16 @@ class _ExercisePlanState extends State<ExercisePlan> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
+                // Line doenst work
+                //final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
+                elapsedTime = exerciseMode ? elapsedTime : 0;
+                exerciseMode = true;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Tracker('Timer', 1800)),
+                  MaterialPageRoute(builder: (context) => Tracker('Timer', totalTime, elapsedTime)),
                 );
               },
-              child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+              child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
               style: ElevatedButton.styleFrom(
                 primary: Colours.highlight,
                 onPrimary: Colours.white,

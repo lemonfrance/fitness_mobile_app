@@ -1,13 +1,18 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:wearable_intelligence/pages/postExercise.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
+import '../wearableIntelligence.dart';
+
 class Tracker extends StatefulWidget {
-  Tracker(this.title, this._duration) : super();
+  Tracker(this.title, this._duration, this._time) : super();
 
   final String title;
   final int _duration; // In seconds
+  final int _time; // In seconds
   var paused = false;
   var ended = false;
 
@@ -16,8 +21,6 @@ class Tracker extends StatefulWidget {
 }
 
 class _TrackerState extends State<Tracker> {
-  CountDownController _controller = CountDownController();
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -34,42 +37,53 @@ class _TrackerState extends State<Tracker> {
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colours.grey),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            var time = timerController.getTime().split(":");
+            elapsedTime = totalTime - (int.parse(time[0]) * 3600 + int.parse(time[1]) * 60 + int.parse(time[2]));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
+          },
         ),
         elevation: 0,
         backgroundColor: AppTheme.theme.backgroundColor,
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            CircularCountDownTimer(
-              duration: widget._duration,
-              controller: _controller,
-              width: width * 0.8,
-              height: width * 0.8,
-              ringColor: Colours.grey,
-              fillColor: Colours.lightBlue,
-              backgroundColor: Colours.white,
-              strokeWidth: 15.0,
-              strokeCap: StrokeCap.round,
-              textStyle: TextStyle(fontSize: 33.0, color: Colours.grey),
-              textFormat: CountdownTextFormat.HH_MM_SS,
-              isReverse: true,
-              isReverseAnimation: true,
-              isTimerTextShown: true,
-              autoStart: true,
-              onStart: () {
-                print('Countdown Started');
-              },
-              onComplete: () async {
-                bool canVibrate = await Vibrate.canVibrate;
-                print(canVibrate.toString());
-                Vibrate.vibrate();
-                setState(() {
-                  widget.ended = true;
-                });
-              },
+            Text(
+              "Walking 1k",
+              style: AppTheme.theme.textTheme.headline1,
+            ),
+            Hero(
+              tag: "timer",
+              child: CircularCountDownTimer(
+                duration: widget._duration,
+                initialDuration: widget._time,
+                controller: timerController,
+                width: width * 0.8,
+                height: width * 0.8,
+                ringColor: Colours.grey,
+                fillColor: Colours.lightBlue,
+                backgroundColor: Colours.white,
+                strokeWidth: 15.0,
+                strokeCap: StrokeCap.round,
+                textStyle: TextStyle(fontSize: 33.0, color: Colours.grey),
+                textFormat: CountdownTextFormat.HH_MM_SS,
+                isReverse: true,
+                isReverseAnimation: true,
+                isTimerTextShown: true,
+                autoStart: true,
+                onStart: () {
+                  print('Countdown Started');
+                },
+                onComplete: () async {
+                  Vibrate.vibrate();
+                  exerciseMode = false;
+                  setState(() {
+                    widget.ended = true;
+                  });
+                },
+              ),
             ),
             widget.ended
                 ? MaterialButton(
@@ -83,7 +97,10 @@ class _TrackerState extends State<Tracker> {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
                     ),
                     onPressed: () {
-                      print("navigate to new page");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
+                      );
                     },
                   )
                 : MaterialButton(
@@ -98,7 +115,7 @@ class _TrackerState extends State<Tracker> {
                     ),
                     onPressed: () {
                       setState(() {
-                        widget.paused ? _controller.resume() : _controller.pause();
+                        widget.paused ? timerController.resume() : timerController.pause();
                         widget.paused = !widget.paused;
                       });
                     },

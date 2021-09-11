@@ -1,3 +1,5 @@
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+
 String? authToken;
 String? uid;
 String? accessToken;
@@ -12,3 +14,10 @@ String? user_id;
 int heartRateMin = 0;
 int heartRateMax = 0;
 List<int> weekActivityMinutes = [];
+int pageIndex = 1;
+
+// Clock globals
+bool exerciseMode = false;
+CountDownController timerController = CountDownController();
+int totalTime = 1800;
+int elapsedTime = 0;

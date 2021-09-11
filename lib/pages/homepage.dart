@@ -198,11 +198,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: (4.5 * height) / 9,
+                    height: (3.5 * height) / 9,
                     child: Stack(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 120, left: 30),
+                          padding: EdgeInsets.only(top: 30, left: 30),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
