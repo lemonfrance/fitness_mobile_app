@@ -44,16 +44,16 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
             child: Text(
               widget.title,
               style: TextStyle(
-                color: (_currentIndex == 1 && global.fitBitAccount == true) ? Colours.white : Colours.darkBlue,
+                color: Colours.darkBlue,
               ),
             ),
           ),
           iconTheme: IconThemeData(
-            color: (_currentIndex == 1 && global.fitBitAccount == true) ? Colours.white : Colours.darkBlue,
+            color: Colours.darkBlue,
           ),
           elevation: 0,
-          backgroundColor: _currentIndex == 1 ? Colors.transparent : AppTheme.theme.backgroundColor,
-          foregroundColor: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
+          backgroundColor: AppTheme.theme.backgroundColor,
+          foregroundColor: Colours.darkBlue,
           actions: [
             Padding(
               padding: EdgeInsets.only(right: 20.0),
