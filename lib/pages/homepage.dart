@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
@@ -76,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() => loading = true);
 
                   await FitBitService().getCode(context);
-
 
                   setState(() => {loading = false});
                 },

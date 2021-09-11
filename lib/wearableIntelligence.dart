@@ -11,7 +11,6 @@ import 'package:wearable_intelligence/utils/styles.dart';
 
 import 'Services/auth.dart';
 
-
 class WearableIntelligence extends StatefulWidget {
   WearableIntelligence(this.title) : super();
 
@@ -34,8 +33,8 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
     ];
 
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBodyBehindAppBar: _currentIndex == 1 ? true : false,
+        backgroundColor: global.fitBitAccount == true ? Colors.transparent : Colours.white,
+        extendBodyBehindAppBar: (_currentIndex == 1 && global.fitBitAccount == true) ? true : false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
@@ -45,12 +44,12 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
             child: Text(
               widget.title,
               style: TextStyle(
-                color: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
+                color: (_currentIndex == 1 && global.fitBitAccount == true) ? Colours.white : Colours.darkBlue,
               ),
             ),
           ),
           iconTheme: IconThemeData(
-            color: _currentIndex == 1 ? Colours.white : Colours.darkBlue,
+            color: (_currentIndex == 1 && global.fitBitAccount == true) ? Colours.white : Colours.darkBlue,
           ),
           elevation: 0,
           backgroundColor: _currentIndex == 1 ? Colors.transparent : AppTheme.theme.backgroundColor,
@@ -61,14 +60,13 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
               child: PopupMenuButton<int>(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 onSelected: (value) async {
-                 if(value ==0){
-                   await _auth.signOut();
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()));
-                 } else {
-                   await FitBitService().logoutFitBit();
-                   Navigator.push(context,
-                       MaterialPageRoute(builder: (context) => WelcomePage()));
-                 }
+                  if (value == 0) {
+                    await _auth.signOut();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Authenticate()));
+                  } else {
+                    await FitBitService().logoutFitBit();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
+                  }
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem<int>(
@@ -89,7 +87,8 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
                         )
                       ],
                     ),
-                  ),PopupMenuItem<int>(
+                  ),
+                  PopupMenuItem<int>(
                     value: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

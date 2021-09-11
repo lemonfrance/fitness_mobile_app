@@ -13,6 +13,7 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   int _widgetIndex = 0;
+  final ScrollController scrollController = ScrollController();
 
   // List of level 1 questions
   List levelOneQuestions = [
@@ -212,6 +213,7 @@ class _OnboardingState extends State<Onboarding> {
           Container(
             height: MediaQuery.of(context).size.height - 130,
             child: ListView(
+              controller: scrollController,
               physics: AlwaysScrollableScrollPhysics(),
               children: [
                 Padding(
@@ -245,6 +247,12 @@ class _OnboardingState extends State<Onboarding> {
                 padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: MaterialButton(
                   onPressed: () {
+                    scrollController.animateTo(
+                      0.0,
+                      curve: Curves.easeOut,
+                      duration: const Duration(milliseconds: 300),
+                    );
+
                     setState(() {
                       switch (_widgetIndex) {
                         case 0:
