@@ -5,10 +5,10 @@ const String walkBlock = "I can walk 1km";
 const String climbStairs = "I can climb a flight of stairs";
 const String preferredExercise = "What is your preferred form of exercise?";
 List exerciseTypes = [
+  {"type": "Walking", "selected": false},
   {"type": "Running", "selected": false},
   {"type": "Swimming", "selected": false},
   {"type": "Cycling", "selected": false},
-  {"type": "Walking", "selected": false},
 ];
 
 // Level 2

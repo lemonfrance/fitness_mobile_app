@@ -1,9 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:wearable_intelligence/components/drawer_state.dart';
-
-import '../styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class Tracker extends StatefulWidget {
   Tracker(this.title, this._duration) : super();
@@ -41,7 +39,6 @@ class _TrackerState extends State<Tracker> {
         elevation: 0,
         backgroundColor: AppTheme.theme.backgroundColor,
       ),
-      drawer: AppDrawer('Progress'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

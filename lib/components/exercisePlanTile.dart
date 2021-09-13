@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wearable_intelligence/styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 Widget exercisePlan(double width, int steps, int heartRate, int calories, int time) {
   TextStyle textStyle = TextStyle(color: Colours.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1);
@@ -11,6 +11,13 @@ Widget exercisePlan(double width, int steps, int heartRate, int calories, int ti
     decoration: BoxDecoration(
       color: Colours.lightBlue,
       borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          blurRadius: 5,
+          offset: Offset(3, 3), // changes position of shadow
+        ),
+      ],
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

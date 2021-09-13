@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:wearable_intelligence/Services/database.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
-import 'package:wearable_intelligence/components/drawer_state.dart';
-import 'package:wearable_intelligence/components/exercisePlanTile.dart';
-import 'package:wearable_intelligence/components/progressCircle.dart';
+import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
+import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 
-import '../loading.dart';
-import '../styles.dart';
+import '../utils/styles.dart';
 
 Future getDailyStats() async {
   await FitBitService().getDailyGoals();
@@ -16,9 +15,7 @@ Future getDailyStats() async {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage(this.title) : super();
-
-  final String title;
+  MyHomePage() : super();
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -27,6 +24,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   FirebaseAuth mAuth = FirebaseAuth.instance;
   bool loading = false;
+  late double height;
+  late double width;
+
+  List _typeAssets = [
+    {"type": "Walking", "icon": 'assets/images/walkingIcon.svg'},
+    {"type": "Running", "icon": 'assets/images/runningIcon.svg'},
+    {"type": "Swimming", "icon": 'assets/images/swimmingIcon.svg'},
+    {"type": "Cycling", "icon": 'assets/images/cyclingIcon.svg'},
+    {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg'},
+  ];
+
+  List _weekPlan = [
+    {"exercise": "Walking", "distance": "1km"},
+    {"exercise": "Running", "distance": "0.5km"},
+    {"exercise": "Rest", "distance": ""},
+    {"exercise": "Cycling", "distance": "4km"},
+    {"exercise": "Swimming", "distance": "1km"},
+    {"exercise": "Walking", "distance": "1km"},
+    {"exercise": "Rest", "distance": ""},
+  ];
 
   Widget logInScreen() {
     return Container(
@@ -38,44 +55,64 @@ class _MyHomePageState extends State<MyHomePage> {
           image: AssetImage('assets/images/runner.png'),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Container(
+          Positioned(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Welcome', style: TextStyle(fontSize: 60, color: Colours.darkBlue, fontWeight: FontWeight.w700)),
-                Text('Log in to Fitbit to get started', style: TextStyle(fontSize: 20, color: Colours.darkBlue, fontWeight: FontWeight.w300)),
+                Text('Welcome',
+                    style: TextStyle(
+                        fontSize: 60,
+                        color: Colours.darkBlue,
+                        fontWeight: FontWeight.w700)),
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 70),
-            child: ElevatedButton(
-              onPressed: () async {
-                setState(() => loading = true);
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 40, 20, 60),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
+                      child: Text(
+                        'Log in to Fitbit to get started',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colours.darkBlue,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() => loading = true);
+                      await FitBitService().getCode(context);
 
-                await FitBitService().getCode();
-                await FitBitService().getAuthToken(global.accessToken!);
-
-                global.fitBitAccount = await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
-                global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
-                await FitBitService().getDailyGoals();
-                await FitBitService().getHeartRates();
-
-                setState(() => {loading = false});
-              },
-              child: Text(
-                "Log in",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colours.highlight,
-                onPrimary: Colours.white,
-                minimumSize: Size(MediaQuery.of(context).size.width - 40, 45),
-                shape: StadiumBorder(),
-                elevation: 10,
+                      setState(() => {loading = false});
+                    },
+                    child: Text(
+                      "Log in",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colours.white,
+                          fontSize: 24),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colours.highlight,
+                      onPrimary: Colours.white,
+                      minimumSize: Size(MediaQuery.of(context).size.width, 60),
+                      shape: StadiumBorder(),
+                      elevation: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -84,44 +121,249 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  /// This is used to create the Preferred Forms of Exercise tiles on the home screen.
+  Widget typeTile(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          exerciseTypes[index]["selected"] = !exerciseTypes[index]["selected"];
+        });
+      },
+      child: Container(
+        height: (width - 120) / 3,
+        width: (width - 120) / 4,
+        decoration: BoxDecoration(
+          color: exerciseTypes[index]["selected"]
+              ? Colours.highlight
+              : Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.3),
+              blurRadius: 4,
+              offset: Offset(4, 4), // Shadow position
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SvgPicture.asset(
+              _typeAssets[index]["icon"],
+              color: exerciseTypes[index]["selected"]
+                  ? Colours.white
+                  : Colours.highlight,
+            ),
+            Text(
+              exerciseTypes[index]["type"],
+              style: AppTheme.theme.textTheme.headline6!.copyWith(
+                color: exerciseTypes[index]["selected"]
+                    ? Colours.white
+                    : Colours.black,
+                fontSize: 12,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// This widget is used to create the schedule tiles on the home page,
+  /// This takes in the index, which identifies where in the _weekPlan we are
+  Widget scheduleTile(int index) {
+    // Get the date of the activity
+    var date = DateTime.now().add(Duration(days: index));
+    String icon = "";
+    int x = 0;
+
+    // Dynamically get the icon
+    while (icon == "" && x < (_typeAssets.length)) {
+      // Check if the icon name matches the type of exercise
+      if (_typeAssets[x]["type"] == _weekPlan[index]["exercise"]) {
+        icon = _typeAssets[x]["icon"];
+      } else {
+        x++;
+      }
+    }
+
+    // TODO: wrap in gesture detector and take them to the detailed day they have selected
+    return Container(
+      height: 80,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, 0.3),
+            blurRadius: 4,
+            offset: Offset(4, 4), // Shadow position
+          ),
+        ],
+      ),
+      child: Row(children: [
+        Padding(
+          padding: EdgeInsets.only(
+              left: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 20,
+              right: 20),
+          child: SvgPicture.asset(
+            icon,
+            color: Colours.darkBlue,
+            width: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 30,
+          ),
+        ),
+        Text(
+          DateFormat('EEEE').format(date) +
+              ": " +
+              _weekPlan[index]["exercise"] +
+              " " +
+              _weekPlan[index]["distance"],
+          style: AppTheme.theme.textTheme.headline3,
+        )
+      ]),
+    );
+  }
+
   Widget homeScreen() {
     return loading
         ? Loading()
         : Container(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                exercisePlan(MediaQuery.of(context).size.width - 40, 1000, 75, 150, 30),
-                ProgressCircle(90.0, Colours.highlight),
-              ],
+            height: height,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: (4.5 * height) / 9,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 120, left: 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Welcome ${global.name}",
+                                  style: AppTheme.theme.textTheme.headline5!
+                                      .copyWith(color: Colours.black)),
+                              Divider(height: 10, color: Colors.transparent),
+                              Text(
+                                "Lets get moving!",
+                                style: AppTheme.theme.textTheme.headline2!
+                                    .copyWith(
+                                        color: Colours.black,
+                                        fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: height / 4,
+                            width: width - 60,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                  blurRadius: 4,
+                                  offset: Offset(4, 4), // Shadow position
+                                ),
+                              ],
+                            ),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20, bottom: 20),
+                                child: Text(
+                                  "Today: " +
+                                      _weekPlan[0]["exercise"] +
+                                      " " +
+                                      _weekPlan[0]["distance"],
+                                  style: AppTheme.theme.textTheme.headline2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 70, left: 20),
+                            child: SvgPicture.asset(
+                              'assets/images/walking.svg',
+                              width: width - 70,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, left: 30),
+                    child: Text(
+                      "Preferred Forms of Exercise",
+                      style: AppTheme.theme.textTheme.headline2!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30, top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        typeTile(0),
+                        typeTile(1),
+                        typeTile(2),
+                        typeTile(3),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, left: 30),
+                    child: Text(
+                      "Schedule",
+                      style: AppTheme.theme.textTheme.headline2!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      width: width - 60,
+                      child: ListView.separated(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _weekPlan.length,
+                        itemBuilder: (context, index) {
+                          return scheduleTile(index);
+                        },
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(
+                          height: 10,
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
   }
 
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      appBar: AppBar(
-        centerTitle: false,
-        titleSpacing: 0.0,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Colours.darkBlue,
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Colours.darkBlue,
-        ),
-        elevation: 0,
-        backgroundColor: AppTheme.theme.backgroundColor,
-        foregroundColor: Colours.darkBlue,
-      ),
-      drawer: AppDrawer('Home'),
       body: !(global.fitBitAccount == true) ? logInScreen() : homeScreen(),
     );
   }

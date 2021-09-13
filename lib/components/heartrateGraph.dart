@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:wearable_intelligence/styles.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as globals;
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class HeartrateGraph extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -42,70 +42,61 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
             ),
           ],
         ),
-            child: SfCartesianChart(
-                title: ChartTitle(
-                  text: 'Heart rate throughout the day',
-                  alignment: ChartAlignment.near,
-                  textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colours.black),
-                ),
-                primaryYAxis: NumericAxis(
-                    minimum: 60,
-                    maximum: 160,
-                    labelFormat: '{value} bpm',
-                    plotBands: <PlotBand>[
-                      PlotBand(
-                        isVisible: true,
-                        start: globals.heartRateMin,
-                        end: globals.heartRateMin,
-                        color: Colours.lightBlue,
-                        opacity: 0.4,
-                        dashArray: <double>[5, 5],
-                        borderColor: Colors.grey,
-                        borderWidth: 2,
-                      ),
-                      PlotBand(
-                        isVisible: true,
-                        start: globals.heartRateMax,
-                        end: globals.heartRateMax,
-                        color: Colours.lightBlue,
-                        opacity: 0.4,
-                        dashArray: <double>[5, 5],
-                        borderColor: Colors.grey,
-                        borderWidth: 2,
-                      ),
-                      PlotBand(
-                          isVisible: true,
-                          start: globals.heartRateMin,
-                          end: globals.heartRateMax,
-                          color: Colours.lightBlue,
-                          opacity: 0.4),
-                    ],
-                    axisLine: AxisLine(width: 0),
-                    majorGridLines: MajorGridLines(width: 0),
-                    majorTickLines: MajorTickLines(width: 0),
-                    interval: 30),
-                primaryXAxis: CategoryAxis(
-                  axisLine: AxisLine(width: 0),
-                  majorGridLines: MajorGridLines(width: 0),
-                  majorTickLines: MajorTickLines(width: 0),
-                  labelStyle:
-                      TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-                ),
-                plotAreaBorderWidth: 0,
-                tooltipBehavior: TooltipBehavior(enable: true, header: '' ),
-                series: <ChartSeries>[
-                  // Renders spline chart
-                  SplineSeries<_SalesData, String>(
-                    dataSource: data,
-                    xValueMapper: (_SalesData sales, _) => sales.year,
-                    yValueMapper: (_SalesData sales, _) => sales.sales,
-                    color: Colours.highlight,
-                    width: 3,
-                  )
-                ]));
+        child: SfCartesianChart(
+            title: ChartTitle(
+              text: 'Heart rate throughout the day',
+              alignment: ChartAlignment.near,
+              textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colours.black),
+            ),
+            primaryYAxis: NumericAxis(
+                minimum: 60,
+                maximum: 160,
+                labelFormat: '{value} bpm',
+                plotBands: <PlotBand>[
+                  PlotBand(
+                    isVisible: true,
+                    start: globals.heartRateMin,
+                    end: globals.heartRateMin,
+                    color: Colours.lightBlue,
+                    opacity: 0.4,
+                    dashArray: <double>[5, 5],
+                    borderColor: Colors.grey,
+                    borderWidth: 2,
+                  ),
+                  PlotBand(
+                    isVisible: true,
+                    start: globals.heartRateMax,
+                    end: globals.heartRateMax,
+                    color: Colours.lightBlue,
+                    opacity: 0.4,
+                    dashArray: <double>[5, 5],
+                    borderColor: Colors.grey,
+                    borderWidth: 2,
+                  ),
+                  PlotBand(isVisible: true, start: globals.heartRateMin, end: globals.heartRateMax, color: Colours.lightBlue, opacity: 0.4),
+                ],
+                axisLine: AxisLine(width: 0),
+                majorGridLines: MajorGridLines(width: 0),
+                majorTickLines: MajorTickLines(width: 0),
+                interval: 30),
+            primaryXAxis: CategoryAxis(
+              axisLine: AxisLine(width: 0),
+              majorGridLines: MajorGridLines(width: 0),
+              majorTickLines: MajorTickLines(width: 0),
+              labelStyle: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+            ),
+            plotAreaBorderWidth: 0,
+            tooltipBehavior: TooltipBehavior(enable: true, header: ''),
+            series: <ChartSeries>[
+              // Renders spline chart
+              SplineSeries<_SalesData, String>(
+                dataSource: data,
+                xValueMapper: (_SalesData sales, _) => sales.year,
+                yValueMapper: (_SalesData sales, _) => sales.sales,
+                color: Colours.highlight,
+                width: 3,
+              )
+            ]));
   }
 }
 

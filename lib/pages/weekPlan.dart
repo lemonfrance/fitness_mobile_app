@@ -5,16 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/Services/database.dart';
-import 'package:wearable_intelligence/components/drawer_state.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
 import 'package:wearable_intelligence/pages/tracker.dart';
-
-import '../styles.dart';
+import 'package:wearable_intelligence/utils/styles.dart';
 
 class ExercisePlan extends StatefulWidget {
-  ExercisePlan(this.title) : super();
-
-  final String title;
+  ExercisePlan() : super();
 
   @override
   _ExercisePlanState createState() => _ExercisePlanState();
@@ -141,23 +137,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      appBar: AppBar(
-        centerTitle: false,
-        titleSpacing: 0.0,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Colours.darkBlue,
-          ),
-        ),
-        iconTheme: IconThemeData(
-          color: Colours.darkBlue,
-        ),
-        elevation: 0,
-        backgroundColor: AppTheme.theme.backgroundColor,
-        foregroundColor: Colours.darkBlue,
-      ),
-      drawer: AppDrawer('Exercise Plan'),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -175,7 +154,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
             ElevatedButton(
               onPressed: () async {
                 final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
-                print(value);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Tracker('Timer', 1800)),
