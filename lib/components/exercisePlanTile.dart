@@ -11,6 +11,13 @@ Widget exercisePlan(double width, int steps, int heartRate, int calories, int ti
     decoration: BoxDecoration(
       color: Colours.lightBlue,
       borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          blurRadius: 5,
+          offset: Offset(3, 3), // changes position of shadow
+        ),
+      ],
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

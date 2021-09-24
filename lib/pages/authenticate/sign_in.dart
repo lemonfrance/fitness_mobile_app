@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
-import 'package:wearable_intelligence/wearableIntelligence.dart';
+import '../welcome.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -89,7 +89,7 @@ class _SignInState extends State<SignIn> {
                             } else {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
+                                MaterialPageRoute(builder: (context) => WelcomePage()),
                               );
                             }
                           }

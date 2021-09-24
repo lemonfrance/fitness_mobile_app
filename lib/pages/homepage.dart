@@ -61,36 +61,59 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Positioned(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Welcome', style: TextStyle(fontSize: 60, color: Colours.darkBlue, fontWeight: FontWeight.w700)),
-                Text('Log in to Fitbit to get started', style: TextStyle(fontSize: 20, color: Colours.darkBlue, fontWeight: FontWeight.w300)),
+                Text('Welcome',
+                    style: TextStyle(
+                        fontSize: 60,
+                        color: Colours.darkBlue,
+                        fontWeight: FontWeight.w700)),
               ],
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
-              child: ElevatedButton(
-                onPressed: () async {
-                  setState(() => loading = true);
+              padding: EdgeInsets.fromLTRB(20, 40, 20, 60),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
+                      child: Text(
+                        'Log in to Fitbit to get started',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colours.darkBlue,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() => loading = true);
+                      await FitBitService().getCode(context);
 
-                  await FitBitService().getCode(context);
-
-
-                  setState(() => {loading = false});
-                },
-                child: Text(
-                  "Log into Fitbit",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colours.highlight,
-                  onPrimary: Colours.white,
-                  minimumSize: Size(MediaQuery.of(context).size.width, 60),
-                  shape: StadiumBorder(),
-                  elevation: 10,
-                ),
+                      setState(() => {loading = false});
+                    },
+                    child: Text(
+                      "Log in",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colours.white,
+                          fontSize: 24),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colours.highlight,
+                      onPrimary: Colours.white,
+                      minimumSize: Size(MediaQuery.of(context).size.width, 60),
+                      shape: StadiumBorder(),
+                      elevation: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -111,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
         height: (width - 120) / 3,
         width: (width - 120) / 4,
         decoration: BoxDecoration(
-          color: exerciseTypes[index]["selected"] ? Colours.darkBlue : Colors.white,
+          color: exerciseTypes[index]["selected"] ? Colours.highlight : Colors.white,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
@@ -126,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             SvgPicture.asset(
               _typeAssets[index]["icon"],
-              color: exerciseTypes[index]["selected"] ? Colours.white : Colours.darkBlue,
+              color: exerciseTypes[index]["selected"] ? Colours.white : Colours.highlight,
             ),
             Text(
               exerciseTypes[index]["type"],
@@ -204,40 +227,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: (4.5 * height) / 9,
                     child: Stack(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(40)),
-                          child: Container(
-                            height: height / 2.5,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                stops: [0.01, 0.5],
-                                colors: [
-                                  Color.fromRGBO(252, 105, 140, 1),
-                                  Color.fromRGBO(255, 148, 112, 1),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
                         Padding(
-                          padding: EdgeInsets.only(top: 130, left: 30),
+                          padding: EdgeInsets.only(top: 120, left: 30),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Welcome ${global.name}",
-                                style: AppTheme.theme.textTheme.headline5!.copyWith(color: Colours.white),
-                              ),
-                              Divider(
-                                height: 10,
-                                color: Colors.transparent,
-                              ),
+                              Text("Welcome ${global.name}",
+                                  style: AppTheme.theme.textTheme.headline5!
+                                      .copyWith(color: Colours.black)),
+                              Divider(height: 10, color: Colors.transparent),
                               Text(
                                 "Lets get moving!",
-                                style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.white, fontWeight: FontWeight.bold),
+                                style: AppTheme.theme.textTheme.headline2!
+                                    .copyWith(
+                                        color: Colours.black,
+                                        fontWeight: FontWeight.bold)
                               ),
                             ],
                           ),

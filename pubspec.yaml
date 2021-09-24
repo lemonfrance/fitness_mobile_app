@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.17.0
   circular_countdown_timer: ^0.2.0
   flutter_vibrate: ^1.1.0
+  scroll_app_bar: ^2.0.0
 
 
 
