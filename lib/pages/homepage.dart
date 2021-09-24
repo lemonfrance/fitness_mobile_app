@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
     {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg'},
   ];
 
+  // TODO get from DB
   List _weekPlan = [
     {"exercise": "Walking", "distance": "1km"},
     {"exercise": "Running", "distance": "0.5km"},
@@ -198,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: (3.5 * height) / 9,
+                    height: (4 * height) / 9,
                     child: Stack(
                       children: [
                         Padding(
@@ -208,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               Text(
                                 "Welcome ${global.name}",
-                                style: AppTheme.theme.textTheme.headline5!.copyWith(color: Colours.black),
+                                style: AppTheme.theme.textTheme.headline4!.copyWith(color: Colours.black),
                               ),
                               Divider(
                                 height: 10,

@@ -224,7 +224,7 @@ final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
     value: (item) => List.generate(item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
   ..addAll({
     kToday: [
-      Event('HIIT Workout'),
+      Event('Walk 1km'),
     ],
     DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
       Event("Light Running"),

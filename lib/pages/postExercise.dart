@@ -88,17 +88,20 @@ class _PostExerciseState extends State<PostExercise> {
         children: [
           Container(
             width: double.infinity,
-            height: height * 0.75,
+            height: height - 140,
             child: ListView(
               padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
               children: [
-                Text("Workout Over", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
+                Text("Workout Complete", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
+                Text("Great work, your average heart rate was 98bpm", style: TextStyle(color: Colours.darkBlue, fontSize: 18)),
+                Text("This is within your target heart rate", style: TextStyle(color: Colours.darkBlue, fontSize: 18)),
                 Container(height: 20),
-                HeartrateGraph(), // Can we have a 30min window?
+                HeartrateGraph(true), // Can we have a 30min window?
                 Container(height: 20),
                 slider("How hard did you find the exercise?", true),
                 Container(height: 20),
                 slider("How much pain did you have?", false),
+                Container(height: 20),
               ],
             ),
           ),
@@ -112,7 +115,6 @@ class _PostExerciseState extends State<PostExercise> {
             child: Text("Finished", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
             style: ElevatedButton.styleFrom(
               primary: Colours.highlight,
-              onPrimary: Colours.white,
               minimumSize: Size(width - 50, 45),
               shape: StadiumBorder(),
               elevation: 10,

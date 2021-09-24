@@ -4,8 +4,9 @@ import 'package:wearable_intelligence/utils/globals.dart' as globals;
 import 'package:wearable_intelligence/utils/styles.dart';
 
 class HeartrateGraph extends StatefulWidget {
+  bool workout;
   // ignore: prefer_const_constructors_in_immutables
-  HeartrateGraph({Key? key}) : super(key: key);
+  HeartrateGraph(this.workout) : super();
 
   @override
   _HeartrateGraphState createState() => _HeartrateGraphState();
@@ -21,6 +22,17 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
     _SalesData('4pm', 90),
     _SalesData('8pm', 90),
     _SalesData('10pm', 100),
+  ];
+
+  List<_SalesData> workoutData = [
+    /// use active zone heart rate when available
+    _SalesData('0 min', 100),
+    _SalesData('5 min', 80),
+    _SalesData('10 min', 120),
+    _SalesData('15 min', 110),
+    _SalesData('20 min', 90),
+    _SalesData('25 min', 90),
+    _SalesData('30 min', 100),
   ];
   // new List<int>.generate(10, (i) => i + 1)
 
@@ -44,7 +56,7 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
         ),
         child: SfCartesianChart(
             title: ChartTitle(
-              text: 'Heart rate throughout the day',
+              text: widget.workout ? 'Heart rate during the workout' : 'Heart rate throughout the day',
               alignment: ChartAlignment.near,
               textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colours.black),
             ),
@@ -90,7 +102,7 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
             series: <ChartSeries>[
               // Renders spline chart
               SplineSeries<_SalesData, String>(
-                dataSource: data,
+                dataSource: widget.workout ? workoutData : data,
                 xValueMapper: (_SalesData sales, _) => sales.year,
                 yValueMapper: (_SalesData sales, _) => sales.sales,
                 color: Colours.highlight,
