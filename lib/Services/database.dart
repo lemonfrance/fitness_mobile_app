@@ -30,6 +30,7 @@ class DatabaseService {
       'refreshToken':'',
       'authToken':'',
       'fitbitId':'',
+      'fitnessLevel':0,
     });
   }
 
@@ -52,6 +53,12 @@ class DatabaseService {
       'authToken': authToken,
       'fitbitId': userId
     });
+  }
+
+  Future setLevel(int level) async{
+    return await wearIntelCollection.doc(uid).update(
+      {'fitnessLevel':level}
+    );
   }
 
   Future getFitbitUser() async {

@@ -12,3 +12,4 @@ String? user_id;
 int heartRateMin = 0;
 int heartRateMax = 0;
 List<int> weekActivityMinutes = [];
+int level = 0;

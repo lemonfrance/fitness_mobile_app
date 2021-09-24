@@ -1,8 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
+import 'package:wearable_intelligence/utils/globals.dart' as globals;
+
+Future setLevel(int level) async {
+  FirebaseAuth mAuth = FirebaseAuth.instance;
+  await DatabaseService(uid: mAuth.currentUser!.uid).setLevel(level);
+}
 
 class Onboarding extends StatefulWidget {
   Onboarding() : super();
@@ -265,6 +273,7 @@ class _OnboardingState extends State<Onboarding> {
                             _widgetIndex = 1;
                           } else {
                             finished = true;
+                            globals.level = 1;
                           }
                           break;
                         case 1:
@@ -272,14 +281,17 @@ class _OnboardingState extends State<Onboarding> {
                             _widgetIndex = 2;
                           } else {
                             finished = true;
+                            globals.level = 2;
                           }
                           break;
                         case 2:
                           finished = true;
+                          globals.level = 3;
                           break;
                       }
                     });
                     if (finished) {
+                      setLevel(globals.level);
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),

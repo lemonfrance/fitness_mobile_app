@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
@@ -133,11 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
         height: (width - 120) / 3,
         width: (width - 120) / 4,
         decoration: BoxDecoration(
-          color: exerciseTypes[index]["selected"]
-              ? Colours.highlight
-              : Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          color: exerciseTypes[index]["selected"] ? Colours.highlight : Colors.white,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
               color: Color.fromRGBO(0, 0, 0, 0.3),
@@ -151,16 +149,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             SvgPicture.asset(
               _typeAssets[index]["icon"],
-              color: exerciseTypes[index]["selected"]
-                  ? Colours.white
-                  : Colours.highlight,
+              color: exerciseTypes[index]["selected"] ? Colours.white : Colours.highlight,
             ),
             Text(
               exerciseTypes[index]["type"],
               style: AppTheme.theme.textTheme.headline6!.copyWith(
-                color: exerciseTypes[index]["selected"]
-                    ? Colours.white
-                    : Colours.black,
+                color: exerciseTypes[index]["selected"] ? Colours.white : Colours.black,
                 fontSize: 12,
               ),
             )
@@ -204,9 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.only(
-              left: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 20,
-              right: 20),
+          padding: EdgeInsets.only(left: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 20, right: 20),
           child: SvgPicture.asset(
             icon,
             color: Colours.darkBlue,
@@ -214,11 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         Text(
-          DateFormat('EEEE').format(date) +
-              ": " +
-              _weekPlan[index]["exercise"] +
-              " " +
-              _weekPlan[index]["distance"],
+          DateFormat('EEEE').format(date) + ": " + _weekPlan[index]["exercise"] + " " + _weekPlan[index]["distance"],
           style: AppTheme.theme.textTheme.headline3,
         )
       ]),
@@ -253,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 style: AppTheme.theme.textTheme.headline2!
                                     .copyWith(
                                         color: Colours.black,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold)
                               ),
                             ],
                           ),
@@ -265,8 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: width - 60,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30)),
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
                               boxShadow: [
                                 BoxShadow(
                                   color: Color.fromRGBO(0, 0, 0, 0.5),
@@ -280,10 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Padding(
                                 padding: EdgeInsets.only(left: 20, bottom: 20),
                                 child: Text(
-                                  "Today: " +
-                                      _weekPlan[0]["exercise"] +
-                                      " " +
-                                      _weekPlan[0]["distance"],
+                                  "Today: " + _weekPlan[0]["exercise"] + " " + _weekPlan[0]["distance"],
                                   style: AppTheme.theme.textTheme.headline2,
                                 ),
                               ),
@@ -307,8 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.only(top: 30, left: 30),
                     child: Text(
                       "Preferred Forms of Exercise",
-                      style: AppTheme.theme.textTheme.headline2!
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: AppTheme.theme.textTheme.headline2!.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
@@ -327,8 +310,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.only(top: 30, left: 30),
                     child: Text(
                       "Schedule",
-                      style: AppTheme.theme.textTheme.headline2!
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: AppTheme.theme.textTheme.headline2!.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                   Align(
@@ -344,8 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         itemBuilder: (context, index) {
                           return scheduleTile(index);
                         },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            Divider(
+                        separatorBuilder: (BuildContext context, int index) => Divider(
                           height: 10,
                           color: Colors.transparent,
                         ),
