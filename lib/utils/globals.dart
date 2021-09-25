@@ -15,6 +15,7 @@ int heartRateMin = 0;
 int heartRateMax = 0;
 List<int> weekActivityMinutes = [];
 int pageIndex = 1;
+int level = 0;
 
 // Clock globals
 bool exerciseMode = false;

@@ -7,20 +7,20 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/pages/welcome.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
-
 import 'database.dart';
+
 
 const Map config = const {
   'clientID': '<OAuth 2.0 Client ID>',
   'clientSecret': '<Client Secret>',
 };
 
+
 class FitBitService {
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
   Future getCode(BuildContext context) async {
-    const url =
-        'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&prompt=login%20consent';
+    const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&prompt=login%20consent';
 
     final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'wearintel');
 
@@ -29,6 +29,7 @@ class FitBitService {
     global.accessToken = Uri.parse(result).queryParameters['code'].toString();
     await FitBitService().getAuthToken(global.accessToken!);
     await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
+    global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
   }
 
   Future reGetCode() async {
@@ -78,9 +79,10 @@ class FitBitService {
   }
 
   Future logoutFitBit() async {
-    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${global.refreshToken}'), headers: {
-      'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
-      'Content-Type': 'application/x-www-form-urlencoded',
+    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${global.refreshToken}'),
+    headers: {
+    'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
+    'Content-Type' : 'application/x-www-form-urlencoded',
     });
 
     global.authToken = '';

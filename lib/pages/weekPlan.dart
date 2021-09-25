@@ -148,7 +148,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 18)),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
                 ),
                 // This might need to change since they can click on the dates.
               ),
