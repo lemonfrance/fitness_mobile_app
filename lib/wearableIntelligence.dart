@@ -7,6 +7,7 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/pages/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/pages/homepage.dart';
+import 'package:wearable_intelligence/pages/postExercise.dart';
 import 'package:wearable_intelligence/pages/tracker.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
@@ -188,6 +189,7 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
                           onComplete: () async {
                             Vibrate.vibrate();
                             global.exerciseMode = false;
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
                             setState(() {});
                           },
                         ),

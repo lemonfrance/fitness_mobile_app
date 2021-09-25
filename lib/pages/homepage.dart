@@ -198,34 +198,38 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, left: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome ${global.name}",
+                          style: AppTheme.theme.textTheme.headline4!.copyWith(color: Colours.black),
+                        ),
+                        Divider(
+                          height: 10,
+                          color: Colors.transparent,
+                        ),
+                        Text(
+                          "Lets get moving!",
+                          style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.black, fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          height: 10,
+                          color: Colors.transparent,
+                        ),
+                      ],
+                    ),
+                  ),
                   Container(
-                    height: (4 * height) / 9,
+                    height: 300,
                     child: Stack(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 30, left: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Welcome ${global.name}",
-                                style: AppTheme.theme.textTheme.headline4!.copyWith(color: Colours.black),
-                              ),
-                              Divider(
-                                height: 10,
-                                color: Colors.transparent,
-                              ),
-                              Text(
-                                "Lets get moving!",
-                                style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.black, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            height: height / 4,
+                            height: 200,
                             width: width - 60,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -241,7 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: Padding(
-                                padding: EdgeInsets.only(left: 20, bottom: 20),
+                                padding: EdgeInsets.all(20),
                                 child: Text(
                                   "Today: " + _weekPlan[0]["exercise"] + " " + _weekPlan[0]["distance"],
                                   style: AppTheme.theme.textTheme.headline2,
@@ -251,12 +255,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.bottomCenter,
+                          alignment: Alignment.topCenter,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 70, left: 20),
+                            padding: EdgeInsets.only(bottom: 10),
                             child: SvgPicture.asset(
                               'assets/images/walking.svg',
-                              width: width - 70,
+                              width: width - 80,
                             ),
                           ),
                         ),

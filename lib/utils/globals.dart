@@ -19,5 +19,5 @@ int pageIndex = 1;
 // Clock globals
 bool exerciseMode = false;
 CountDownController timerController = CountDownController();
-int totalTime = 1800;
+int totalTime = 3;
 int elapsedTime = 0;

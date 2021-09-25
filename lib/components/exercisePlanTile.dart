@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
-Widget exercisePlan(double width, int steps, int heartRate, int calories, int time) {
+Widget exercisePlan(int heartRate, int time) {
   TextStyle textStyle = TextStyle(color: Colours.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1);
   return Container(
-    width: width,
     padding: EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colours.lightBlue,

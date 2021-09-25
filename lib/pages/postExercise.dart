@@ -61,6 +61,98 @@ class _PostExerciseState extends State<PostExercise> {
     );
   }
 
+  Widget feedbackTile() {
+    double width = (MediaQuery.of(context).size.width - 50);
+    return Container(
+      width: width,
+      height: width / 2,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            blurRadius: 5,
+            offset: Offset(3, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "You spent most of your workout in the desired heart rate zone",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 60,
+                  width: (width - 80) / 2,
+                  decoration: BoxDecoration(
+                    color: Colours.highlight,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 5,
+                        offset: Offset(3, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.favorite,
+                        color: Colours.white,
+                      ),
+                      Text(
+                        "Avg 98bpm",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colours.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 60,
+                  width: (width - 80) / 2,
+                  decoration: BoxDecoration(
+                    color: Colours.highlight,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 5,
+                        offset: Offset(3, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.favorite,
+                        color: Colours.white,
+                      ),
+                      Text(
+                        "Max 108bpm",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colours.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -68,58 +160,58 @@ class _PostExerciseState extends State<PostExercise> {
 
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        titleSpacing: 0.0,
-        title: Padding(
-          padding: EdgeInsets.only(left: 30),
-          child: Text(
-            widget.title,
-            style: TextStyle(
-              color: Colours.grey,
-            ),
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: AppTheme.theme.backgroundColor,
-      ),
-      body: Column(
+      body: Stack(
         children: [
           Container(
+            height: width / 2,
+            decoration: BoxDecoration(
+              color: Colours.darkBlue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
+              ),
+            ),
+          ),
+          Container(
             width: double.infinity,
-            height: height - 140,
+            height: height,
             child: ListView(
-              padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+              padding: EdgeInsets.fromLTRB(40, 0, 30, 0),
               children: [
-                Text("Workout Complete", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
-                Text("Great work, your average heart rate was 98bpm", style: TextStyle(color: Colours.darkBlue, fontSize: 18)),
-                Text("This is within your target heart rate", style: TextStyle(color: Colours.darkBlue, fontSize: 18)),
+                Container(height: 40),
+                Text("Workout Complete, Great Work!", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+                Container(height: 20),
+                feedbackTile(),
                 Container(height: 20),
                 HeartrateGraph(true), // Can we have a 30min window?
                 Container(height: 20),
                 slider("How hard did you find the exercise?", true),
                 Container(height: 20),
                 slider("How much pain did you have?", false),
-                Container(height: 20),
+                Container(height: 100),
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
-              );
-            },
-            child: Text("Finished", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
-            style: ElevatedButton.styleFrom(
-              primary: Colours.highlight,
-              minimumSize: Size(width - 50, 45),
-              shape: StadiumBorder(),
-              elevation: 10,
-            ),
-          ),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 20),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
+                    );
+                  },
+                  child: Text("Finished", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colours.highlight,
+                    minimumSize: Size(width - 100, 45),
+                    shape: StadiumBorder(),
+                    elevation: 10,
+                  ),
+                ),
+              )),
         ],
       ),
     );
