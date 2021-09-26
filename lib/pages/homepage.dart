@@ -5,15 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/loading.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as global;
+
+import 'package:wearable_intelligence/models/exercisePlan.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 
 import '../utils/styles.dart';
 
-Future getDailyStats() async {
-  await FitBitService().getDailyGoals();
-  await FitBitService().getHeartRates();
-}
 
 class MyHomePage extends StatefulWidget {
   MyHomePage() : super();
@@ -28,22 +26,14 @@ class _MyHomePageState extends State<MyHomePage> {
   late double height;
   late double width;
 
+  ExercisePlan Exercise = new ExercisePlan("Running", "Go for a run", "150bpm", "30mins");
+
   List _typeAssets = [
     {"type": "Walking", "icon": 'assets/images/walkingIcon.svg'},
     {"type": "Running", "icon": 'assets/images/runningIcon.svg'},
     {"type": "Swimming", "icon": 'assets/images/swimmingIcon.svg'},
     {"type": "Cycling", "icon": 'assets/images/cyclingIcon.svg'},
     {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg'},
-  ];
-
-  List _weekPlan = [
-    {"exercise": "Walking", "distance": "1km"},
-    {"exercise": "Running", "distance": "0.5km"},
-    {"exercise": "Rest", "distance": ""},
-    {"exercise": "Cycling", "distance": "4km"},
-    {"exercise": "Swimming", "distance": "1km"},
-    {"exercise": "Walking", "distance": "1km"},
-    {"exercise": "Rest", "distance": ""},
   ];
 
   Widget logInScreen() {
@@ -165,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// This widget is used to create the schedule tiles on the home page,
-  /// This takes in the index, which identifies where in the _weekPlan we are
+  /// This takes in the index, which identifies where in the weekPlan we are
   Widget scheduleTile(int index) {
     // Get the date of the activity
     var date = DateTime.now().add(Duration(days: index));
@@ -175,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Dynamically get the icon
     while (icon == "" && x < (_typeAssets.length)) {
       // Check if the icon name matches the type of exercise
-      if (_typeAssets[x]["type"] == _weekPlan[index]["exercise"]) {
+      if (_typeAssets[x]["type"] == weekPlan[date.weekday-1].getType) {
         icon = _typeAssets[x]["icon"];
       } else {
         x++;
@@ -198,15 +188,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.only(left: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 20, right: 20),
+          padding: EdgeInsets.only(left: (weekPlan[date.weekday -1].getType == "Walking") ? 25 : 20, right: 20),
           child: SvgPicture.asset(
             icon,
             color: Colours.darkBlue,
-            width: (_weekPlan[index]["exercise"] == "Walking") ? 25 : 30,
+            width: (weekPlan[date.weekday-1].getType == "Walking") ? 25 : 30,
           ),
         ),
         Text(
-          DateFormat('EEEE').format(date) + ": " + _weekPlan[index]["exercise"] + " " + _weekPlan[index]["distance"],
+          DateFormat('EEEE').format(date) + ":  " + weekPlan[date.weekday-1].getType,
           style: AppTheme.theme.textTheme.headline3,
         )
       ]),
@@ -214,6 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget homeScreen() {
+    var date = DateTime.now();
     return loading
         ? Loading()
         : Container(
@@ -232,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Welcome ${global.name}",
+                              Text("Welcome $name",
                                   style: AppTheme.theme.textTheme.headline5!
                                       .copyWith(color: Colours.black)),
                               Divider(height: 10, color: Colors.transparent),
@@ -267,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Padding(
                                 padding: EdgeInsets.only(left: 20, bottom: 20),
                                 child: Text(
-                                  "Today: " + _weekPlan[0]["exercise"] + " " + _weekPlan[0]["distance"],
+                                  "Today:  " + weekPlan[date.weekday-1].getType + " ",
                                   style: AppTheme.theme.textTheme.headline2,
                                 ),
                               ),
@@ -322,7 +313,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: _weekPlan.length,
+                        itemCount: weekPlan.length,
                         itemBuilder: (context, index) {
                           return scheduleTile(index);
                         },
@@ -345,7 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      body: !(global.fitBitAccount == true) ? logInScreen() : homeScreen(),
+      body: !(fitBitAccount == true) ? logInScreen() : homeScreen(),
     );
   }
 }

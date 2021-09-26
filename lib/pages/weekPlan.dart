@@ -153,7 +153,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Tracker('Timer', 1800)),
