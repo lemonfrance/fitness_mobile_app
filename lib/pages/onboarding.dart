@@ -23,25 +23,6 @@ class _OnboardingState extends State<Onboarding> {
   int _widgetIndex = 0;
   final ScrollController scrollController = ScrollController();
 
-  // List of level 1 questions
-  List levelOneQuestions = [
-    {"question": walkBlock, "selected": false, "type": "expandedPain", "pain": 0.0},
-    {"question": climbStairs, "selected": false, "type": "expandedPain", "pain": 0.0},
-    {"question": preferredExercise, "selected": false, "type": "exercise"},
-  ];
-
-  // List of level 2 questions
-  List levelTwoQuestions = [
-    {"question": runBlock, "selected": false, "type": "expandedPain", "pain": 0.0}
-  ];
-
-  // List of level 3 questions
-  List levelThreeQuestions = [
-    {"question": runDistance, "selected": false, "type": "expandedDistance", "distance": 0.0},
-    {"question": swimDistance, "selected": false, "type": "expandedDistance", "distance": 0.0},
-    {"question": bikeDistance, "selected": false, "type": "expandedDistance", "distance": 0.0},
-  ];
-
   // This is used for boolean answers
   Widget boolButton(String question, int index, List list) {
     return Padding(

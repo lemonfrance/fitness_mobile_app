@@ -35,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
     {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg'},
   ];
 
-  // TODO get from DB
   List _weekPlan = [
     {"exercise": "Walking", "distance": "1km"},
     {"exercise": "Running", "distance": "0.5km"},
@@ -61,34 +60,49 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Positioned(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Welcome', style: TextStyle(fontSize: 60, color: Colours.darkBlue, fontWeight: FontWeight.w700)),
-                Text('Log in to Fitbit to get started', style: TextStyle(fontSize: 20, color: Colours.darkBlue, fontWeight: FontWeight.w300)),
               ],
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
-              child: ElevatedButton(
-                onPressed: () async {
-                  setState(() => loading = true);
-                  await FitBitService().getCode(context);
+              padding: EdgeInsets.fromLTRB(20, 40, 20, 60),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
+                      child: Text(
+                        'Log in to Fitbit to get started',
+                        style: TextStyle(fontSize: 20, color: Colours.darkBlue, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      setState(() => loading = true);
+                      await FitBitService().getCode(context);
 
-                  setState(() => {loading = false});
-                },
-                child: Text(
-                  "Log into Fitbit",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colours.highlight,
-                  onPrimary: Colours.white,
-                  minimumSize: Size(MediaQuery.of(context).size.width, 60),
-                  shape: StadiumBorder(),
-                  elevation: 10,
-                ),
+                      setState(() => {loading = false});
+                    },
+                    child: Text(
+                      "Log in",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colours.highlight,
+                      onPrimary: Colours.white,
+                      minimumSize: Size(MediaQuery.of(context).size.width, 60),
+                      shape: StadiumBorder(),
+                      elevation: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -198,38 +212,25 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 30, left: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Welcome ${global.name}",
-                          style: AppTheme.theme.textTheme.headline4!.copyWith(color: Colours.black),
-                        ),
-                        Divider(
-                          height: 10,
-                          color: Colors.transparent,
-                        ),
-                        Text(
-                          "Lets get moving!",
-                          style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.black, fontWeight: FontWeight.bold),
-                        ),
-                        Divider(
-                          height: 10,
-                          color: Colors.transparent,
-                        ),
-                      ],
-                    ),
-                  ),
                   Container(
-                    height: 300,
+                    height: (4.5 * height) / 9,
                     child: Stack(
                       children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 120, left: 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Welcome ${global.name}", style: AppTheme.theme.textTheme.headline5!.copyWith(color: Colours.black)),
+                              Divider(height: 10, color: Colors.transparent),
+                              Text("Lets get moving!", style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.black, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            height: 200,
+                            height: height / 4,
                             width: width - 60,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -245,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: Padding(
-                                padding: EdgeInsets.all(20),
+                                padding: EdgeInsets.only(left: 20, bottom: 20),
                                 child: Text(
                                   "Today: " + _weekPlan[0]["exercise"] + " " + _weekPlan[0]["distance"],
                                   style: AppTheme.theme.textTheme.headline2,
@@ -255,12 +256,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.topCenter,
+                          alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.only(bottom: 70, left: 20),
                             child: SvgPicture.asset(
                               'assets/images/walking.svg',
-                              width: width - 80,
+                              width: width - 70,
                             ),
                           ),
                         ),

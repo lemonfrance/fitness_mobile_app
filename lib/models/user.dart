@@ -9,8 +9,6 @@ class Users {
   double? weight;
   String? gender;
   String? birthDate;
-  List<String>? weekPlan;
-  int? questionnaireScore;
   int? totalHours;
   String? refreshToken;
   String? authToken;
@@ -18,7 +16,5 @@ class Users {
   int? fitnessLevel;
 
   Users({this.username, this.email, this.uid, this.firstName, this.lastName,
-         this.age, this.height, this.weight, this.gender, this.birthDate,
-         this.weekPlan, this.questionnaireScore, this.totalHours, this.refreshToken, this.authToken, this.fitbitId, this.fitnessLevel});
-
+         this.age, this.height, this.weight, this.gender, this.birthDate,  this.totalHours, this.refreshToken, this.authToken, this.fitbitId});
 }

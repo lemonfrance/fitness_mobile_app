@@ -13,9 +13,13 @@ int totalHours = 0;
 String? user_id;
 int heartRateMin = 0;
 int heartRateMax = 0;
-List<int> weekActivityMinutes = [];
+int restingHeartRate = 0;
 int pageIndex = 1;
 int level = 0;
+bool firstFitbit = false;
+
+var weekPlan = [];
+var weekActivityMinutes = [];
 
 // Clock globals
 bool exerciseMode = false;

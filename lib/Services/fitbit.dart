@@ -25,11 +25,9 @@ class FitBitService {
     final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'wearintel');
 
     //get auth code
-    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
     global.accessToken = Uri.parse(result).queryParameters['code'].toString();
-    await FitBitService().getAuthToken(global.accessToken!);
-    await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
-    global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
+    global.firstFitbit = true;
+    Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
   }
 
   Future reGetCode() async {
@@ -101,27 +99,30 @@ class FitBitService {
     return true;
   }
 
-  Future getDailyGoals() async {
-    final http.Response response = await http.get(
-        Uri.parse('https://api.fitbit.com/1/user/${global.user_id}/activities/date/${DateFormat('yyyy-MM-dd').format(DateTime.now())}.json?'),
-        headers: {'Authorization': 'Bearer ${global.authToken}'});
-
-    global.calories = jsonDecode(response.body)["summary"]['caloriesOut'];
-    global.totalHours = jsonDecode(response.body)["summary"]["activeScore"];
-  }
 
   Future getHeartRates() async {
     var formatter = new DateFormat('yyyy-MM-dd');
-    int index = 0;
-    for (int i = 6; i >= 0; i--) {
+    global.weekActivityMinutes = [];
+
       http.Response response = await http.get(
           Uri.parse(
-              'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/${formatter.format(DateTime.now().subtract(Duration(days: i)))}/1d.json'),
+              'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/7d.json'),
           headers: {'Authorization': 'Bearer ${global.authToken}'});
-      global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][1]["min"];
-      global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][1]["max"];
-      //don't have data that can be received yet // global.weekActivityMinutes[index] = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][1]["minutes"];
-      index++;
+
+        global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
+        global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
+
+      //don't have data that can be received yet //
+    global.calories = 0;
+    global.totalHours = 0;
+    for (int i = 0; i < 4; i++) {
+      int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
+      global.calories += calories;
     }
+    for (int i = 0; i < 7; i++) {
+      global.weekActivityMinutes.add(jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"]);
+      int time = jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"].round();
+      global.totalHours += time;
+   }
   }
 }
