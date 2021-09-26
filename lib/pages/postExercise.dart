@@ -15,8 +15,26 @@ class PostExercise extends StatefulWidget {
 }
 
 class _PostExerciseState extends State<PostExercise> {
-  double _difficulty = 0.0;
+  double _difficulty = 2.0;
   double _pain = 0.0;
+
+  String getString(double difficulty) {
+    int value = difficulty.toInt();
+    switch (value) {
+      case 4:
+        return "Very hard";
+      case 3:
+        return "Hard";
+      case 2:
+        return "Neutral";
+      case 1:
+        return "Easy";
+      case 0:
+        return "Very Easy";
+      default:
+        return "Error";
+    }
+  }
 
   Widget slider(String title, bool difficulty) {
     return Container(
@@ -43,9 +61,9 @@ class _PostExerciseState extends State<PostExercise> {
           Slider(
             value: difficulty ? _difficulty : _pain,
             min: 0,
-            max: 10,
-            divisions: 10,
-            label: difficulty ? _difficulty.toString() : _pain.toString(),
+            max: difficulty ? 4 : 10,
+            divisions: difficulty ? 4 : 10,
+            label: difficulty ? getString(_difficulty) : _pain.toString(),
             activeColor: Colours.highlight,
             inactiveColor: Colours.white,
             onChanged: (double value) {
