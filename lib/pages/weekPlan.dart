@@ -137,76 +137,69 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      body: Stack(
+      body: ListView(
         children: [
-          ListView(
-            children: [
-              weekCalendar(),
-              // This might need to change since they can click on the dates.
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
-                ),
-                // This might need to change since they can click on the dates.
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: SvgPicture.asset(
-                  'assets/images/walking.svg',
-                  width: width - 40,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: exercisePlan(75, 30),
-              ),
-              education(
-                //exercise id get intensity
-                "Low impact",
-                "It causes less strain and injuries than most other forms of exercise.",
-              ),
-              education(
-                //get workout name
-                "Muscle workout",
-                "cycling uses all of the major muscle groups as you pedal.",
-              ),
-              education(
-                //get workout type
-                "Strength and stamina",
-                "cycling increases stamina, strength and aerobic fitness.",
-              ),
-              Container(height: 80)
-            ],
+          weekCalendar(),
+          // This might need to change since they can click on the dates.
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
+            ),
+            // This might need to change since they can click on the dates.
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Line doenst work
-                  //final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
-                  elapsedTime = exerciseMode ? elapsedTime : 0;
-                  exerciseMode = true;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Tracker('Timer', totalTime, elapsedTime)),
-                  );
-                },
-                child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
-                style: ElevatedButton.styleFrom(
-                  primary: Colours.highlight,
-                  onPrimary: Colours.white,
-                  minimumSize: Size(width - 100, 45),
-                  shape: StadiumBorder(),
-                  elevation: 10,
-                ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 10, left: 50, right: 50),
+            child: ElevatedButton(
+              onPressed: () async {
+                // Line doenst work
+                //final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
+                elapsedTime = exerciseMode ? elapsedTime : 0;
+                exerciseMode = true;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Tracker('Timer', totalTime, elapsedTime)),
+                );
+              },
+              child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+              style: ElevatedButton.styleFrom(
+                primary: Colours.highlight,
+                onPrimary: Colours.white,
+                minimumSize: Size(width - 100, 45),
+                shape: StadiumBorder(),
+                elevation: 10,
               ),
             ),
           ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: SvgPicture.asset(
+              'assets/images/walking.svg',
+              width: width - 40,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: exercisePlan(75, 30),
+          ),
+          education(
+            //exercise id get intensity
+            "Low impact",
+            "It causes less strain and injuries than most other forms of exercise.",
+          ),
+          education(
+            //get workout name
+            "Muscle workout",
+            "cycling uses all of the major muscle groups as you pedal.",
+          ),
+          education(
+            //get workout type
+            "Strength and stamina",
+            "cycling increases stamina, strength and aerobic fitness.",
+          ),
+          Container(height: 20)
         ],
       ),
     );
