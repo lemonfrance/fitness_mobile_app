@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
-import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
 import 'package:wearable_intelligence/pages/tracker.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 class ExercisePlan extends StatefulWidget {
@@ -137,61 +137,70 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            weekCalendar(),
-            // This might need to change since they can click on the dates.
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 18)),
-              ),
-              // This might need to change since they can click on the dates.
+      body: ListView(
+        children: [
+          weekCalendar(),
+          // This might need to change since they can click on the dates.
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
             ),
-            ElevatedButton(
+            // This might need to change since they can click on the dates.
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 10, left: 50, right: 50),
+            child: ElevatedButton(
               onPressed: () async {
+                // Line doenst work
+                //final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
+                elapsedTime = exerciseMode ? elapsedTime : 0;
+                exerciseMode = true;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Tracker('Timer', 1800)),
+                  MaterialPageRoute(builder: (context) => Tracker('Timer', totalTime, elapsedTime)),
                 );
               },
-              child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+              child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
               style: ElevatedButton.styleFrom(
                 primary: Colours.highlight,
                 onPrimary: Colours.white,
-                minimumSize: Size(width - 40, 45),
+                minimumSize: Size(width - 100, 45),
                 shape: StadiumBorder(),
                 elevation: 10,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: SvgPicture.asset(
-                'assets/images/walking.svg',
-                width: width - 40,
-              ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: SvgPicture.asset(
+              'assets/images/walking.svg',
+              width: width - 40,
             ),
-            exercisePlan(width - 40, 1000, 75, 150, 30),
-            education(
-              //exercise id get intensity
-              "Low impact",
-              "It causes less strain and injuries than most other forms of exercise.",
-            ),
-            education(
-              //get workout name
-              "Muscle workout",
-              "cycling uses all of the major muscle groups as you pedal.",
-            ),
-            education(
-              //get workout type
-              "Strength and stamina",
-              "cycling increases stamina, strength and aerobic fitness.",
-            ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: exercisePlan(75, 30),
+          ),
+          education(
+            //exercise id get intensity
+            "Low impact",
+            "It causes less strain and injuries than most other forms of exercise.",
+          ),
+          education(
+            //get workout name
+            "Muscle workout",
+            "cycling uses all of the major muscle groups as you pedal.",
+          ),
+          education(
+            //get workout type
+            "Strength and stamina",
+            "cycling increases stamina, strength and aerobic fitness.",
+          ),
+          Container(height: 20)
+        ],
       ),
     );
   }
@@ -220,7 +229,7 @@ final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
     value: (item) => List.generate(item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
   ..addAll({
     kToday: [
-      Event('HIIT Workout'),
+      Event('Walk 1km'),
     ],
     DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
       Event("Light Running"),

@@ -22,7 +22,7 @@ class _VitalsState extends State<Vitals> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(height: 20),
-            HeartrateGraph(),
+            HeartrateGraph(false),
             Container(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

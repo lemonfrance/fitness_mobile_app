@@ -2,16 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/loading.dart';
-
 import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 
 import '../utils/styles.dart';
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage() : super();
@@ -51,59 +48,34 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Positioned(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Welcome',
-                    style: TextStyle(
-                        fontSize: 60,
-                        color: Colours.darkBlue,
-                        fontWeight: FontWeight.w700)),
+                Text('Welcome', style: TextStyle(fontSize: 60, color: Colours.darkBlue, fontWeight: FontWeight.w700)),
+                Text('Log in to Fitbit to get started', style: TextStyle(fontSize: 20, color: Colours.darkBlue, fontWeight: FontWeight.w300)),
               ],
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 40, 20, 60),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
-                      child: Text(
-                        'Log in to Fitbit to get started',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Colours.darkBlue,
-                            fontWeight: FontWeight.w300),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      setState(() => loading = true);
-                      await FitBitService().getCode(context);
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
+              child: ElevatedButton(
+                onPressed: () async {
+                  setState(() => loading = true);
+                  await FitBitService().getCode(context);
 
-                      setState(() => {loading = false});
-                    },
-                    child: Text(
-                      "Log in",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colours.white,
-                          fontSize: 24),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colours.highlight,
-                      onPrimary: Colours.white,
-                      minimumSize: Size(MediaQuery.of(context).size.width, 60),
-                      shape: StadiumBorder(),
-                      elevation: 10,
-                    ),
-                  ),
-                ],
+                  setState(() => {loading = false});
+                },
+                child: Text(
+                  "Log into Fitbit",
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colours.highlight,
+                  onPrimary: Colours.white,
+                  minimumSize: Size(MediaQuery.of(context).size.width, 60),
+                  shape: StadiumBorder(),
+                  elevation: 10,
+                ),
               ),
             ),
           ),
@@ -165,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Dynamically get the icon
     while (icon == "" && x < (_typeAssets.length)) {
       // Check if the icon name matches the type of exercise
-      if (_typeAssets[x]["type"] == weekPlan[date.weekday-1].getType) {
+      if (_typeAssets[x]["type"] == weekPlan[date.weekday - 1].getType) {
         icon = _typeAssets[x]["icon"];
       } else {
         x++;
@@ -188,15 +160,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       child: Row(children: [
         Padding(
-          padding: EdgeInsets.only(left: (weekPlan[date.weekday -1].getType == "Walking") ? 25 : 20, right: 20),
+          padding: EdgeInsets.only(left: (weekPlan[date.weekday - 1].getType == "Walking") ? 25 : 20, right: 20),
           child: SvgPicture.asset(
             icon,
             color: Colours.darkBlue,
-            width: (weekPlan[date.weekday-1].getType == "Walking") ? 25 : 30,
+            width: (weekPlan[date.weekday - 1].getType == "Walking") ? 25 : 30,
           ),
         ),
         Text(
-          DateFormat('EEEE').format(date) + ":  " + weekPlan[date.weekday-1].getType,
+          DateFormat('EEEE').format(date) + ":  " + weekPlan[date.weekday - 1].getType,
           style: AppTheme.theme.textTheme.headline3,
         )
       ]),
@@ -214,8 +186,32 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, left: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome $name",
+                          style: AppTheme.theme.textTheme.headline4!.copyWith(color: Colours.black),
+                        ),
+                        Divider(
+                          height: 10,
+                          color: Colors.transparent,
+                        ),
+                        Text(
+                          "Lets get moving!",
+                          style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.black, fontWeight: FontWeight.bold),
+                        ),
+                        Divider(
+                          height: 10,
+                          color: Colors.transparent,
+                        ),
+                      ],
+                    ),
+                  ),
                   Container(
-                    height: (4.5 * height) / 9,
+                    height: 300,
                     child: Stack(
                       children: [
                         Padding(
@@ -223,24 +219,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Welcome $name",
-                                  style: AppTheme.theme.textTheme.headline5!
-                                      .copyWith(color: Colours.black)),
+                              Text("Welcome $name", style: AppTheme.theme.textTheme.headline5!.copyWith(color: Colours.black)),
                               Divider(height: 10, color: Colors.transparent),
-                              Text(
-                                "Lets get moving!",
-                                style: AppTheme.theme.textTheme.headline2!
-                                    .copyWith(
-                                        color: Colours.black,
-                                        fontWeight: FontWeight.bold)
-                              ),
+                              Text("Lets get moving!", style: AppTheme.theme.textTheme.headline2!.copyWith(color: Colours.black, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            height: height / 4,
+                            height: 200,
                             width: width - 60,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -256,9 +244,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: Padding(
-                                padding: EdgeInsets.only(left: 20, bottom: 20),
+                                padding: EdgeInsets.all(20),
                                 child: Text(
-                                  "Today:  " + weekPlan[date.weekday-1].getType + " ",
+                                  "Today:  " + weekPlan[date.weekday - 1].getType + " ",
                                   style: AppTheme.theme.textTheme.headline2,
                                 ),
                               ),
@@ -266,12 +254,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.bottomCenter,
+                          alignment: Alignment.topCenter,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 70, left: 20),
+                            padding: EdgeInsets.only(bottom: 10),
                             child: SvgPicture.asset(
                               'assets/images/walking.svg',
-                              width: width - 70,
+                              width: width - 80,
                             ),
                           ),
                         ),
