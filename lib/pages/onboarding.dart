@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wearable_intelligence/Services/database.dart';
+import 'package:wearable_intelligence/utils/globals.dart' as globals;
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as globals;
 
 Future setLevel(int level) async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
@@ -196,98 +196,97 @@ class _OnboardingState extends State<Onboarding> {
     bool finished = false;
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
         children: [
-          Container(
-            height: MediaQuery.of(context).size.height - 130,
-            child: ListView(
-              controller: scrollController,
-              physics: AlwaysScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 32, top: 50),
-                  child: Text(
-                    "Select what is applicable to you",
-                    textAlign: TextAlign.start,
-                    style: AppTheme.theme.textTheme.headline3!.copyWith(fontWeight: FontWeight.bold),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: ListView(
+                controller: scrollController,
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 32, top: 50),
+                    child: Text(
+                      "Select what is applicable to you",
+                      textAlign: TextAlign.start,
+                      style: AppTheme.theme.textTheme.headline3!.copyWith(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Divider(color: Colors.transparent),
-                IndexedStack(
-                  index: _widgetIndex,
-                  children: [
-                    levelOne(),
-                    levelTwo(),
-                    levelThree(),
-                  ],
-                ),
-              ],
+                  Divider(color: Colors.transparent),
+                  IndexedStack(
+                    index: _widgetIndex,
+                    children: [
+                      levelOne(),
+                      levelTwo(),
+                      levelThree(),
+                    ],
+                  ),
+                  Container(
+                    height: 100,
+                  )
+                ],
+              ),
             ),
           ),
-          Stack(
-            alignment: AlignmentDirectional.topCenter,
-            children: [
-              Container(
-                color: Colours.white,
-                height: 130,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: MaterialButton(
-                  onPressed: () {
-                    scrollController.animateTo(
-                      0.0,
-                      curve: Curves.easeOut,
-                      duration: const Duration(milliseconds: 300),
-                    );
+          Align(
+            alignment: AlignmentDirectional.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(left: 50, right: 50, top: 20, bottom: 20),
+              child: MaterialButton(
+                onPressed: () {
+                  scrollController.animateTo(
+                    0.0,
+                    curve: Curves.easeOut,
+                    duration: const Duration(milliseconds: 300),
+                  );
 
-                    setState(() {
-                      switch (_widgetIndex) {
-                        case 0:
-                          // Make sure that they can both walk 1k and climb a flight of stairs
-                          // Make sure they are not in unnecessary pain
-                          if (levelOneQuestions[0]["selected"] == true &&
-                              levelOneQuestions[1]["selected"] == true &&
-                              levelOneQuestions[0]["pain"] < 6 &&
-                              levelOneQuestions[1]["pain"] < 6) {
-                            _widgetIndex = 1;
-                          } else {
-                            finished = true;
-                            globals.level = 1;
-                          }
-                          break;
-                        case 1:
-                          if (levelTwoQuestions[0]["selected"] == true && levelTwoQuestions[0]["pain"] < 6) {
-                            _widgetIndex = 2;
-                          } else {
-                            finished = true;
-                            globals.level = 2;
-                          }
-                          break;
-                        case 2:
+                  setState(() {
+                    switch (_widgetIndex) {
+                      case 0:
+                        // Make sure that they can both walk 1k and climb a flight of stairs
+                        // Make sure they are not in unnecessary pain
+                        if (levelOneQuestions[0]["selected"] == true &&
+                            levelOneQuestions[1]["selected"] == true &&
+                            levelOneQuestions[0]["pain"] < 6 &&
+                            levelOneQuestions[1]["pain"] < 6) {
+                          _widgetIndex = 1;
+                        } else {
                           finished = true;
-                          globals.level = 3;
-                          break;
-                      }
-                    });
-                    if (finished) {
-                      setLevel(globals.level);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
-                      );
+                          globals.level = 1;
+                        }
+                        break;
+                      case 1:
+                        if (levelTwoQuestions[0]["selected"] == true && levelTwoQuestions[0]["pain"] < 6) {
+                          _widgetIndex = 2;
+                        } else {
+                          finished = true;
+                          globals.level = 2;
+                        }
+                        break;
+                      case 2:
+                        finished = true;
+                        globals.level = 3;
+                        break;
                     }
-                  },
-                  minWidth: double.infinity,
-                  height: 60,
-                  elevation: 10,
-                  shape: StadiumBorder(),
-                  color: Colours.highlight,
-                  child: Text("NEXT"),
-                ),
+                  });
+                  if (finished) {
+                    setLevel(globals.level);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
+                    );
+                  }
+                },
+                minWidth: double.infinity,
+                height: 60,
+                elevation: 10,
+                shape: StadiumBorder(),
+                color: Colours.highlight,
+                child: Text("NEXT"),
               ),
-            ],
+            ),
           ),
         ],
       ),
