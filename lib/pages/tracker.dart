@@ -1,128 +1,286 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:wearable_intelligence/pages/postExercise.dart';
-import 'package:wearable_intelligence/utils/globals.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
-import '../wearableIntelligence.dart';
+import '../utils/globals.dart';
+import 'postExercise.dart';
 
 class Tracker extends StatefulWidget {
-  Tracker(this.title, this._duration, this._time) : super();
+  Tracker(this.title, this._time, this._continue) : super();
 
   final String title;
-  final int _duration; // In seconds
   final int _time; // In seconds
-  var paused = false;
-  var ended = false;
+  final bool _continue;
 
   @override
   _TrackerState createState() => _TrackerState();
 }
 
 class _TrackerState extends State<Tracker> {
-  @override
-  Widget build(BuildContext context) {
+  reset(bool continueTrackers) {
+    if (!continueTrackers) {
+      paused = false;
+      ended = false;
+      rest = false;
+      start = true;
+      reps = 3;
+      exerciseTime = 10;
+      restTime = 5;
+      elapsedTime = 0;
+    }
+  }
+
+  bool shouldPop = true;
+
+  Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: AppTheme.theme.backgroundColor,
-      appBar: AppBar(
-        centerTitle: false,
-        titleSpacing: 0.0,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Colours.grey,
+    double height = MediaQuery.of(context).size.height;
+
+    return Container(
+      width: width,
+      height: 80,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            blurRadius: 5,
+            offset: Offset(3, 3), // changes position of shadow
           ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colours.grey),
-          onPressed: () {
-            var time = timerController.getTime().split(":");
-            elapsedTime = totalTime - (int.parse(time[0]) * 3600 + int.parse(time[1]) * 60 + int.parse(time[2]));
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
-          },
-        ),
-        elevation: 0,
-        backgroundColor: AppTheme.theme.backgroundColor,
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              "Walking 1k",
-              style: AppTheme.theme.textTheme.headline1,
+      child: Row(
+        children: [
+          Icon(icon, color: Colours.highlight, size: 60),
+          Container(
+            width: 10,
+          ),
+          Text(
+            title,
+            style: AppTheme.theme.textTheme.headline2,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget timerTile(int duration, bool exerciseTimer) {
+    double width = MediaQuery.of(context).size.width;
+
+    if (rest) {
+      restTime = duration;
+    } else {
+      exerciseTime = duration;
+    }
+
+    return Container(
+      width: width - 35,
+      height: width / 1.7,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              width: width - 40,
+              height: (width / 1.7) - 15,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: ((exerciseTimer != rest) && !start) ? Colours.highlight : Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    blurRadius: 5,
+                    offset: Offset(3, 3), // changes position of shadow
+                  ),
+                ],
+              ),
             ),
-            Hero(
-              tag: "timer",
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: SvgPicture.asset(
+              exerciseTimer ? 'assets/images/walking.svg' : 'assets/images/rest.svg',
+              width: width - 140,
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.all(10),
               child: CircularCountDownTimer(
-                duration: widget._duration,
+                duration: duration,
                 initialDuration: widget._time,
-                controller: timerController,
-                width: width * 0.8,
-                height: width * 0.8,
+                controller: exerciseTimer ? exerciseController : restController,
+                width: 90,
+                height: 90,
                 ringColor: Colours.grey,
                 fillColor: Colours.lightBlue,
                 backgroundColor: Colours.white,
-                strokeWidth: 15.0,
+                strokeWidth: 5.0,
                 strokeCap: StrokeCap.round,
-                textStyle: TextStyle(fontSize: 33.0, color: Colours.grey),
-                textFormat: CountdownTextFormat.HH_MM_SS,
+                textStyle: TextStyle(fontSize: 24.0, color: Colours.grey),
+                textFormat: CountdownTextFormat.MM_SS,
                 isReverse: true,
                 isReverseAnimation: true,
                 isTimerTextShown: true,
-                autoStart: true,
-                onStart: () {
-                  print('Countdown Started');
-                },
+                autoStart: (widget._continue && (exerciseTimer != rest)) ? true : false,
+                onStart: () {},
                 onComplete: () async {
-                  Vibrate.vibrate();
-                  exerciseMode = false;
+                  // TODO make vibrate work on android
+                  // bool canVibrate = await Vibrate.canVibrate;
+                  // print(canVibrate.toString());
+                  // Vibrate.vibrate();
+
+                  elapsedTime = 0;
                   setState(() {
-                    widget.ended = true;
+                    // If we just finished an exercise.
+                    if (!rest) {
+                      reps--;
+                    }
+
+                    if (reps != 0) {
+                      rest = !rest;
+                    } else {
+                      ended = true;
+                      exerciseMode = false;
+                    }
+
+                    if (reps != 0) {
+                      rest ? restController.start() : exerciseController.start();
+                    }
                   });
                 },
               ),
             ),
-            widget.ended
-                ? MaterialButton(
-                    minWidth: width * 0.6,
-                    height: 50,
-                    elevation: 10,
-                    shape: StadiumBorder(),
-                    color: Colours.highlight,
-                    child: Text(
-                      "Show Stats",
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
-                      );
-                    },
-                  )
-                : MaterialButton(
-                    minWidth: width * 0.6,
-                    height: 50,
-                    elevation: 10,
-                    shape: StadiumBorder(),
-                    color: Colours.lightBlue,
-                    child: Text(
-                      widget.paused ? "Play" : "Pause",
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        widget.paused ? timerController.resume() : timerController.pause();
-                        widget.paused = !widget.paused;
-                      });
-                    },
-                  ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  String getRepText() {
+    if (reps > 1) {
+      return "$reps reps left";
+    } else if (reps == 1) {
+      return "$reps rep left";
+    } else {
+      return "Workout Over";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return WillPopScope(
+        child: Scaffold(
+          backgroundColor: AppTheme.theme.backgroundColor,
+          appBar: AppBar(
+            centerTitle: false,
+            titleSpacing: 0.0,
+            title: Text(
+              widget.title,
+              style: TextStyle(
+                color: Colours.grey,
+              ),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colours.grey),
+              onPressed: () {
+                // TODO uncomment to allow users to go back
+                // var time = rest ? restController.getTime().split(":") : exerciseController.getTime().split(":");
+                // elapsedTime = (rest ? restTime : exerciseTime) - (int.parse(time[0]) * 60 + int.parse(time[1]));
+                // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
+              },
+            ),
+            elevation: 0,
+            backgroundColor: AppTheme.theme.backgroundColor,
+          ),
+          body: Stack(
+            children: [
+              ListView(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(children: [
+                      tile(Icons.favorite, "Target: 165bpm"),
+                      Container(height: 10),
+                      tile(Icons.directions_walk, getRepText()),
+                    ]),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, right: 20, bottom: 100),
+                    child: Column(
+                      children: [
+                        timerTile(exerciseTime, true), // 60 for minutes
+                        Container(height: 10),
+                        timerTile(restTime, false),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: (ended || start)
+                      ? MaterialButton(
+                          minWidth: width * 0.6,
+                          height: 50,
+                          elevation: 10,
+                          shape: StadiumBorder(),
+                          color: Colours.highlight,
+                          child: Text(
+                            start ? "Start" : "Show Stats",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
+                          ),
+                          onPressed: () {
+                            if (start) {
+                              reset(widget._continue);
+                            }
+                            start
+                                ? exerciseController.start()
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
+                                  );
+                            setState(() {
+                              start = false;
+                            });
+                          },
+                        )
+                      : MaterialButton(
+                          minWidth: width * 0.6,
+                          height: 50,
+                          elevation: 10,
+                          shape: StadiumBorder(),
+                          color: Colours.lightBlue,
+                          child: Text(
+                            paused ? "Play" : "Pause",
+                            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              paused
+                                  ? (rest ? restController.resume() : exerciseController.resume())
+                                  : (rest ? restController.pause() : exerciseController.pause());
+                              paused = !paused;
+                            });
+                          },
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        onWillPop: () async {
+          var time = rest ? exerciseController.getTime().split(":") : exerciseController.getTime().split(":");
+          elapsedTime = (rest ? restTime : exerciseTime) - (int.parse(time[0]) * 60 + int.parse(time[1]));
+          return false; // TODO change to true to allow back press.
+        });
   }
 }

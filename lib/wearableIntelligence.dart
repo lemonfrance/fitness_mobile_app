@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/pages/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/pages/homepage.dart';
-import 'package:wearable_intelligence/pages/postExercise.dart';
 import 'package:wearable_intelligence/pages/tracker.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
@@ -17,6 +15,7 @@ import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 import 'Services/auth.dart';
+import 'utils/globals.dart';
 
 class WearableIntelligence extends StatefulWidget {
   WearableIntelligence(this.title) : super();
@@ -160,39 +159,55 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
                     alignment: Alignment.topRight,
                     child: GestureDetector(
                       onTap: () {
-                        global.elapsedTime = totalTime - int.parse(timerController.getTime());
+                        global.elapsedTime = (rest ? restTime : exerciseTime) - int.parse((rest ? restController.getTime() : exerciseController.getTime()));
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Tracker('Timer', global.totalTime, global.elapsedTime)),
+                          MaterialPageRoute(builder: (context) => Tracker('Timer', global.elapsedTime, true)),
                         );
                       },
-                      child: Hero(
-                        tag: "timer",
-                        child: CircularCountDownTimer(
-                          duration: global.totalTime,
-                          initialDuration: global.elapsedTime,
-                          controller: timerController,
-                          width: 50,
-                          height: 50,
-                          ringColor: Colours.grey,
-                          fillColor: Colours.highlight,
-                          backgroundColor: Colours.white,
-                          strokeWidth: 5.0,
-                          strokeCap: StrokeCap.round,
-                          isReverse: true,
-                          isReverseAnimation: true,
-                          isTimerTextShown: false,
-                          autoStart: true,
-                          onStart: () {
-                            print('Countdown Started');
-                          },
-                          onComplete: () async {
-                            Vibrate.vibrate();
-                            global.exerciseMode = false;
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
-                            setState(() {});
-                          },
-                        ),
+                      child: CircularCountDownTimer(
+                        duration: rest ? restTime : exerciseTime,
+                        initialDuration: global.elapsedTime,
+                        controller: rest ? restController : exerciseController,
+                        width: 50,
+                        height: 50,
+                        ringColor: Colours.grey,
+                        fillColor: Colours.highlight,
+                        backgroundColor: Colours.white,
+                        strokeWidth: 5.0,
+                        strokeCap: StrokeCap.round,
+                        isReverse: true,
+                        isReverseAnimation: true,
+                        isTimerTextShown: false,
+                        autoStart: true,
+                        onStart: () {
+                          print('Countdown Started');
+                        },
+                        onComplete: () async {
+                          // TODO make vibrate work on android
+                          // bool canVibrate = await Vibrate.canVibrate;
+                          // print(canVibrate.toString());
+                          // Vibrate.vibrate();
+
+                          // If we just finished an exercise.
+                          if (!rest) {
+                            reps--;
+                          }
+
+                          if (reps != 0) {
+                            rest = !rest;
+                          } else {
+                            ended = true;
+                            exerciseMode = false;
+                          }
+                          print("navigarion?");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Tracker('Timer', 0, true)));
+
+                          if (reps != 0) {
+                            rest ? restController.start() : exerciseController.start();
+                          }
+                          elapsedTime = 0;
+                        },
                       ),
                     ),
                   ),

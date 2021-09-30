@@ -22,7 +22,15 @@ var weekPlan = [];
 var weekActivityMinutes = [];
 
 // Clock globals
+CountDownController restController = CountDownController();
+CountDownController exerciseController = CountDownController();
+
 bool exerciseMode = false;
-CountDownController timerController = CountDownController();
-int totalTime = 3;
+bool paused = false;
+bool ended = false;
+bool rest = false;
+bool start = true;
+int reps = 2;
+int exerciseTime = 10;
+int restTime = 5;
 int elapsedTime = 0;

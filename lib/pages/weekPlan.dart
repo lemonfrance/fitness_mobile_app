@@ -6,8 +6,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
 import 'package:wearable_intelligence/pages/tracker.dart';
-import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
+
+import '../utils/globals.dart';
 
 class ExercisePlan extends StatefulWidget {
   ExercisePlan() : super();
@@ -154,13 +155,16 @@ class _ExercisePlanState extends State<ExercisePlan> {
             padding: EdgeInsets.only(bottom: 10, left: 50, right: 50),
             child: ElevatedButton(
               onPressed: () async {
-                // Line doenst work
-                //final value = await DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(_weekID);
                 elapsedTime = exerciseMode ? elapsedTime : 0;
+                bool temp = exerciseMode;
+                if (!temp) {
+                  ended = false;
+                  start = true;
+                }
                 exerciseMode = true;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Tracker('Timer', totalTime, elapsedTime)),
+                  MaterialPageRoute(builder: (context) => Tracker('Timer', elapsedTime, temp ? true : false)),
                 );
               },
               child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),

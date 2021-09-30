@@ -7,20 +7,20 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/pages/welcome.dart';
 import 'package:wearable_intelligence/utils/globals.dart' as global;
-import 'database.dart';
 
+import 'database.dart';
 
 const Map config = const {
   'clientID': '<OAuth 2.0 Client ID>',
   'clientSecret': '<Client Secret>',
 };
 
-
 class FitBitService {
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
   Future getCode(BuildContext context) async {
-    const url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&prompt=login%20consent';
+    const url =
+        'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=23B82K&redirect_uri=wearintel://myapp&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&prompt=login%20consent';
 
     final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'wearintel');
 
@@ -77,10 +77,9 @@ class FitBitService {
   }
 
   Future logoutFitBit() async {
-    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${global.refreshToken}'),
-    headers: {
-    'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
-    'Content-Type' : 'application/x-www-form-urlencoded',
+    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${global.refreshToken}'), headers: {
+      'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
+      'Content-Type': 'application/x-www-form-urlencoded',
     });
 
     global.authToken = '';
@@ -99,30 +98,31 @@ class FitBitService {
     return true;
   }
 
-
   Future getHeartRates() async {
     var formatter = new DateFormat('yyyy-MM-dd');
     global.weekActivityMinutes = [];
 
-      http.Response response = await http.get(
-          Uri.parse(
-              'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/7d.json'),
-          headers: {'Authorization': 'Bearer ${global.authToken}'});
+    http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/7d.json'),
+        headers: {'Authorization': 'Bearer ${global.authToken}'});
 
-        global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
-        global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
+    global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
+    global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
 
-      //don't have data that can be received yet //
+    //don't have data that can be received yet //
     global.calories = 0;
     global.totalHours = 0;
-    for (int i = 0; i < 4; i++) {
-      int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
-      global.calories += calories;
+    try {
+      for (int i = 0; i < 4; i++) {
+        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
+        global.calories += calories;
+      }
+      for (int i = 0; i < 7; i++) {
+        global.weekActivityMinutes.add(jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"]);
+        int time = jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"].round();
+        global.totalHours += time;
+      }
+    } catch (e) {
+      print(e);
     }
-    for (int i = 0; i < 7; i++) {
-      global.weekActivityMinutes.add(jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"]);
-      int time = jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"].round();
-      global.totalHours += time;
-   }
   }
 }
