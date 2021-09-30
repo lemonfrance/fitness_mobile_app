@@ -98,12 +98,12 @@ class FitBitService {
     return true;
   }
 
-  Future getHeartRates() async {
-    var formatter = new DateFormat('yyyy-MM-dd');
-    global.weekActivityMinutes = [];
+  Future getHeartRateInformation() async {
+      http.Response response = await http.get(
+          Uri.parse(
+              'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/7d.json'),
+          headers: {'Authorization': 'Bearer ${global.authToken}'});
 
-    http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/7d.json'),
-        headers: {'Authorization': 'Bearer ${global.authToken}'});
 
     global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
     global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
@@ -111,18 +111,81 @@ class FitBitService {
     //don't have data that can be received yet //
     global.calories = 0;
     global.totalHours = 0;
-    try {
+     try {
       for (int i = 0; i < 4; i++) {
-        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
+        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]
+                ["heartRateZones"][i]["caloriesOut"]
+            .round();
         global.calories += calories;
       }
-      for (int i = 0; i < 7; i++) {
-        global.weekActivityMinutes.add(jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"]);
-        int time = jsonDecode(response.body)["activities-heart"][i]["value"]["heartRateZones"][2]["minutes"].round();
+      for (int i = 7; i > 0; i--) {
+        var date = DateTime.now().subtract(Duration(days: i));
+        global.weekActivityMinutes[date.weekday - 1] =
+            jsonDecode(response.body)["activities-heart"][i - 1]["value"]
+                ["heartRateZones"][2]["minutes"];
+        int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]
+                ["heartRateZones"][2]["minutes"]
+            .round();
         global.totalHours += time;
       }
-    } catch (e) {
+    }catch(e){
+       print(e);
+     }
+  }
+
+  Future getHeartRate30() async {
+    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: 30)));
+    var end = DateFormat("HH:mm").format(DateTime.now());
+    http.Response response = await http.get(
+        Uri.parse(
+            'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
+        headers: {'Authorization': 'Bearer ${global.authToken}'});
+
+    try {
+      for (int i = 0;
+          i <
+              (jsonDecode(response.body)["activities-heart-intraday"]
+                      ["dataset"])
+                  .length;
+          i++) {
+        global.workoutHeartRates[i] = new global.heartRates(
+            i.toString(),
+            jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]
+                ["value"]);
+      }
+    } catch(e){
+      print(e);
+    }
+  }
+
+  Future getHeartRateDay() async {
+    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(days:1)));
+    var end = DateFormat("HH:mm").format(DateTime.now());
+    http.Response response = await http.get(
+        Uri.parse(
+            'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
+        headers: {'Authorization': 'Bearer ${global.authToken}'});
+
+    try{
+      for (int i = 0;
+          i <
+              (jsonDecode(response.body)["activities-heart-intraday"]
+                          ["dataset"])
+                      .length /
+                  60;
+          i++) {
+        String time = (jsonDecode(response.body)["activities-heart-intraday"]
+                ["dataset"][i * 60]["time"])
+            .split(':')[0];
+        global.dayHeartRates[i] = new global.heartRates(
+            time,
+            jsonDecode(response.body)["activities-heart-intraday"]["dataset"]
+                [i * 60]["value"]);
+      }
+    }catch(e){
       print(e);
     }
   }
 }
+
+

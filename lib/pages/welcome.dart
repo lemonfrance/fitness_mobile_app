@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as global;
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 import '../loading.dart';
@@ -12,15 +12,20 @@ import '../loading.dart';
 Future verifyFitbit(BuildContext context) async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
+
+
   final user = await DatabaseService(uid: mAuth.currentUser!.uid).getFitbitUser();
   final refreshToken = await DatabaseService(uid: mAuth.currentUser!.uid).getRefreshToken();
-  global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
-  global.level = await DatabaseService(uid: mAuth.currentUser!.uid).getLevel();
+  await DatabaseService(uid: mAuth.currentUser!.uid).getPreferredExercises();
+  name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
+  level = await DatabaseService(uid: mAuth.currentUser!.uid).getLevel();
   if (user != '') {
     await FitBitService().getRefreshToken(refreshToken);
-    await FitBitService().getHeartRates();
+    await FitBitService().getHeartRateInformation();
     await DatabaseService(uid: mAuth.currentUser!.uid).getExercisePlan();
-    global.fitBitAccount = true;
+    await FitBitService().getHeartRate30();
+    await FitBitService().getHeartRateDay();
+    fitBitAccount = true;
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
   }
 }
@@ -28,13 +33,13 @@ Future verifyFitbit(BuildContext context) async {
 Future loadNewAccount(BuildContext context) async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
 
-  await FitBitService().getAuthToken(global.accessToken!);
-  await FitBitService().getFitBitData(global.authToken, mAuth.currentUser!.uid);
-  global.name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
-  await FitBitService().getHeartRates();
+  await FitBitService().getAuthToken(accessToken!);
+  await FitBitService().getFitBitData(authToken, mAuth.currentUser!.uid);
+  name = await DatabaseService(uid: mAuth.currentUser!.uid).getFirstName();
+  await FitBitService().getHeartRateInformation();
   await CreateInitalExercisePlan(mAuth);
   await DatabaseService(uid: mAuth.currentUser!.uid).getExercisePlan();
-  global.firstFitbit = false;
+  firstFitbit = false;
 
   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
 }
@@ -42,7 +47,7 @@ Future loadNewAccount(BuildContext context) async {
 
 Future CreateInitalExercisePlan(FirebaseAuth mAuth) async{
    List exerciseType = [];
-   String heartRateRange = global.heartRateMin.toString() +" - " + global.heartRateMax.toString() + "bpm";
+   String heartRateRange = heartRateMin.toString() +" - " + heartRateMax.toString() + "bpm";
    for(int i = 0;i<exerciseTypes.length;i++){
      if(exerciseTypes[i]["selected"]){
        exerciseType.add(exerciseTypes[i]["type"]);
@@ -50,13 +55,13 @@ Future CreateInitalExercisePlan(FirebaseAuth mAuth) async{
    }
 
    if(exerciseType.isEmpty){
-     if(global.level == 1){
+     if(level == 1){
        if(levelOneQuestions[0]["pain"]>=8)
         exerciseType.add("Swimming");
        else{
          exerciseType.add("Walking");
        }
-     } else if(global.level == 2){
+     } else if(level == 2){
        exerciseType.add("Running");
      } else{
        if(levelThreeQuestions[0]["selected"] || (!levelThreeQuestions[1]["selected"] && !levelThreeQuestions[2]["selected"])){
@@ -102,7 +107,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(global.firstFitbit){
+    if(firstFitbit){
       loadNewAccount(context);
     }else{
       verifyFitbit(context);

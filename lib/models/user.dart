@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Users {
   String? username;
   String? email;
@@ -14,7 +16,8 @@ class Users {
   String? authToken;
   String? fitbitId;
   int? fitnessLevel;
+  Array? preferredExercises;
 
   Users({this.username, this.email, this.uid, this.firstName, this.lastName,
-         this.age, this.height, this.weight, this.gender, this.birthDate,  this.totalHours, this.refreshToken, this.authToken, this.fitbitId});
+         this.age, this.height, this.weight, this.gender, this.birthDate,  this.totalHours, this.refreshToken, this.authToken, this.fitbitId, this.preferredExercises});
 }

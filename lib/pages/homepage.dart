@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/loading.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
@@ -87,10 +88,17 @@ class _MyHomePageState extends State<MyHomePage> {
   /// This is used to create the Preferred Forms of Exercise tiles on the home screen.
   Widget typeTile(int index) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         setState(() {
           exerciseTypes[index]["selected"] = !exerciseTypes[index]["selected"];
         });
+        var exercises = [];
+        for(dynamic type in exerciseTypes){
+          if(type["selected"]){
+            exercises.add(type["type"]);
+          }
+        }
+        await DatabaseService(uid: mAuth.currentUser!.uid).setPreferredExercises(exercises);
       },
       child: Container(
         height: (width - 120) / 3,

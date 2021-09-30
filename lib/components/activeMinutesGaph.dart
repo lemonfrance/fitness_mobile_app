@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 class ActiveMinutesGraph extends StatefulWidget {
@@ -10,15 +11,15 @@ class ActiveMinutesGraph extends StatefulWidget {
 }
 
 class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
-  List<_SalesData> data = [
+  List<ActiveData> data = [
     /// use active zone heart rate when available
-    _SalesData('MON', 20),
-    _SalesData('TUE', 50),
-    _SalesData('WED', 45),
-    _SalesData('THU', 30),
-    _SalesData('FRI', 35),
-    _SalesData('SAT', 25),
-    _SalesData('SUN', 40),
+    ActiveData('MON',  weekActivityMinutes[0]),
+    ActiveData('TUE',  weekActivityMinutes[1]),
+    ActiveData('WED',  weekActivityMinutes[2]),
+    ActiveData('THU',  weekActivityMinutes[3]),
+    ActiveData('FRI',  weekActivityMinutes[4]),
+    ActiveData('SAT',  weekActivityMinutes[5]),
+    ActiveData('SUN',  weekActivityMinutes[6]),
   ];
 
   @override
@@ -46,13 +47,13 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
                 alignment: ChartAlignment.near,
                 textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colours.black)),
             primaryYAxis: NumericAxis(
-              maximum: 55,
+              maximum: 45,
               labelFormat: '{value} min',
               plotBands: <PlotBand>[
                 PlotBand(
                   isVisible: true,
-                  start: 35,
-                  end: 35,
+                  start: 30,
+                  end: 30,
                   dashArray: <double>[5, 10],
                   borderColor: Colors.grey,
                   borderWidth: 2,
@@ -72,11 +73,11 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
             ),
             plotAreaBorderWidth: 0,
             series: <ChartSeries>[
-              ColumnSeries<_SalesData, String>(
+              ColumnSeries<ActiveData, String>(
                   dataSource: data,
-                  xValueMapper: (_SalesData sales, _) => sales.year,
-                  yValueMapper: (_SalesData sales, _) => sales.sales,
-                  pointColorMapper: (_SalesData sales, _) => (sales.sales > 35) ? Colours.lightBlue : Colours.highlight,
+                  xValueMapper: (ActiveData data, _) => data.day,
+                  yValueMapper: (ActiveData data, _) => data.minutes,
+                  pointColorMapper: (ActiveData data, _) => (data.minutes > 30) ? Colours.lightBlue : Colours.highlight,
                   // Sets the corner radius
                   width: 0.2,
                   borderRadius: BorderRadius.all(Radius.circular(30)))
@@ -84,9 +85,9 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
   }
 }
 
-class _SalesData {
-  _SalesData(this.year, this.sales);
+class ActiveData {
+  ActiveData(this.day, this.minutes);
 
-  final String year;
-  final int sales;
+  final String day;
+  final int minutes;
 }

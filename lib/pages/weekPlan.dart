@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
+import 'package:wearable_intelligence/models/exercisePlan.dart' as model;
 import 'package:wearable_intelligence/pages/tracker.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
@@ -19,28 +20,29 @@ class ExercisePlan extends StatefulWidget {
 
 class _ExercisePlanState extends State<ExercisePlan> {
   final AuthService _auth = AuthService();
-  late final ValueNotifier<List<Event>> _selectedEvents;
+  late ValueNotifier<List<model.ExercisePlan>> _selectedEvents;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
   //Future<dynamic>? _workout;
-  int? _weekID;
+  int _weekID = 0;
 
   @override
   void initState() {
     super.initState();
 
     _selectedDay = _focusedDay;
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _selectedEvents = ValueNotifier(_getEventsForDay(_focusedDay));
     _weekID = (_focusedDay.weekday - 1);
 
     // _workout = DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(weekID);
   }
 
-  List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+  List<model.ExercisePlan> _getEventsForDay(DateTime day) {
+    List<model.ExercisePlan> event = [];
+    event.add(weekPlan[day.weekday-1]);
+    return event;
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -55,7 +57,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
   Widget weekCalendar() {
     return Container(
-      child: TableCalendar<Event>(
+      child: TableCalendar<model.ExercisePlan>(
         firstDay: kFirstDay,
         lastDay: kLastDay,
         focusedDay: _focusedDay,
@@ -82,7 +84,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
           _focusedDay = focusedDay;
         },
         calendarBuilders: CalendarBuilders(markerBuilder: (context, date, events) {
-          List<Event> event = _getEventsForDay(date);
+          List<model.ExercisePlan> event = _getEventsForDay(date);
           if (event.length > 0) {
             return Container();
           }
@@ -146,7 +148,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
             padding: EdgeInsets.all(20),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!).first.toString()) : "Rest Day",
+              child: Text((_getEventsForDay(_selectedDay!).length > 0) ? (_getEventsForDay(_selectedDay!)[0].getType) : "Rest Day",
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 24)),
             ),
             // This might need to change since they can click on the dates.
@@ -186,7 +188,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
           ),
           Padding(
             padding: EdgeInsets.all(20),
-            child: exercisePlan(75, 30),
+            child: exercisePlan((_getEventsForDay(_selectedDay!)[0].getHeartRate), (_getEventsForDay(_selectedDay!)[0].getDuration)),
           ),
           education(
             //exercise id get intensity

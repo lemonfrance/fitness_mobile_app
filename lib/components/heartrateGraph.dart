@@ -1,6 +1,8 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as globals;
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 class HeartrateGraph extends StatefulWidget {
@@ -13,27 +15,7 @@ class HeartrateGraph extends StatefulWidget {
 }
 
 class _HeartrateGraphState extends State<HeartrateGraph> {
-  List<_SalesData> data = [
-    /// use active zone heart rate when available
-    _SalesData('8am', 100),
-    _SalesData('10am', 80),
-    _SalesData('12pm', 120),
-    _SalesData('2pm', 110),
-    _SalesData('4pm', 90),
-    _SalesData('8pm', 90),
-    _SalesData('10pm', 100),
-  ];
 
-  List<_SalesData> workoutData = [
-    /// use active zone heart rate when available
-    _SalesData('0 min', 100),
-    _SalesData('5 min', 80),
-    _SalesData('10 min', 120),
-    _SalesData('15 min', 110),
-    _SalesData('20 min', 90),
-    _SalesData('25 min', 90),
-    _SalesData('30 min', 100),
-  ];
   // new List<int>.generate(10, (i) => i + 1)
 
   @override
@@ -62,13 +44,13 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
             ),
             primaryYAxis: NumericAxis(
                 minimum: 60,
-                maximum: 160,
+                maximum: 120,
                 labelFormat: '{value} bpm',
                 plotBands: <PlotBand>[
                   PlotBand(
                     isVisible: true,
-                    start: globals.heartRateMin,
-                    end: globals.heartRateMin,
+                    start: heartRateMin,
+                    end: heartRateMin,
                     color: Colours.lightBlue,
                     opacity: 0.4,
                     dashArray: <double>[5, 5],
@@ -77,15 +59,15 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
                   ),
                   PlotBand(
                     isVisible: true,
-                    start: globals.heartRateMax,
-                    end: globals.heartRateMax,
+                    start: heartRateMax,
+                    end: heartRateMax,
                     color: Colours.lightBlue,
                     opacity: 0.4,
                     dashArray: <double>[5, 5],
                     borderColor: Colors.grey,
                     borderWidth: 2,
                   ),
-                  PlotBand(isVisible: true, start: globals.heartRateMin, end: globals.heartRateMax, color: Colours.lightBlue, opacity: 0.4),
+                  PlotBand(isVisible: true, start: heartRateMin, end: heartRateMax, color: Colours.lightBlue, opacity: 0.4),
                 ],
                 axisLine: AxisLine(width: 0),
                 majorGridLines: MajorGridLines(width: 0),
@@ -99,22 +81,25 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
             ),
             plotAreaBorderWidth: 0,
             tooltipBehavior: TooltipBehavior(enable: true, header: ''),
-            series: <ChartSeries>[
-              // Renders spline chart
-              SplineSeries<_SalesData, String>(
-                dataSource: widget.workout ? workoutData : data,
-                xValueMapper: (_SalesData sales, _) => sales.year,
-                yValueMapper: (_SalesData sales, _) => sales.sales,
+            series: widget.workout ? (<ChartSeries>[
+              SplineSeries<heartRates, String>(
+                dataSource: workoutHeartRates,
+                xValueMapper: (heartRates value, _) => value.time,
+                yValueMapper: (heartRates value, _) => value.value,
+
                 color: Colours.highlight,
                 width: 3,
               )
-            ]));
+            ]) :(<ChartSeries>[
+              SplineSeries<heartRates, String>(
+                dataSource: dayHeartRates,
+                xValueMapper: (heartRates value, _) => value.time,
+                yValueMapper: (heartRates value, _) => value.value,
+
+                color: Colours.highlight,
+                width: 3,
+              )
+            ])
+        ));
   }
-}
-
-class _SalesData {
-  _SalesData(this.year, this.sales);
-
-  final String year;
-  final int sales;
 }

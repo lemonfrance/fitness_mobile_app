@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
 
@@ -211,7 +213,7 @@ class _PostExerciseState extends State<PostExercise> {
                 Container(height: 20),
                 feedbackTile(),
                 Container(height: 20),
-                HeartrateGraph(true), // Can we have a 30min window?
+                workoutHeartRates[0].time == '' ? Container(height: 0): HeartrateGraph(true),
                 Container(height: 20),
                 slider("How hard did you find the exercise?", true),
                 Container(height: 20),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
+import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 
 
 class DatabaseService {
@@ -30,6 +31,7 @@ class DatabaseService {
       'authToken':'',
       'fitbitId':'',
       'fitnessLevel':0,
+      'preferredExercises':[]
     });
   }
 
@@ -58,6 +60,19 @@ class DatabaseService {
     return await wearIntelCollection.doc(uid).update(
       {'fitnessLevel':level}
     );
+  }
+
+  Future setPreferredExercises(var exercises) async {
+    return await wearIntelCollection.doc(uid).update(
+        {'preferredExercises': exercises}
+    );
+  }
+
+  Future getPreferredExercises() async {
+    final value = await wearIntelCollection.doc(uid).get();
+    for(String exercise in value.get('preferredExercises')){
+      exerciseTypes.firstWhere((element) => element["type"] == exercise)["selected"] = true;
+      }
   }
 
   Future getFitbitUser() async {

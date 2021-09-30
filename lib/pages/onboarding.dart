@@ -2,14 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wearable_intelligence/Services/database.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as globals;
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 
-Future setLevel(int level) async {
+
+Future saveOnboard(int level, var exercises) async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
   await DatabaseService(uid: mAuth.currentUser!.uid).setLevel(level);
+  await DatabaseService(uid: mAuth.currentUser!.uid).setPreferredExercises(exercises);
 }
 
 class Onboarding extends StatefulWidget {
@@ -241,44 +243,48 @@ class _OnboardingState extends State<Onboarding> {
                     curve: Curves.easeOut,
                     duration: const Duration(milliseconds: 300),
                   );
-
-                  setState(() {
-                    switch (_widgetIndex) {
-                      case 0:
-                        // Make sure that they can both walk 1k and climb a flight of stairs
-                        // Make sure they are not in unnecessary pain
-                        if (levelOneQuestions[0]["selected"] == true &&
-                            levelOneQuestions[1]["selected"] == true &&
-                            levelOneQuestions[0]["pain"] < 6 &&
-                            levelOneQuestions[1]["pain"] < 6) {
-                          _widgetIndex = 1;
-                        } else {
+                    setState(() {
+                      switch (_widgetIndex) {
+                        case 0:
+                          // Make sure that they can both walk 1k and climb a flight of stairs
+                          // Make sure they are not in unnecessary pain
+                          if (levelOneQuestions[0]["selected"] == true &&
+                              levelOneQuestions[1]["selected"] == true &&
+                              levelOneQuestions[0]["pain"] < 6 &&
+                              levelOneQuestions[1]["pain"] < 6) {
+                            _widgetIndex = 1;
+                          } else {
+                            finished = true;
+                            level = 1;
+                          }
+                          break;
+                        case 1:
+                          if (levelTwoQuestions[0]["selected"] == true && levelTwoQuestions[0]["pain"] < 6) {
+                            _widgetIndex = 2;
+                          } else {
+                            finished = true;
+                            level = 2;
+                          }
+                          break;
+                        case 2:
                           finished = true;
-                          globals.level = 1;
+                          level = 3;
+                          break;
+                      }
+                    });
+                    if (finished) {
+                      var exercises = [];
+                      for(dynamic type in exerciseTypes){
+                        if(type["selected"]){
+                          exercises.add(type["type"]);
                         }
-                        break;
-                      case 1:
-                        if (levelTwoQuestions[0]["selected"] == true && levelTwoQuestions[0]["pain"] < 6) {
-                          _widgetIndex = 2;
-                        } else {
-                          finished = true;
-                          globals.level = 2;
-                        }
-                        break;
-                      case 2:
-                        finished = true;
-                        globals.level = 3;
-                        break;
-                    }
-                  });
-                  if (finished) {
-                    setLevel(globals.level);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
-                    );
-                  }
-                },
+                      }
+                      saveOnboard(level, exercises);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),
+                      );
+                    }},
                 minWidth: double.infinity,
                 height: 60,
                 elevation: 10,
