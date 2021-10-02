@@ -24,9 +24,9 @@ class _TrackerState extends State<Tracker> {
       ended = false;
       rest = false;
       start = true;
-      reps = 3;
-      exerciseTime = 10;
-      restTime = 5;
+      reps = 1;
+      exerciseTime = 2;
+      restTime = 1;
       elapsedTime = 0;
     }
   }

@@ -41,7 +41,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {
     List<model.ExercisePlan> event = [];
-    event.add(weekPlan[day.weekday-1]);
+    event.add(weekPlan[day.weekday - 1]);
     return event;
   }
 
@@ -119,7 +119,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
   }
 
   Widget education(String title, String body) {
-    TextStyle headerStyle = TextStyle(color: Colours.darkBlue, fontSize: 18, fontWeight: FontWeight.bold, height: 1);
+    TextStyle headerStyle = TextStyle(color: Colours.darkBlue, fontSize: 21, fontWeight: FontWeight.bold, height: 1);
     TextStyle bodyStyle = TextStyle(color: Colours.darkBlue, fontSize: 18, height: 1);
     return Padding(
       padding: EdgeInsets.all(20),
@@ -128,6 +128,9 @@ class _ExercisePlanState extends State<ExercisePlan> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: headerStyle),
+          Container(
+            height: 5,
+          ),
           Text(body, style: bodyStyle),
         ],
       ),
@@ -137,6 +140,15 @@ class _ExercisePlanState extends State<ExercisePlan> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+
+    // Uncomment if you want to test the timer on a weekend
+    // bool showButton = ((_focusedDay.day == DateTime.now().day) &&
+    //     (_focusedDay.month == DateTime.now().month) &&
+    //     (_focusedDay.year == DateTime.now().year));
+    bool showButton = ((_focusedDay.day == DateTime.now().day) &&
+        (_focusedDay.month == DateTime.now().month) &&
+        (_focusedDay.year == DateTime.now().year) &&
+        (DateTime.now().weekday < 6));
 
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
@@ -155,29 +167,31 @@ class _ExercisePlanState extends State<ExercisePlan> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 10, left: 50, right: 50),
-            child: ElevatedButton(
-              onPressed: () async {
-                elapsedTime = exerciseMode ? elapsedTime : 0;
-                bool temp = exerciseMode;
-                if (!temp) {
-                  ended = false;
-                  start = true;
-                }
-                exerciseMode = true;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Tracker('Timer', elapsedTime, temp ? true : false)),
-                );
-              },
-              child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
-              style: ElevatedButton.styleFrom(
-                primary: Colours.highlight,
-                onPrimary: Colours.white,
-                minimumSize: Size(width - 100, 45),
-                shape: StadiumBorder(),
-                elevation: 10,
-              ),
-            ),
+            child: showButton
+                ? ElevatedButton(
+                    onPressed: () async {
+                      elapsedTime = exerciseMode ? elapsedTime : 0;
+                      bool temp = exerciseMode;
+                      if (!temp) {
+                        ended = false;
+                        start = true;
+                      }
+                      exerciseMode = true;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Tracker('Timer', elapsedTime, temp ? true : false)),
+                      );
+                    },
+                    child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colours.highlight,
+                      onPrimary: Colours.white,
+                      minimumSize: Size(width - 100, 45),
+                      shape: StadiumBorder(),
+                      elevation: 10,
+                    ),
+                  )
+                : Container(),
           ),
           Padding(
             padding: EdgeInsets.all(20),
@@ -191,19 +205,10 @@ class _ExercisePlanState extends State<ExercisePlan> {
             child: exercisePlan((_getEventsForDay(_selectedDay!)[0].getHeartRate), (_getEventsForDay(_selectedDay!)[0].getDuration)),
           ),
           education(
-            //exercise id get intensity
-            "Low impact",
-            "It causes less strain and injuries than most other forms of exercise.",
-          ),
-          education(
-            //get workout name
-            "Muscle workout",
-            "cycling uses all of the major muscle groups as you pedal.",
-          ),
-          education(
-            //get workout type
-            "Strength and stamina",
-            "cycling increases stamina, strength and aerobic fitness.",
+            "Heart Rate",
+            "Where appropriate, we wish for the heart rate to reach 77-95% of your maximum heart rate while participating in vigorous-intensity aerobic exercise.\n"
+                "\nIf vigorous-intensity exercise is not recommended we aim to reach 64-76% of your maximum heart rate.\n\nThese target heart rate ranges are"
+                " used to help reduce HbA1c levels and improve your cardiovascular health",
           ),
           Container(height: 20)
         ],
