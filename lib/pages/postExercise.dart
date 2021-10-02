@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wearable_intelligence/Services/database.dart';
+import 'package:intl/intl.dart';
+import 'package:wearable_intelligence/Services/evaluation.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
@@ -264,6 +265,9 @@ class _PostExerciseState extends State<PostExercise> {
               padding: EdgeInsets.only(bottom: 20),
               child: ElevatedButton(
                 onPressed: () async {
+                  String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  await EvaluationService().setResponses(date, weekPlan[DateTime.now().weekday - 1].getType, widget.chestPain, widget.coldSweats, _difficulty.toInt(), _pain.toInt());
+                  await EvaluationService().setHeartRateData(date);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),

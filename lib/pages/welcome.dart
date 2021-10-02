@@ -23,7 +23,6 @@ Future verifyFitbit(BuildContext context) async {
     await FitBitService().getRefreshToken(refreshToken);
     await FitBitService().getHeartRateInformation();
     await DatabaseService(uid: mAuth.currentUser!.uid).getExercisePlan();
-    await FitBitService().getHeartRate30();
     await FitBitService().getHeartRateDay();
     fitBitAccount = true;
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));

@@ -1,6 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 import '../utils/globals.dart';
@@ -238,16 +239,11 @@ class _TrackerState extends State<Tracker> {
                             start ? "Start" : "Show Stats",
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             if (start) {
                               reset(widget._continue);
                             }
-                            start
-                                ? exerciseController.start()
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
-                                  );
+                            start ? exerciseController.start() : nextPage(context);
                             setState(() {
                               start = false;
                             });
@@ -283,4 +279,10 @@ class _TrackerState extends State<Tracker> {
           return false; // TODO change to true to allow back press.
         });
   }
+}
+
+
+Future nextPage(BuildContext context) async {
+  await FitBitService().getHeartRate30();
+  Navigator.push(context,MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
 }

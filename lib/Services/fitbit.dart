@@ -6,7 +6,7 @@ import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/pages/welcome.dart';
-import 'package:wearable_intelligence/utils/globals.dart' as global;
+import 'package:wearable_intelligence/utils/globals.dart';
 
 import 'database.dart';
 
@@ -25,8 +25,8 @@ class FitBitService {
     final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'wearintel');
 
     //get auth code
-    global.accessToken = Uri.parse(result).queryParameters['code'].toString();
-    global.firstFitbit = true;
+    accessToken = Uri.parse(result).queryParameters['code'].toString();
+    firstFitbit = true;
     Navigator.push(context, MaterialPageRoute(builder: (context) => WelcomePage()));
   }
 
@@ -37,7 +37,7 @@ class FitBitService {
     final result = await FlutterWebAuth.authenticate(url: url, callbackUrlScheme: 'wearintel');
 
     //get auth code
-    global.accessToken = Uri.parse(result).queryParameters['code'].toString();
+    accessToken = Uri.parse(result).queryParameters['code'].toString();
   }
 
   Future getAuthToken(String code) async {
@@ -46,10 +46,10 @@ class FitBitService {
       'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
       'Content-Type': 'application/x-www-form-urlencoded',
     });
-    global.authToken = jsonDecode(response.body)["access_token"];
-    global.refreshToken = jsonDecode(response.body)["refresh_token"];
-    global.user_id = jsonDecode(response.body)["user_id"];
-    global.fitBitAccount = true;
+    authToken = jsonDecode(response.body)["access_token"];
+    refreshToken = jsonDecode(response.body)["refresh_token"];
+    user_id = jsonDecode(response.body)["user_id"];
+    fitBitAccount = true;
 
     final responseBody = (jsonDecode(response.body));
     await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"], responseBody["user_id"]);
@@ -63,30 +63,30 @@ class FitBitService {
         'Content-Type': 'application/x-www-form-urlencoded',
       });
 
-      global.authToken = jsonDecode(response.body)["access_token"];
-      global.refreshToken = jsonDecode(response.body)["refresh_token"];
-      global.user_id = jsonDecode(response.body)["user_id"];
-      global.fitBitAccount = true;
+      authToken = jsonDecode(response.body)["access_token"];
+      refreshToken = jsonDecode(response.body)["refresh_token"];
+      user_id = jsonDecode(response.body)["user_id"];
+      fitBitAccount = true;
 
       final responseBody = (jsonDecode(response.body));
       await DatabaseService(uid: mAuth.currentUser!.uid).updateToken(responseBody["refresh_token"], responseBody["access_token"], responseBody["user_id"]);
     } catch (e) {
       await reGetCode();
-      await getAuthToken(global.accessToken!);
+      await getAuthToken(accessToken!);
     }
   }
 
   Future logoutFitBit() async {
-    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${global.refreshToken}'), headers: {
+    await http.post(Uri.parse('https://api.fitbit.com/oauth2/revoke?token=${refreshToken}'), headers: {
       'Authorization': 'Basic MjNCODJLOjQ1MTA4ZTY1MDA0MzE2MmIzYThkODdjODNhY2JlOTdj',
       'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    global.authToken = '';
-    global.refreshToken = '';
-    global.user_id = '';
+    authToken = '';
+    refreshToken = '';
+    user_id = '';
     await DatabaseService(uid: mAuth.currentUser!.uid).updateToken('', '', '');
-    global.fitBitAccount = false;
+    fitBitAccount = false;
   }
 
   Future getFitBitData(auth_code, uid) async {
@@ -101,32 +101,32 @@ class FitBitService {
   Future getHeartRateInformation() async {
       http.Response response = await http.get(
           Uri.parse(
-              'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/7d.json'),
-          headers: {'Authorization': 'Bearer ${global.authToken}'});
+              'https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/7d.json'),
+          headers: {'Authorization': 'Bearer ${authToken}'});
 
 
-    global.heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
-    global.heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
+    heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
+    heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
 
     //don't have data that can be received yet //
-    global.calories = 0;
-    global.totalHours = 0;
+    calories = 0;
+    totalHours = 0;
      try {
       for (int i = 0; i < 4; i++) {
         int calories = jsonDecode(response.body)["activities-heart"][0]["value"]
                 ["heartRateZones"][i]["caloriesOut"]
             .round();
-        global.calories += calories;
+        calories += calories;
       }
       for (int i = 7; i > 0; i--) {
         var date = DateTime.now().subtract(Duration(days: i));
-        global.weekActivityMinutes[date.weekday - 1] =
+        weekActivityMinutes[date.weekday - 1] =
             jsonDecode(response.body)["activities-heart"][i - 1]["value"]
                 ["heartRateZones"][2]["minutes"];
         int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]
                 ["heartRateZones"][2]["minutes"]
             .round();
-        global.totalHours += time;
+        totalHours += time;
       }
     }catch(e){
        print(e);
@@ -138,20 +138,15 @@ class FitBitService {
     var end = DateFormat("HH:mm").format(DateTime.now());
     http.Response response = await http.get(
         Uri.parse(
-            'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
-        headers: {'Authorization': 'Bearer ${global.authToken}'});
+            'https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
+        headers: {'Authorization': 'Bearer ${authToken}'});
 
     try {
-      for (int i = 0;
-          i <
-              (jsonDecode(response.body)["activities-heart-intraday"]
-                      ["dataset"])
-                  .length;
-          i++) {
-        global.workoutHeartRates[i] = new global.heartRates(
+      for (int i = 0; i <(jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length; i++) {
+        workoutHeartRates[i] = new heartRates(
             i.toString(),
-            jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]
-                ["value"]);
+            jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"]);
+        workoutHeartRatesDB[i] = jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"];
       }
     } catch(e){
       print(e);
@@ -163,8 +158,8 @@ class FitBitService {
     var end = DateFormat("HH:mm").format(DateTime.now());
     http.Response response = await http.get(
         Uri.parse(
-            'https://api.fitbit.com/1/user/${global.user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
-        headers: {'Authorization': 'Bearer ${global.authToken}'});
+            'https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
+        headers: {'Authorization': 'Bearer ${authToken}'});
 
     try{
       for (int i = 0;
@@ -177,7 +172,7 @@ class FitBitService {
         String time = (jsonDecode(response.body)["activities-heart-intraday"]
                 ["dataset"][i * 60]["time"])
             .split(':')[0];
-        global.dayHeartRates[i] = new global.heartRates(
+        dayHeartRates[i] = new heartRates(
             time,
             jsonDecode(response.body)["activities-heart-intraday"]["dataset"]
                 [i * 60]["value"]);

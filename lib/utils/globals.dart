@@ -22,6 +22,7 @@ bool firstFitbit = false;
 var weekPlan = [];
 var weekActivityMinutes = [0,0,0,0,0,0,0];
 var workoutHeartRates = List.filled(30, heartRates('',0));
+var workoutHeartRatesDB = List.filled(30, 0);
 var dayHeartRates = List.filled(24, heartRates('',0));
 
 class heartRates {
