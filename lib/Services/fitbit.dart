@@ -99,11 +99,8 @@ class FitBitService {
   }
 
   Future getHeartRateInformation() async {
-      http.Response response = await http.get(
-          Uri.parse(
-              'https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/7d.json'),
-          headers: {'Authorization': 'Bearer ${authToken}'});
-
+    http.Response response = await http
+        .get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/7d.json'), headers: {'Authorization': 'Bearer ${authToken}'});
 
     heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
     heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
@@ -111,76 +108,51 @@ class FitBitService {
     //don't have data that can be received yet //
     calories = 0;
     totalHours = 0;
-     try {
+    try {
       for (int i = 0; i < 4; i++) {
-        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]
-                ["heartRateZones"][i]["caloriesOut"]
-            .round();
+        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
         calories += calories;
       }
       for (int i = 7; i > 0; i--) {
         var date = DateTime.now().subtract(Duration(days: i));
-        weekActivityMinutes[date.weekday - 1] =
-            jsonDecode(response.body)["activities-heart"][i - 1]["value"]
-                ["heartRateZones"][2]["minutes"];
-        int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]
-                ["heartRateZones"][2]["minutes"]
-            .round();
+        weekActivityMinutes[date.weekday - 1] = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"];
+        int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"].round();
         totalHours += time;
       }
-    }catch(e){
-       print(e);
-     }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future getHeartRate30() async {
     var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: 30)));
     var end = DateFormat("HH:mm").format(DateTime.now());
-    http.Response response = await http.get(
-        Uri.parse(
-            'https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
+    http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
         headers: {'Authorization': 'Bearer ${authToken}'});
 
     try {
-      for (int i = 0; i <(jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length; i++) {
-        workoutHeartRates[i] = new heartRates(
-            i.toString(),
-            jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"]);
+      for (int i = 0; i < (jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length; i++) {
+        workoutHeartRates[i] = new heartRates(i.toString(), jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"]);
         workoutHeartRatesDB[i] = jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"];
       }
-    } catch(e){
+    } catch (e) {
       print(e);
     }
   }
 
   Future getHeartRateDay() async {
-    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(days:1)));
+    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(days: 1)));
     var end = DateFormat("HH:mm").format(DateTime.now());
-    http.Response response = await http.get(
-        Uri.parse(
-            'https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
+    http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
         headers: {'Authorization': 'Bearer ${authToken}'});
 
-    try{
-      for (int i = 0;
-          i <
-              (jsonDecode(response.body)["activities-heart-intraday"]
-                          ["dataset"])
-                      .length /
-                  60;
-          i++) {
-        String time = (jsonDecode(response.body)["activities-heart-intraday"]
-                ["dataset"][i * 60]["time"])
-            .split(':')[0];
-        dayHeartRates[i] = new heartRates(
-            time,
-            jsonDecode(response.body)["activities-heart-intraday"]["dataset"]
-                [i * 60]["value"]);
+    try {
+      for (int i = 0; i < (jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length / 60; i++) {
+        String time = (jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i * 60]["time"]).split(':')[0];
+        dayHeartRates[i] = new heartRates(time, jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i * 60]["value"]);
       }
-    }catch(e){
+    } catch (e) {
       print(e);
     }
   }
 }
-
-

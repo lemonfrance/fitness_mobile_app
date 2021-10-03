@@ -16,6 +16,20 @@ class Users {
   int? fitnessLevel;
   List? preferredExercises;
 
-  Users({this.username, this.email, this.uid, this.firstName, this.lastName,
-         this.age, this.height, this.weight, this.gender, this.birthDate,  this.totalHours, this.refreshToken, this.authToken, this.fitbitId, this.preferredExercises});
+  Users(
+      {this.username,
+      this.email,
+      this.uid,
+      this.firstName,
+      this.lastName,
+      this.age,
+      this.height,
+      this.weight,
+      this.gender,
+      this.birthDate,
+      this.totalHours,
+      this.refreshToken,
+      this.authToken,
+      this.fitbitId,
+      this.preferredExercises});
 }

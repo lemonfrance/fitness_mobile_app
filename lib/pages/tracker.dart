@@ -1,42 +1,33 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
-import '../utils/globals.dart';
+import '../Services/fitbit.dart';
 import 'postExercise.dart';
 
 class Tracker extends StatefulWidget {
-  Tracker(this.title, this._time, this._continue) : super();
-
-  final String title;
-  final int _time; // In seconds
-  final bool _continue;
+  Tracker() : super();
 
   @override
   _TrackerState createState() => _TrackerState();
 }
 
 class _TrackerState extends State<Tracker> {
-  reset(bool continueTrackers) {
-    if (!continueTrackers) {
-      paused = false;
-      ended = false;
-      rest = false;
-      start = true;
-      reps = 3;
-      exerciseTime = 10;
-      restTime = 5;
-      elapsedTime = 0;
-    }
-  }
+  CountDownController restController = CountDownController();
+  CountDownController exerciseController = CountDownController();
 
-  bool shouldPop = true;
+  bool paused = false;
+  bool ended = false;
+  bool start = true;
+  bool rest = false;
+
+  int reps = 2;
+  int exerciseTime = 2;
+  int restTime = 1;
 
   Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Container(
       width: width,
@@ -68,14 +59,8 @@ class _TrackerState extends State<Tracker> {
     );
   }
 
-  Widget timerTile(int duration, bool exerciseTimer) {
+  Widget timerTile(bool exerciseTimer) {
     double width = MediaQuery.of(context).size.width;
-
-    if (rest) {
-      restTime = duration;
-    } else {
-      exerciseTime = duration;
-    }
 
     return Container(
       width: width - 35,
@@ -113,8 +98,8 @@ class _TrackerState extends State<Tracker> {
             child: Padding(
               padding: EdgeInsets.all(10),
               child: CircularCountDownTimer(
-                duration: duration,
-                initialDuration: widget._time,
+                duration: exerciseTimer ? exerciseTime : restTime,
+                initialDuration: 0,
                 controller: exerciseTimer ? exerciseController : restController,
                 width: 90,
                 height: 90,
@@ -128,7 +113,7 @@ class _TrackerState extends State<Tracker> {
                 isReverse: true,
                 isReverseAnimation: true,
                 isTimerTextShown: true,
-                autoStart: (widget._continue && (exerciseTimer != rest)) ? true : false,
+                autoStart: false,
                 onStart: () {},
                 onComplete: () async {
                   // TODO make vibrate work on android
@@ -136,7 +121,6 @@ class _TrackerState extends State<Tracker> {
                   // print(canVibrate.toString());
                   // Vibrate.vibrate();
 
-                  elapsedTime = 0;
                   setState(() {
                     // If we just finished an exercise.
                     if (!rest) {
@@ -145,13 +129,9 @@ class _TrackerState extends State<Tracker> {
 
                     if (reps != 0) {
                       rest = !rest;
+                      rest ? restController.start() : exerciseController.start();
                     } else {
                       ended = true;
-                      exerciseMode = false;
-                    }
-
-                    if (reps != 0) {
-                      rest ? restController.start() : exerciseController.start();
                     }
                   });
                 },
@@ -176,30 +156,10 @@ class _TrackerState extends State<Tracker> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+
     return WillPopScope(
         child: Scaffold(
           backgroundColor: AppTheme.theme.backgroundColor,
-          appBar: AppBar(
-            centerTitle: false,
-            titleSpacing: 0.0,
-            title: Text(
-              widget.title,
-              style: TextStyle(
-                color: Colours.grey,
-              ),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colours.grey),
-              onPressed: () {
-                // TODO uncomment to allow users to go back
-                // var time = rest ? restController.getTime().split(":") : exerciseController.getTime().split(":");
-                // elapsedTime = (rest ? restTime : exerciseTime) - (int.parse(time[0]) * 60 + int.parse(time[1]));
-                // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')));
-              },
-            ),
-            elevation: 0,
-            backgroundColor: AppTheme.theme.backgroundColor,
-          ),
           body: Stack(
             children: [
               ListView(
@@ -216,9 +176,9 @@ class _TrackerState extends State<Tracker> {
                     padding: EdgeInsets.only(left: 15, right: 20, bottom: 100),
                     child: Column(
                       children: [
-                        timerTile(exerciseTime, true), // 60 for minutes
+                        timerTile(true), // 60 for minutes
                         Container(height: 10),
-                        timerTile(restTime, false),
+                        timerTile(false),
                       ],
                     ),
                   ),
@@ -241,12 +201,16 @@ class _TrackerState extends State<Tracker> {
                           ),
                           onPressed: () async {
                             if (start) {
-                              reset(widget._continue);
+                              start ? exerciseController.start() : nextPage(context);
+                              setState(() {
+                                start = false;
+                              });
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
+                              );
                             }
-                            start ? exerciseController.start() : nextPage(context);
-                            setState(() {
-                              start = false;
-                            });
                           },
                         )
                       : MaterialButton(
@@ -274,15 +238,12 @@ class _TrackerState extends State<Tracker> {
           ),
         ),
         onWillPop: () async {
-          var time = rest ? exerciseController.getTime().split(":") : exerciseController.getTime().split(":");
-          elapsedTime = (rest ? restTime : exerciseTime) - (int.parse(time[0]) * 60 + int.parse(time[1]));
-          return false; // TODO change to true to allow back press.
+          return false;
         });
   }
 }
 
-
 Future nextPage(BuildContext context) async {
   await FitBitService().getHeartRate30();
-  Navigator.push(context,MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
+  Navigator.push(context, MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
 }

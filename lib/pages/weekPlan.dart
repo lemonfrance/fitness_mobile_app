@@ -41,7 +41,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {
     List<model.ExercisePlan> event = [];
-    event.add(weekPlan[day.weekday-1]);
+    event.add(weekPlan[day.weekday - 1]);
     return event;
   }
 
@@ -157,19 +157,9 @@ class _ExercisePlanState extends State<ExercisePlan> {
             padding: EdgeInsets.only(bottom: 10, left: 50, right: 50),
             child: ElevatedButton(
               onPressed: () async {
-                elapsedTime = exerciseMode ? elapsedTime : 0;
-                bool temp = exerciseMode;
-                if (!temp) {
-                  ended = false;
-                  start = true;
-                }
-                exerciseMode = true;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Tracker('Timer', elapsedTime, temp ? true : false)),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Tracker()));
               },
-              child: Text(exerciseMode ? "TIMER" : "BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
+              child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
               style: ElevatedButton.styleFrom(
                 primary: Colours.highlight,
                 onPrimary: Colours.white,
