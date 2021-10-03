@@ -2,9 +2,9 @@ class ExercisePlan {
   final String type;
   final String description;
   final String heartRate;
-  final String duration;
+  final int reps;
 
-  ExercisePlan(this.type, this.description, this.heartRate, this.duration);
+  ExercisePlan(this.type, this.description, this.heartRate, this.reps);
 
   String get getType{
     return this.type;
@@ -18,7 +18,7 @@ class ExercisePlan {
     return this.heartRate;
   }
 
-  String get getDuration{
-    return this.duration;
+  int get getReps{
+    return this.reps;
   }
 }

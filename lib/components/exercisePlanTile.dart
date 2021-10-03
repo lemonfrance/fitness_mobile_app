@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
-Widget exercisePlan(String heartRate, String time) {
+Widget exercisePlan(String heartRate, int reps) {
   TextStyle textStyle = TextStyle(color: Colours.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1);
   return heartRate == ""? Container(height: 0,):Container(
     padding: EdgeInsets.all(20),
@@ -39,7 +39,7 @@ Widget exercisePlan(String heartRate, String time) {
               'assets/images/time.svg',
             ),
             VerticalDivider(width: 20, color: Colors.transparent),
-            Text(time, style: textStyle),
+            Text(reps.toString()+" reps", style: textStyle),
           ],
         ),
       ],

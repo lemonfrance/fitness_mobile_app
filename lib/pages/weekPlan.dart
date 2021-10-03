@@ -25,8 +25,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
-  //Future<dynamic>? _workout;
-  int _weekID = 0;
 
   @override
   void initState() {
@@ -34,9 +32,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_focusedDay));
-    _weekID = (_focusedDay.weekday - 1);
-
-    // _workout = DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(weekID);
   }
 
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {
@@ -178,7 +173,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
           ),
           Padding(
             padding: EdgeInsets.all(20),
-            child: exercisePlan((_getEventsForDay(_selectedDay!)[0].getHeartRate), (_getEventsForDay(_selectedDay!)[0].getDuration)),
+            child: exercisePlan((_getEventsForDay(_selectedDay!)[0].getHeartRate), (_getEventsForDay(_selectedDay!)[0].getReps)),
           ),
           education(
             //exercise id get intensity

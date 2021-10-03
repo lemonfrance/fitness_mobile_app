@@ -2,12 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/loading.dart';
-import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
-import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
 
 import '../utils/styles.dart';
 
@@ -23,8 +20,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool loading = false;
   late double height;
   late double width;
-
-  ExercisePlan Exercise = new ExercisePlan("Running", "Go for a run", "150bpm", "30mins");
 
   List _typeAssets = [
     {"type": "Walking", "icon": 'assets/images/walkingIcon.svg'},
@@ -81,55 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// This is used to create the Preferred Forms of Exercise tiles on the home screen.
-  Widget typeTile(int index) {
-    return GestureDetector(
-      onTap: () async {
-        setState(() {
-          exerciseTypes[index]["selected"] = !exerciseTypes[index]["selected"];
-        });
-        var exercises = [];
-        for(dynamic type in exerciseTypes){
-          if(type["selected"]){
-            exercises.add(type["type"]);
-          }
-        }
-        await DatabaseService(uid: mAuth.currentUser!.uid).setPreferredExercises(exercises);
-      },
-      child: Container(
-        height: (width - 120) / 3,
-        width: (width - 120) / 4,
-        decoration: BoxDecoration(
-          color: exerciseTypes[index]["selected"] ? Colours.highlight : Colors.white,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.3),
-              blurRadius: 4,
-              offset: Offset(4, 4), // Shadow position
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SvgPicture.asset(
-              _typeAssets[index]["icon"],
-              color: exerciseTypes[index]["selected"] ? Colours.white : Colours.highlight,
-            ),
-            Text(
-              exerciseTypes[index]["type"],
-              style: AppTheme.theme.textTheme.headline6!.copyWith(
-                color: exerciseTypes[index]["selected"] ? Colours.white : Colours.black,
-                fontSize: 12,
-              ),
-            )
-          ],
-        ),
       ),
     );
   }
@@ -271,25 +217,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 30, left: 30),
-                    child: Text(
-                      "Preferred Forms of Exercise",
-                      style: AppTheme.theme.textTheme.headline2!.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 30, right: 30, top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        typeTile(0),
-                        typeTile(1),
-                        typeTile(2),
-                        typeTile(3),
                       ],
                     ),
                   ),
