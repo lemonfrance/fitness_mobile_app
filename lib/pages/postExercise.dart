@@ -222,7 +222,7 @@ class _PostExerciseState extends State<PostExercise> {
                     workoutHeartRates[0].time == '' ?  MaterialButton(
                       onPressed: () async{
                         await FitBitService().getHeartRateWorkout();
-                        //Navigator.push(context,MaterialPageRoute(builder: (context) => PostExercise("Post workout stats"));
+                        setState(() {});
                       },
                       minWidth: double.infinity,
                       height: 60,
@@ -230,7 +230,7 @@ class _PostExerciseState extends State<PostExercise> {
                       shape: StadiumBorder(),
                       color: Colours.highlight,
                       child: Text(
-                        "Did you experience any chest pain?",
+                        "Refresh to get your heart rates",
                         style: TextStyle(color: Colors.white ),
                       ),
                     ) : HeartrateGraph(true),
