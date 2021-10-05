@@ -303,7 +303,7 @@ class _PostExerciseState extends State<PostExercise> {
                       await EvaluationService()
                           .setResponses(date, weekPlan[DateTime.now().weekday - 1].getType, chestPain, coldSweats, _difficulty.toInt(), _pain.toInt());
                       await EvaluationService().setHeartRateData(date);
-                      bool notPushed = await updatePlan(_difficulty.toInt(), _pain.toInt(), context);
+                      await updatePlan(_difficulty.toInt(), _pain.toInt(), context);
 
                       if (coldSweats || chestPain) {
                         Navigator.push(
@@ -413,6 +413,7 @@ Future updatePlan(int difficulty, int pain, BuildContext context) async {
               "confirm it's still safe to use Wearable Intelligence")),
     );
   }
+  notPushed = true;
   for (int i = 1; i < 6; i++) {
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updateExercisePlan(i.toString(), plan);
   }
