@@ -173,7 +173,7 @@ class _PostExerciseState extends State<PostExercise> {
                       FittedBox(
                         fit: BoxFit.fitWidth,
                         child: Text(
-                          "Max ${heartRatePeak as int}bpm",
+                          "Max ${heartRatePeak.round()}bpm",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colours.white),
                         ),
                       ),
