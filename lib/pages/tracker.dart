@@ -169,7 +169,7 @@ class _TrackerState extends State<Tracker> {
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(children: [
-                      tile(Icons.favorite, "Target: 165bpm"),
+                      tile(Icons.favorite, "Target: ${heartRateMax}bpm"),
                       Container(height: 10),
                       tile(Icons.directions_walk, getRepText()),
                     ]),
