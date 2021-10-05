@@ -1,3 +1,5 @@
+import 'dart:math';
+
 String? authToken;
 String? uid;
 String? accessToken;
@@ -11,6 +13,9 @@ int totalHours = 0;
 String? user_id;
 int heartRateMin = 0;
 int heartRateMax = 0;
+int heartRatePeak = 0;
+int heartRatePit = 0;
+int averageHeartRate = 0;
 int restingHeartRate = 0;
 int pageIndex = 1;
 int level = 0;
@@ -18,12 +23,23 @@ bool firstFitbit = false;
 
 var weekPlan = [];
 var weekActivityMinutes = [0, 0, 0, 0, 0, 0, 0];
-var workoutHeartRates = List.filled(30, heartRates('', 0));
-var workoutHeartRatesDB = List.filled(30, 0);
+var workoutHeartRates = List.filled(weekPlan[0].getReps*2, heartRates('', 0));
+var workoutHeartRatesDB = List.filled(weekPlan[0].getReps*2, 0);
 var dayHeartRates = List.filled(24, heartRates('', 0));
 
 class heartRates {
   heartRates(this.time, this.value);
+
   final String time;
   final int value;
+}
+
+void heartRateWorkoutCalcs(){
+  heartRatePeak =  workoutHeartRatesDB.reduce(max);
+  heartRatePit = workoutHeartRatesDB.reduce(min);
+  averageHeartRate = (workoutHeartRatesDB.reduce((a, b) => a + b) / workoutHeartRatesDB.length) as int;
+}
+void heartRateDayCalcs(){
+  heartRatePeak =  dayHeartRates.map((m) => m.value).reduce(max);
+  heartRatePit = dayHeartRates.map((m) => m.value).reduce(min);
 }

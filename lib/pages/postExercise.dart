@@ -142,7 +142,7 @@ class _PostExerciseState extends State<PostExercise> {
                       FittedBox(
                         fit: BoxFit.fitWidth,
                         child: Text(
-                          "Avg 98bpm",
+                          "Avg ${averageHeartRate}bpm",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colours.white),
                         ),
                       ),
@@ -173,7 +173,7 @@ class _PostExerciseState extends State<PostExercise> {
                       FittedBox(
                         fit: BoxFit.fitWidth,
                         child: Text(
-                          "Max 108bpm",
+                          "Max ${heartRatePeak}bpm",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colours.white),
                         ),
                       ),

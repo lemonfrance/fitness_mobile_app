@@ -135,6 +135,7 @@ class FitBitService {
         workoutHeartRates[i] = new heartRates(i.toString(), jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"]);
         workoutHeartRatesDB[i] = jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"];
       }
+      heartRateWorkoutCalcs();
     } catch (e) {
       print(e);
     }

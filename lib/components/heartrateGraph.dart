@@ -21,6 +21,9 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
   @override
   Widget build(BuildContext context) {
     double width = (MediaQuery.of(context).size.width - 50);
+    if(!widget.workout){
+      heartRateDayCalcs();
+    }
     return Container(
         width: width,
         height: width / 1.5,
@@ -43,8 +46,8 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
               textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colours.black),
             ),
             primaryYAxis: NumericAxis(
-                minimum: 60,
-                maximum: 120,
+                minimum: heartRatePit as double,
+                maximum: heartRatePeak as double,
                 labelFormat: '{value} bpm',
                 plotBands: <PlotBand>[
                   PlotBand(
