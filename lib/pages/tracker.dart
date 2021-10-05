@@ -1,6 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 import '../Services/fitbit.dart';
@@ -22,9 +23,9 @@ class _TrackerState extends State<Tracker> {
   bool start = true;
   bool rest = false;
 
-  int reps = 2;
-  int exerciseTime = 2;
-  int restTime = 1;
+  int reps = weekPlan[DateTime.now().weekday - 1].getReps;
+  int exerciseTime = 60;
+  int restTime = 60;
 
   Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
@@ -167,7 +168,7 @@ class _TrackerState extends State<Tracker> {
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(children: [
-                      tile(Icons.favorite, "Target: 165bpm"),
+                      tile(Icons.favorite, "Target: ${heartRateMax}bpm"),
                       Container(height: 10),
                       tile(Icons.directions_walk, getRepText()),
                     ]),
@@ -244,6 +245,6 @@ class _TrackerState extends State<Tracker> {
 }
 
 Future nextPage(BuildContext context) async {
-  await FitBitService().getHeartRate30();
+  await FitBitService().getHeartRateWorkout();
   Navigator.push(context, MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
 }

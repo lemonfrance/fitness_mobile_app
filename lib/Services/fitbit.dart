@@ -124,9 +124,9 @@ class FitBitService {
     }
   }
 
-  Future getHeartRate30() async {
-    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: 30)));
-    var end = DateFormat("HH:mm").format(DateTime.now());
+  Future getHeartRateWorkout() async {
+    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: (weekPlan[DateTime.now().weekday - 1].getReps) * 2 - 1)));
+    var end = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: 1)));
     http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
         headers: {'Authorization': 'Bearer ${authToken}'});
 
@@ -135,6 +135,7 @@ class FitBitService {
         workoutHeartRates[i] = new heartRates(i.toString(), jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"]);
         workoutHeartRatesDB[i] = jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"];
       }
+      heartRateWorkoutCalcs();
     } catch (e) {
       print(e);
     }

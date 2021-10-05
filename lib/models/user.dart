@@ -14,7 +14,6 @@ class Users {
   String? authToken;
   String? fitbitId;
   int? fitnessLevel;
-  List? preferredExercises;
 
   Users(
       {this.username,
@@ -30,6 +29,5 @@ class Users {
       this.totalHours,
       this.refreshToken,
       this.authToken,
-      this.fitbitId,
-      this.preferredExercises});
+      this.fitbitId});
 }
