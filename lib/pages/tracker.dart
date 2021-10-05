@@ -24,9 +24,9 @@ class _TrackerState extends State<Tracker> {
   bool start = true;
   bool rest = false;
 
-  int reps = 2; //weekPlan[DateTime.now().weekday - 1].getReps;
-  int exerciseTime = 5;
-  int restTime = 2;
+  int reps = weekPlan[DateTime.now().weekday - 1].getReps;
+  int exerciseTime = 60;
+  int restTime = 60;
 
   Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
