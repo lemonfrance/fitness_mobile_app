@@ -46,8 +46,8 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
               textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colours.black),
             ),
             primaryYAxis: NumericAxis(
-                minimum: heartRatePit as double,
-                maximum: heartRatePeak as double,
+                minimum: heartRatePit,
+                maximum: heartRatePeak,
                 labelFormat: '{value} bpm',
                 plotBands: <PlotBand>[
                   PlotBand(

@@ -13,8 +13,8 @@ int totalHours = 0;
 String? user_id;
 int heartRateMin = 0;
 int heartRateMax = 0;
-int heartRatePeak = 0;
-int heartRatePit = 0;
+double heartRatePeak = 0;
+double heartRatePit = 0;
 int averageHeartRate = 0;
 int restingHeartRate = 0;
 int pageIndex = 1;
@@ -35,11 +35,11 @@ class heartRates {
 }
 
 void heartRateWorkoutCalcs(){
-  heartRatePeak =  workoutHeartRatesDB.reduce(max);
-  heartRatePit = workoutHeartRatesDB.reduce(min);
+  heartRatePeak =  workoutHeartRatesDB.reduce(max) as double;
+  heartRatePit = workoutHeartRatesDB.reduce(min) as double;
   averageHeartRate = (workoutHeartRatesDB.reduce((a, b) => a + b) / workoutHeartRatesDB.length) as int;
 }
 void heartRateDayCalcs(){
-  heartRatePeak =  dayHeartRates.map((m) => m.value).reduce(max);
-  heartRatePit = dayHeartRates.map((m) => m.value).reduce(min);
+  heartRatePeak =  dayHeartRates.map((m) => m.value).reduce(max) as double;
+  heartRatePit = dayHeartRates.map((m) => m.value).reduce(min) as double;
 }
