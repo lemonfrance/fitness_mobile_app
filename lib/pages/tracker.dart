@@ -1,6 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
@@ -23,9 +24,9 @@ class _TrackerState extends State<Tracker> {
   bool start = true;
   bool rest = false;
 
-  int reps = weekPlan[DateTime.now().weekday - 1].getReps;
-  int exerciseTime = 60;
-  int restTime = 60;
+  int reps = 2; //weekPlan[DateTime.now().weekday - 1].getReps;
+  int exerciseTime = 5;
+  int restTime = 2;
 
   Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
@@ -118,9 +119,9 @@ class _TrackerState extends State<Tracker> {
                 onStart: () {},
                 onComplete: () async {
                   // TODO make vibrate work on android
-                  // bool canVibrate = await Vibrate.canVibrate;
-                  // print(canVibrate.toString());
-                  // Vibrate.vibrate();
+                  bool canVibrate = await Vibrate.canVibrate;
+                  print(canVibrate.toString());
+                  Vibrate.vibrate();
 
                   setState(() {
                     // If we just finished an exercise.
