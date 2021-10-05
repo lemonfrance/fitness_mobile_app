@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/evaluation.dart';
+import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
@@ -218,7 +219,21 @@ class _PostExerciseState extends State<PostExercise> {
                     Container(height: 20),
                     feedbackTile(),
                     Container(height: 20),
-                    workoutHeartRates[0].time == '' ? Container(height: 0) : HeartrateGraph(true),
+                    workoutHeartRates[0].time == '' ?  MaterialButton(
+                      onPressed: () async{
+                        await FitBitService().getHeartRateWorkout();
+                        //Navigator.push(context,MaterialPageRoute(builder: (context) => PostExercise("Post workout stats"));
+                      },
+                      minWidth: double.infinity,
+                      height: 60,
+                      elevation: 10,
+                      shape: StadiumBorder(),
+                      color: Colours.highlight,
+                      child: Text(
+                        "Did you experience any chest pain?",
+                        style: TextStyle(color: Colors.white ),
+                      ),
+                    ) : HeartrateGraph(true),
                     Container(height: 20),
                     slider("How hard did you find the exercise?", true),
                     Container(height: 20),
