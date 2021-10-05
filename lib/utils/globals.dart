@@ -23,8 +23,8 @@ bool firstFitbit = false;
 
 var weekPlan = [];
 var weekActivityMinutes = [0, 0, 0, 0, 0, 0, 0];
-var workoutHeartRates = List.filled(weekPlan[0].getReps*2, heartRates('', 0));
-var workoutHeartRatesDB = List.filled(weekPlan[0].getReps*2, 0);
+var workoutHeartRates = List.filled(weekPlan[0].getReps * 2, heartRates('', 0));
+var workoutHeartRatesDB = List.filled(weekPlan[0].getReps * 2, 0);
 var dayHeartRates = List.filled(24, heartRates('', 0));
 
 class heartRates {
@@ -34,12 +34,28 @@ class heartRates {
   final int value;
 }
 
-void heartRateWorkoutCalcs(){
-  heartRatePeak =  workoutHeartRatesDB.reduce(max) as double;
-  heartRatePit = workoutHeartRatesDB.reduce(min) as double;
-  averageHeartRate = (workoutHeartRatesDB.reduce((a, b) => a + b) / workoutHeartRatesDB.length) as int;
+void heartRateWorkoutCalcs() {
+  heartRatePeak = workoutHeartRatesDB.reduce(max).toDouble();
+  heartRatePit = heartRatePeak;
+  for (int i in workoutHeartRatesDB) {
+    if (i != 0 && i < heartRatePit) {
+      heartRatePit = i.toDouble();
+    }
+  }
+
+  int count = 0;
+  int value = 0;
+  for (int i in workoutHeartRatesDB) {
+    if (i != 0) {
+      value += i;
+      count++;
+    }
+  }
+
+  averageHeartRate = (value / count).toInt();
 }
-void heartRateDayCalcs(){
-  heartRatePeak =  dayHeartRates.map((m) => m.value).reduce(max) as double;
+
+void heartRateDayCalcs() {
+  heartRatePeak = dayHeartRates.map((m) => m.value).reduce(max) as double;
   heartRatePit = dayHeartRates.map((m) => m.value).reduce(min) as double;
 }

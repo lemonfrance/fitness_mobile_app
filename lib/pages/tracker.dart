@@ -1,7 +1,6 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
@@ -24,7 +23,7 @@ class _TrackerState extends State<Tracker> {
   bool start = true;
   bool rest = false;
 
-  int reps = weekPlan[DateTime.now().weekday-1].getReps;
+  int reps = weekPlan[DateTime.now().weekday - 1].getReps;
   int exerciseTime = 60;
   int restTime = 60;
 
