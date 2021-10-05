@@ -30,8 +30,7 @@ class DatabaseService {
       'refreshToken':'',
       'authToken':'',
       'fitbitId':'',
-      'fitnessLevel':0,
-      'preferredExercises':[]
+      'fitnessLevel':0
     });
   }
 
@@ -62,23 +61,11 @@ class DatabaseService {
     );
   }
 
-  Future setPreferredExercises(var exercises) async {
-    return await wearIntelCollection.doc(uid).update(
-        {'preferredExercises': exercises}
-    );
-  }
-
-  Future getPreferredExercises() async {
-    final value = await wearIntelCollection.doc(uid).get();
-    for(String exercise in value.get('preferredExercises')){
-      exerciseTypes.firstWhere((element) => element["type"] == exercise)["selected"] = true;
-      }
-  }
-
   Future getFitbitUser() async {
     final value = await wearIntelCollection.doc(uid).get();
     return value.get('fitbitId').toString();
   }
+
   Future getRefreshToken() async {
     final value = await wearIntelCollection.doc(uid).get();
     return value.get('refreshToken').toString();
@@ -134,22 +121,27 @@ class DatabaseService {
     weekPlan = [];
     final value = await wearIntelCollection.doc(uid).collection("ExercisePlan").get();
     for(DocumentSnapshot doc in value.docs){
-      weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("description"), doc.get("heartRate"), doc.get("duration")));
+      weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("description"), doc.get("heartRate"), doc.get("reps"), doc.get("rest")));
     }
   }
 
-  Future createExercisePlan(String day, String type, String description, String heartRate) async{
-    String duration;
-    if(day == '6' || day == '7'){
-      duration = '';
-    }else{
-      duration = '30 minutes';
-    }
+  Future createExercisePlan(String day, String type, String description, String heartRate, int reps, int rest) async{
     await wearIntelCollection.doc(uid).collection("ExercisePlan").doc(day).set({
       'type': type,
       'description': description,
       'heartRate': heartRate,
-      'duration': duration
+      'reps': reps,
+      'rest' : rest
+    });
+  }
+
+  Future updateExercisePlan(String day, ExercisePlan plan) async{
+    await wearIntelCollection.doc(uid).collection("ExercisePlan").doc(day).update({
+      'type': plan.getType,
+      'description': plan.getDescription,
+      'heartRate': plan.getHeartRate,
+      'reps': plan.getReps,
+      'rest' : plan.getRest
     });
   }
 }

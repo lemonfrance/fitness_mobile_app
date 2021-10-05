@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -25,8 +23,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
-  //Future<dynamic>? _workout;
-  int _weekID = 0;
 
   @override
   void initState() {
@@ -34,9 +30,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_focusedDay));
-    _weekID = (_focusedDay.weekday - 1);
-
-    // _workout = DatabaseService(uid: 'qln9sdoy6DOfJRxOVTO3HJ5AprA3').getExercise(weekID);
   }
 
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {
@@ -119,7 +112,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
   }
 
   Widget education(String title, String body) {
-    TextStyle headerStyle = TextStyle(color: Colours.darkBlue, fontSize: 21, fontWeight: FontWeight.bold, height: 1);
+    TextStyle headerStyle = TextStyle(color: Colours.darkBlue, fontSize: 18, fontWeight: FontWeight.bold, height: 1);
     TextStyle bodyStyle = TextStyle(color: Colours.darkBlue, fontSize: 18, height: 1);
     return Padding(
       padding: EdgeInsets.all(20),
@@ -128,9 +121,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: headerStyle),
-          Container(
-            height: 5,
-          ),
+          Container(height: 5),
           Text(body, style: bodyStyle),
         ],
       ),
@@ -170,17 +161,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
             child: showButton
                 ? ElevatedButton(
                     onPressed: () async {
-                      elapsedTime = exerciseMode ? elapsedTime : 0;
-                      bool temp = exerciseMode;
-                      if (!temp) {
-                        ended = false;
-                        start = true;
-                      }
-                      exerciseMode = true;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Tracker('Timer', elapsedTime, temp ? true : false)),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tracker()));
                     },
                     child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
                     style: ElevatedButton.styleFrom(
@@ -202,7 +183,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
           ),
           Padding(
             padding: EdgeInsets.all(20),
-            child: exercisePlan((_getEventsForDay(_selectedDay!)[0].getHeartRate), (_getEventsForDay(_selectedDay!)[0].getDuration)),
+            child: exercisePlan((_getEventsForDay(_selectedDay!)[0].getHeartRate), (_getEventsForDay(_selectedDay!)[0].getReps)),
           ),
           education(
             "Heart Rate",
@@ -210,7 +191,13 @@ class _ExercisePlanState extends State<ExercisePlan> {
                 "\nIf vigorous-intensity exercise is not recommended we aim to reach 64-76% of your maximum heart rate.\n\nThese target heart rate ranges are"
                 " used to help reduce HbA1c levels and improve your cardiovascular health",
           ),
-          Container(height: 20)
+          Container(height: 5),
+          education(
+            "Exercise Plans",
+            "The recommended exercise plans are geared at exercising 5 days a week, with a goal of 30 minutes each day. As you exercise Wearable Intelligence "
+                "will adapt to your needs.",
+          ),
+          Container(height: 20),
         ],
       ),
     );
@@ -229,24 +216,3 @@ class Event {
 final kToday = DateTime.now();
 final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
 final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
-
-final kEvents = LinkedHashMap<DateTime, List<Event>>(
-  equals: isSameDay,
-  hashCode: getHashCode,
-)..addAll(_kEventSource);
-
-final _kEventSource = Map.fromIterable(List.generate(50, (index) => index),
-    key: (item) => DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5),
-    value: (item) => List.generate(item % 4 + 1, (index) => Event('Event $item | ${index + 1}')))
-  ..addAll({
-    kToday: [
-      Event('Walk 1km'),
-    ],
-    DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
-      Event("Light Running"),
-    ]
-  });
-
-int getHashCode(DateTime key) {
-  return key.day * 1000000 + key.month * 10000 + key.year;
-}

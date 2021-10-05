@@ -8,10 +8,9 @@ import 'package:wearable_intelligence/wearableIntelligence.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 
 
-Future saveOnboard(int level, var exercises) async {
+Future saveOnboard(int level) async {
   FirebaseAuth mAuth = FirebaseAuth.instance;
   await DatabaseService(uid: mAuth.currentUser!.uid).setLevel(level);
-  await DatabaseService(uid: mAuth.currentUser!.uid).setPreferredExercises(exercises);
 }
 
 class Onboarding extends StatefulWidget {
@@ -109,34 +108,6 @@ class _OnboardingState extends State<Onboarding> {
         : boolButton(question, index, list);
   }
 
-  // This displays the types of exercises in level 1
-  Widget exerciseList() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 16, bottom: 16),
-          child: Text(
-            "What are your preferred types of exercise",
-            textAlign: TextAlign.start,
-            style: AppTheme.theme.textTheme.headline3!.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-        ListView.separated(
-          clipBehavior: Clip.none,
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: exerciseTypes.length,
-          itemBuilder: (context, index) {
-            return boolButton(exerciseTypes[index]["type"], index, exerciseTypes);
-          },
-          separatorBuilder: (BuildContext context, int index) => Divider(
-            color: Colors.transparent,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget levelOne() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,8 +121,6 @@ class _OnboardingState extends State<Onboarding> {
             switch (levelOneQuestions[index]["type"]) {
               case "expandedPain":
                 return expandingButton(levelOneQuestions[index]["question"], index, levelOneQuestions, true);
-              case "exercise":
-                return exerciseList();
               default:
                 return Container();
             }
@@ -274,12 +243,7 @@ class _OnboardingState extends State<Onboarding> {
                     });
                     if (finished) {
                       var exercises = [];
-                      for(dynamic type in exerciseTypes){
-                        if(type["selected"]){
-                          exercises.add(type["type"]);
-                        }
-                      }
-                      saveOnboard(level, exercises);
+                      saveOnboard(level);
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => WearableIntelligence('Wearable Intelligence')),

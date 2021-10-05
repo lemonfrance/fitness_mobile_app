@@ -1,4 +1,4 @@
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'dart:math';
 
 String? authToken;
 String? uid;
@@ -13,6 +13,9 @@ int totalHours = 0;
 String? user_id;
 int heartRateMin = 0;
 int heartRateMax = 0;
+double heartRatePeak = 0;
+double heartRatePit = 0;
+int averageHeartRate = 0;
 int restingHeartRate = 0;
 int pageIndex = 1;
 int level = 0;
@@ -20,7 +23,8 @@ bool firstFitbit = false;
 
 var weekPlan = [];
 var weekActivityMinutes = [0, 0, 0, 0, 0, 0, 0];
-var workoutHeartRates = List.filled(30, heartRates('', 0));
+var workoutHeartRates = List.filled(weekPlan[0].getReps * 2, heartRates('', 0));
+var workoutHeartRatesDB = List.filled(weekPlan[0].getReps * 2, 0);
 var dayHeartRates = List.filled(24, heartRates('', 0));
 
 class heartRates {
@@ -29,16 +33,28 @@ class heartRates {
   final int value;
 }
 
-// Clock globals
-CountDownController restController = CountDownController();
-CountDownController exerciseController = CountDownController();
+void heartRateWorkoutCalcs() {
+  heartRatePeak = workoutHeartRatesDB.reduce(max).toDouble();
+  heartRatePit = heartRatePeak;
+  for (int i in workoutHeartRatesDB) {
+    if (i != 0 && i < heartRatePit) {
+      heartRatePit = i.toDouble();
+    }
+  }
 
-bool exerciseMode = false;
-bool paused = false;
-bool ended = false;
-bool rest = false;
-bool start = true;
-int reps = 2;
-int exerciseTime = 2;
-int restTime = 1;
-int elapsedTime = 0;
+  int count = 0;
+  int value = 0;
+  for (int i in workoutHeartRatesDB) {
+    if (i != 0) {
+      value += i;
+      count++;
+    }
+  }
+
+  averageHeartRate = (value / count).toInt();
+}
+
+void heartRateDayCalcs() {
+  heartRatePeak = dayHeartRates.map((m) => m.value).reduce(max) as double;
+  heartRatePit = dayHeartRates.map((m) => m.value).reduce(min) as double;
+}

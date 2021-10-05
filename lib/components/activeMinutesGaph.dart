@@ -52,8 +52,8 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
               plotBands: <PlotBand>[
                 PlotBand(
                   isVisible: true,
-                  start: 30,
-                  end: 30,
+                  start: weekPlan[0].getReps*2,
+                  end: weekPlan[0].getReps*2,
                   dashArray: <double>[5, 10],
                   borderColor: Colors.grey,
                   borderWidth: 2,
@@ -77,7 +77,7 @@ class _ActiveMinutesGraphState extends State<ActiveMinutesGraph> {
                   dataSource: data,
                   xValueMapper: (ActiveData data, _) => data.day,
                   yValueMapper: (ActiveData data, _) => data.minutes,
-                  pointColorMapper: (ActiveData data, _) => (data.minutes > 30) ? Colours.lightBlue : Colours.highlight,
+                  pointColorMapper: (ActiveData data, _) => (data.minutes > weekPlan[0].getReps*2) ? Colours.lightBlue : Colours.highlight,
                   // Sets the corner radius
                   width: 0.2,
                   borderRadius: BorderRadius.all(Radius.circular(30)))

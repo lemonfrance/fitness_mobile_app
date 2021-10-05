@@ -1,12 +1,8 @@
-import 'dart:async';
-
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/pages/authenticate/authenticate.dart';
 import 'package:wearable_intelligence/pages/homepage.dart';
-import 'package:wearable_intelligence/pages/tracker.dart';
 import 'package:wearable_intelligence/pages/vitals.dart';
 import 'package:wearable_intelligence/pages/weekPlan.dart';
 import 'package:wearable_intelligence/pages/welcome.dart';
@@ -28,11 +24,6 @@ class WearableIntelligence extends StatefulWidget {
 
 class _WearableIntelligenceState extends State<WearableIntelligence> {
   final AuthService _auth = AuthService();
-  CountDownController _controller = CountDownController();
-
-  FutureOr refresh(dynamic value) {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,72 +140,7 @@ class _WearableIntelligenceState extends State<WearableIntelligence> {
           : Container(
               height: 0,
             ),
-      body: Stack(
-        children: [
-          _pages.elementAt(pageIndex),
-          global.exerciseMode
-              ? Padding(
-                  padding: EdgeInsets.only(top: 10, right: 30),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        global.elapsedTime = (rest ? restTime : exerciseTime) - int.parse((rest ? restController.getTime() : exerciseController.getTime()));
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Tracker('Timer', global.elapsedTime, true)),
-                        );
-                      },
-                      child: CircularCountDownTimer(
-                        duration: rest ? restTime : exerciseTime,
-                        initialDuration: global.elapsedTime,
-                        controller: rest ? restController : exerciseController,
-                        width: 50,
-                        height: 50,
-                        ringColor: Colours.grey,
-                        fillColor: Colours.highlight,
-                        backgroundColor: Colours.white,
-                        strokeWidth: 5.0,
-                        strokeCap: StrokeCap.round,
-                        isReverse: true,
-                        isReverseAnimation: true,
-                        isTimerTextShown: false,
-                        autoStart: true,
-                        onStart: () {
-                          print('Countdown Started');
-                        },
-                        onComplete: () async {
-                          // TODO make vibrate work on android
-                          // bool canVibrate = await Vibrate.canVibrate;
-                          // print(canVibrate.toString());
-                          // Vibrate.vibrate();
-
-                          // If we just finished an exercise.
-                          if (!rest) {
-                            reps--;
-                          }
-
-                          if (reps != 0) {
-                            rest = !rest;
-                          } else {
-                            ended = true;
-                            exerciseMode = false;
-                          }
-                          print("navigarion?");
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Tracker('Timer', 0, true)));
-
-                          if (reps != 0) {
-                            rest ? restController.start() : exerciseController.start();
-                          }
-                          elapsedTime = 0;
-                        },
-                      ),
-                    ),
-                  ),
-                )
-              : Container(),
-        ],
-      ),
+      body: _pages.elementAt(pageIndex),
     );
   }
 }
