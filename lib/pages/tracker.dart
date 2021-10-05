@@ -246,6 +246,6 @@ class _TrackerState extends State<Tracker> {
 }
 
 Future nextPage(BuildContext context) async {
-  await FitBitService().getHeartRate30();
+  await FitBitService().getHeartRateWorkout();
   Navigator.push(context, MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")));
 }

@@ -124,8 +124,8 @@ class FitBitService {
     }
   }
 
-  Future getHeartRate30() async {
-    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: 30)));
+  Future getHeartRateWorkout() async {
+    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(minutes: (weekPlan[DateTime.now().weekday-1].getReps)*2)));
     var end = DateFormat("HH:mm").format(DateTime.now());
     http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
         headers: {'Authorization': 'Bearer ${authToken}'});

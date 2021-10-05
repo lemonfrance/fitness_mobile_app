@@ -310,9 +310,9 @@ Future updatePlan(int difficulty, int pain) async {
   if(pain<5){
     // Between 0-4 - check heart rate
     for(int bpm in workoutHeartRatesDB){
-      if(bpm<77){
+      if(bpm<(heartRateMax-10) && bpm != 0){
         low.add(bpm);
-      }else if(bpm>90){
+      }else if(bpm>(heartRateMax+10)){
         high.add(bpm);
       }
     }
