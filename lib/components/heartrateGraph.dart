@@ -21,9 +21,6 @@ class _HeartrateGraphState extends State<HeartrateGraph> {
   @override
   Widget build(BuildContext context) {
     double width = (MediaQuery.of(context).size.width - 50);
-    if(!widget.workout){
-      heartRateDayCalcs();
-    }
     return Container(
         width: width,
         height: width / 1.5,
