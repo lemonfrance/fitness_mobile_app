@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
     {"type": "Walking", "icon": 'assets/images/walkingIcon.svg'},
     {"type": "Running", "icon": 'assets/images/runningIcon.svg'},
     {"type": "Swimming", "icon": 'assets/images/swimmingIcon.svg'},
-    {"type": "Cycling", "icon": 'assets/images/cyclingIcon.svg'},
+    {"type": "Jogging", "icon": 'assets/images/runningIcon.svg'},
     {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg'},
   ];
 
