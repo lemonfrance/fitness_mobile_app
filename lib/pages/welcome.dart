@@ -65,10 +65,10 @@ Future CreateInitalExercisePlan(FirebaseAuth mAuth) async{
 
    int index = 0;
    for(int i = 1;i<6;i++){
-     await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(i.toString(), exerciseType, '', heartRateRange, reps);
+     await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(i.toString(), exerciseType, '', heartRateRange, reps,60);
    }
-   await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(6.toString(), "Rest", '','',0);
-   await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(7.toString(), "Rest", '','',0);
+   await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(6.toString(), "Rest", '','',0,0);
+   await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(7.toString(), "Rest", '','',0,0);
 
 
 }

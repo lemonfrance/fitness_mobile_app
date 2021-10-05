@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wearable_intelligence/Services/database.dart';
 import 'package:wearable_intelligence/Services/evaluation.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
+import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
@@ -270,6 +273,7 @@ class _PostExerciseState extends State<PostExercise> {
                       await EvaluationService()
                           .setResponses(date, weekPlan[DateTime.now().weekday - 1].getType, chestPain, coldSweats, _difficulty.toInt(), _pain.toInt());
                       await EvaluationService().setHeartRateData(date);
+                      await updatePlan(_difficulty.toInt(), _pain.toInt());
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
@@ -291,5 +295,70 @@ class _PostExerciseState extends State<PostExercise> {
         onWillPop: () async {
           return false;
         });
+  }
+}
+
+
+Future updatePlan(int difficulty, int pain) async {
+  ExercisePlan plan = weekPlan[DateTime.now().weekday - 1];
+  var low = [];
+  var high = [];
+
+  // 0 increase by 3, 1 increase by 2, 2 increase by 1, 3 nothing, 4 decrease by 1  max reps?????
+  plan.setReps = plan.getReps +(3-difficulty);
+
+  if(pain<5){
+    // Between 0-4 - check heart rate
+    for(int bpm in workoutHeartRatesDB){
+      if(bpm<77){
+        low.add(bpm);
+      }else if(bpm>90){
+        high.add(bpm);
+      }
+    }
+
+    if(high.length>(workoutHeartRatesDB.length/3)){
+      // Above 90 for over a 3rd drop them down.
+      if(plan.getType == 'Running'){
+        plan.setType = "Jogging";
+      } else if(plan.getType == 'Jogging'){
+        plan.setType = "Walking";
+      } else if(plan.getType == 'Walking'){
+        plan.setType = "Swimming";
+      } else {
+        //talk to your doctor
+      }
+    } else if(low.length>(workoutHeartRatesDB.length/2)){
+      // Below 77 for over half bump up the intensity
+      if(plan.getType == 'Running'){
+        if(plan.getRest >= 20){
+          plan.setRest = plan.getRest - 10;
+        }
+        //recommend sprinting
+      } else if(plan.getType == 'Jogging'){
+        plan.setType = "Running";
+      } else if(plan.getType == 'Walking'){
+        plan.setType = "Jogging";
+      } else {
+        plan.setType = "Walking";
+      }
+    }
+
+  } else if(pain<7 && pain>4){
+    // Between 5 or 6 - Drop the intensity
+    if(plan.getType == 'Running'){
+      plan.setType = "Jogging";
+    } else if(plan.getType == 'Jogging'){
+      plan.setType = "Walking";
+    } else if(plan.getType == 'Walking'){
+      plan.setType = "Swimming";
+    } else {
+      //talk to your doctor
+    }
+  } else {
+    // Between 7 - 10 - Talk to a doctor
+  }
+  for(int i = 1;i<6;i++){
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updateExercisePlan(i.toString(), plan);
   }
 }
