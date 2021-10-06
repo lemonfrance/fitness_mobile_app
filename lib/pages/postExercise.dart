@@ -369,7 +369,7 @@ Future updatePlan(int difficulty, int pain, BuildContext context) async {
         notPushed = false;
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Warning("Your heart rate is peaking to a concerning level, please seek help from a medical professional")),
+          MaterialPageRoute(builder: (context) => Warning("Your heart rate is peaking to a concerning level. Please seek help from a medical professional")),
         );
       }
     } else if (low.length > (workoutHeartRatesDB.length / 2)) {
@@ -400,7 +400,7 @@ Future updatePlan(int difficulty, int pain, BuildContext context) async {
       notPushed = false;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Warning("Your heart rate is peaking to a concerning level, please seek help from a medical professional")),
+        MaterialPageRoute(builder: (context) => Warning("Your heart rate is peaking to a concerning level. Please seek help from a medical professional")),
       );
     }
   } else {
