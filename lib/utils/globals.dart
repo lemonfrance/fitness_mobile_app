@@ -26,6 +26,7 @@ var weekActivityMinutes = [0, 0, 0, 0, 0, 0, 0];
 var workoutHeartRates = List.filled(weekPlan[0].getReps * 2, heartRates('', 0));
 var workoutHeartRatesDB = List.filled(weekPlan[0].getReps * 2, 0);
 var dayHeartRates = List.filled(24, heartRates('', 0));
+bool exercisedToday = false;
 
 class heartRates {
   heartRates(this.time, this.value);

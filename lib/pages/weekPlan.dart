@@ -32,6 +32,17 @@ class _ExercisePlanState extends State<ExercisePlan> {
     _selectedEvents = ValueNotifier(_getEventsForDay(_focusedDay));
   }
 
+  bool showButton() {
+    // Uncomment if you want to test the timer without restrictions
+    // return true;
+
+    return (((_focusedDay.day == DateTime.now().day) &&
+            (_focusedDay.month == DateTime.now().month) &&
+            (_focusedDay.year == DateTime.now().year) &&
+            (DateTime.now().weekday < 6)) &&
+        !exercisedToday);
+  }
+
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {
     List<model.ExercisePlan> event = [];
     event.add(weekPlan[day.weekday - 1]);
@@ -132,15 +143,6 @@ class _ExercisePlanState extends State<ExercisePlan> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    // Uncomment if you want to test the timer on a weekend
-    // bool showButton = ((_focusedDay.day == DateTime.now().day) &&
-    //     (_focusedDay.month == DateTime.now().month) &&
-    //     (_focusedDay.year == DateTime.now().year));
-    bool showButton = ((_focusedDay.day == DateTime.now().day) &&
-        (_focusedDay.month == DateTime.now().month) &&
-        (_focusedDay.year == DateTime.now().year) &&
-        (DateTime.now().weekday < 6));
-
     return Scaffold(
       backgroundColor: AppTheme.theme.backgroundColor,
       body: ListView(
@@ -158,7 +160,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 10, left: 50, right: 50),
-            child: showButton
+            child: showButton()
                 ? ElevatedButton(
                     onPressed: () async {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => Tracker()));
