@@ -36,11 +36,9 @@ class _ExercisePlanState extends State<ExercisePlan> {
     // Uncomment if you want to test the timer without restrictions
     // return true;
 
-    return (((_focusedDay.day == DateTime.now().day) &&
-            (_focusedDay.month == DateTime.now().month) &&
-            (_focusedDay.year == DateTime.now().year) &&
-            (DateTime.now().weekday < 6)) &&
-        !exercisedToday);
+    return (((_focusedDay.day == DateTime.now().day) && (_focusedDay.month == DateTime.now().month) && (_focusedDay.year == DateTime.now().year)) &&
+        (DateTime.now().weekday < 6) &&
+        !((lastExercised.day == DateTime.now().day) && (lastExercised.month == DateTime.now().month) && (lastExercised.year == DateTime.now().year)));
   }
 
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {

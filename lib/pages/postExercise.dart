@@ -301,7 +301,7 @@ class _PostExerciseState extends State<PostExercise> {
                           .setResponses(date, weekPlan[DateTime.now().weekday - 1].getType, chestPain, coldSweats, _difficulty.toInt(), _pain.toInt());
                       await EvaluationService().setHeartRateData(date);
                       await updatePlan(_difficulty.toInt(), _pain.toInt());
-                      exercisedToday = true;
+                      lastExercised = DateTime.now();
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
