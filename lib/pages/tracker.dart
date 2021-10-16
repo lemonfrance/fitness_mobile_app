@@ -1,6 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
@@ -118,9 +119,9 @@ class _TrackerState extends State<Tracker> {
                 onStart: () {},
                 onComplete: () async {
                   // TODO make vibrate work on android
-                  // bool canVibrate = await Vibrate.canVibrate;
-                  // print(canVibrate.toString());
-                  // Vibrate.vibrate();
+                  bool canVibrate = await Vibrate.canVibrate;
+                  print(canVibrate.toString());
+                  Vibrate.vibrate();
 
                   setState(() {
                     // If we just finished an exercise.
