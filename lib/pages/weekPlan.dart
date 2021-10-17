@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:wearable_intelligence/Services/auth.dart';
 import 'package:wearable_intelligence/components/exercisePlanTile.dart';
@@ -36,11 +37,9 @@ class _ExercisePlanState extends State<ExercisePlan> {
     // Uncomment if you want to test the timer without restrictions
     // return true;
 
-    return (((_focusedDay.day == DateTime.now().day) &&
-            (_focusedDay.month == DateTime.now().month) &&
-            (_focusedDay.year == DateTime.now().year) &&
-            (DateTime.now().weekday < 6)) &&
-        !exercisedToday);
+    return ((DateFormat('yyyy-MM-dd').format(DateTime.now()) == DateFormat('yyyy-MM-dd').format(_focusedDay)) &&
+        (DateTime.now().weekday < 6) &&
+        (DateFormat('yyyy-MM-dd').format(DateTime.now()) != DateFormat('yyyy-MM-dd').format(lastExercised)));
   }
 
   List<model.ExercisePlan> _getEventsForDay(DateTime day) {
