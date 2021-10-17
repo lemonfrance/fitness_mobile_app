@@ -21,4 +21,13 @@ class EvaluationService {
   Future setHeartRateData(String date) async {
     return await evaluationCollection.doc(userId).collection('completedWorkouts').doc(date).update({'heartRates': workoutHeartRatesDB});
   }
+
+  Future getTodaysData(String date) async {
+    try {
+      evaluationCollection.doc(uid).collection("completedWorkouts").doc(date);
+      exercisedToday = true;
+    } catch (e) {
+      exercisedToday = false;
+    }
+  }
 }

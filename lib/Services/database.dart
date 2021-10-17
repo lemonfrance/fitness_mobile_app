@@ -7,7 +7,6 @@ class DatabaseService {
   DatabaseService({required this.uid});
 
   final CollectionReference wearIntelCollection = FirebaseFirestore.instance.collection('wearIntel');
-  final CollectionReference exerciseCollection = FirebaseFirestore.instance.collection('evaluation');
 
   Stream<QuerySnapshot> get users {
     return wearIntelCollection.snapshots();
@@ -113,15 +112,6 @@ class DatabaseService {
     final value = await wearIntelCollection.doc(uid).collection("ExercisePlan").get();
     for (DocumentSnapshot doc in value.docs) {
       weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("description"), doc.get("heartRate"), doc.get("reps"), doc.get("rest")));
-    }
-  }
-
-  Future getTodaysData(String date) async {
-    try {
-      final data = await exerciseCollection.doc(uid).collection("completedWorkouts").doc(date);
-      exercisedToday = true;
-    } catch (e) {
-      exercisedToday = false;
     }
   }
 

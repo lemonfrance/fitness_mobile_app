@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/Services/database.dart';
+import 'package:wearable_intelligence/Services/evaluation.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
@@ -37,7 +38,7 @@ Future loadNewAccount(BuildContext context) async {
   await FitBitService().getHeartRateInformation();
   await CreateInitalExercisePlan(mAuth);
   await DatabaseService(uid: mAuth.currentUser!.uid).getExercisePlan();
-  await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).getTodaysData(DateFormat('yyyy-MM-dd').format(DateTime.now()));
+  await EvaluationService().getTodaysData(DateFormat('yyyy-MM-dd').format(DateTime.now()));
 
   firstFitbit = false;
 
@@ -64,7 +65,6 @@ Future CreateInitalExercisePlan(FirebaseAuth mAuth) async {
     reps = 15;
   }
 
-  int index = 0;
   for (int i = 1; i < 6; i++) {
     await DatabaseService(uid: mAuth.currentUser!.uid).createExercisePlan(i.toString(), exerciseType, '', heartRateRange, reps, 60);
   }

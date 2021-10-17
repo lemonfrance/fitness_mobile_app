@@ -6,6 +6,7 @@ import 'package:wearable_intelligence/Services/evaluation.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
+import 'package:wearable_intelligence/pages/warning.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
@@ -219,7 +220,7 @@ class _PostExerciseState extends State<PostExercise> {
                     Container(height: 20),
                     feedbackTile(),
                     Container(height: 20),
-                    workoutHeartRates[0].time == ''
+                    (workoutHeartRates.length == 0) || (workoutHeartRates[0].time == '')
                         ? MaterialButton(
                             onPressed: () async {
                               await FitBitService().getHeartRateWorkout();
@@ -300,12 +301,19 @@ class _PostExerciseState extends State<PostExercise> {
                       await EvaluationService()
                           .setResponses(date, weekPlan[DateTime.now().weekday - 1].getType, chestPain, coldSweats, _difficulty.toInt(), _pain.toInt());
                       await EvaluationService().setHeartRateData(date);
-                      await updatePlan(_difficulty.toInt(), _pain.toInt());
+                      await updatePlan(_difficulty.toInt(), _pain.toInt(), context);
                       exercisedToday = true;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
-                      );
+                      if (coldSweats || chestPain) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Warning("Your symptoms are concerning, please seek urgent help from a medical professional")),
+                        );
+                      } else if (notPushed) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
+                        );
+                      }
                     },
                     child: Text("Finished", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
                     style: ElevatedButton.styleFrom(
@@ -326,11 +334,14 @@ class _PostExerciseState extends State<PostExercise> {
   }
 }
 
-Future updatePlan(int difficulty, int pain) async {
+bool notPushed = true;
+
+Future updatePlan(int difficulty, int pain, BuildContext context) async {
   ExercisePlan plan = weekPlan[DateTime.now().weekday - 1];
   var low = [];
   var high = [];
 
+  notPushed = true;
   // 0 increase by 3, 1 increase by 2, 2 increase by 1, 3 nothing, 4 decrease by 1  max reps?????
   plan.setReps = plan.getReps + (3 - difficulty);
 
@@ -354,6 +365,11 @@ Future updatePlan(int difficulty, int pain) async {
         plan.setType = "Swimming";
       } else {
         //talk to your doctor
+        notPushed = false;
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Warning("Your heart rate is peaking to a concerning level. Please seek help from a medical professional")),
+        );
       }
     } else if (low.length > (workoutHeartRatesDB.length / 2)) {
       // Below 77 for over half bump up the intensity
@@ -380,10 +396,23 @@ Future updatePlan(int difficulty, int pain) async {
       plan.setType = "Swimming";
     } else {
       //talk to your doctor
+      notPushed = false;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Warning("Your heart rate is peaking to a concerning level. Please seek help from a medical professional")),
+      );
     }
   } else {
     // Between 7 - 10 - Talk to a doctor
+    notPushed = false;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Warning("You are experiencing a concerning level of pain. Please seek help from a medical professional and "
+              "confirm it's still safe to use Wearable Intelligence")),
+    );
   }
+
   for (int i = 1; i < 6; i++) {
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updateExercisePlan(i.toString(), plan);
   }
