@@ -138,6 +138,28 @@ class _ExercisePlanState extends State<ExercisePlan> {
     );
   }
 
+  String getImage(String type) {
+    List _typeAssets = [
+      {"type": "Walking", "image": 'assets/images/walking.svg'},
+      {"type": "Running", "image": 'assets/images/running.svg'},
+      {"type": "Swimming", "image": 'assets/images/swimming.svg'},
+      {"type": "Jogging", "image": 'assets/images/running.svg'},
+      {"type": "Rest", "image": 'assets/images/rest.svg'},
+    ];
+
+    int x = 0;
+    String image = "";
+
+    while (image == "" && x < (_typeAssets.length)) {
+      if (_typeAssets[x]["type"] == type) {
+        return _typeAssets[x]["image"];
+      }
+
+      x++;
+    }
+    return 'assets/images/rest.svg';
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -162,7 +184,11 @@ class _ExercisePlanState extends State<ExercisePlan> {
             child: showButton()
                 ? ElevatedButton(
                     onPressed: () async {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Tracker()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Tracker((_getEventsForDay(_selectedDay!)[0].getType), getImage(_getEventsForDay(_selectedDay!)[0].getType))));
                     },
                     child: Text("BEGIN", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
                     style: ElevatedButton.styleFrom(
@@ -178,7 +204,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
           Padding(
             padding: EdgeInsets.all(20),
             child: SvgPicture.asset(
-              'assets/images/walking.svg',
+              getImage(_getEventsForDay(_selectedDay!)[0].getType),
               width: width - 40,
             ),
           ),
