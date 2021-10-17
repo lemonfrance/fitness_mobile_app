@@ -35,7 +35,7 @@ class _ExercisePlanState extends State<ExercisePlan> {
 
   bool showButton() {
     // Uncomment if you want to test the timer without restrictions
-    return true;
+    // return true;
 
     return ((DateFormat('yyyy-MM-dd').format(DateTime.now()) == DateFormat('yyyy-MM-dd').format(_focusedDay)) &&
         (DateTime.now().weekday < 6) &&
