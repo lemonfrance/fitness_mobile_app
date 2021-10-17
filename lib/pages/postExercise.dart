@@ -6,6 +6,7 @@ import 'package:wearable_intelligence/Services/evaluation.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
+import 'package:wearable_intelligence/pages/warning.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 import 'package:wearable_intelligence/wearableIntelligence.dart';
@@ -312,6 +313,11 @@ class _PostExerciseState extends State<PostExercise> {
                           context,
                           MaterialPageRoute(builder: (context) => WearableIntelligence("Wearable Intelligence")),
                         );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Warning(warningText)),
+                        );
                       }
                     },
                     child: Text("Finished", style: TextStyle(fontWeight: FontWeight.bold, color: Colours.white, fontSize: 24)),
@@ -333,51 +339,63 @@ class _PostExerciseState extends State<PostExercise> {
   }
 }
 
-Future updatePlan(int difficulty, int pain) async {
+bool notPushed = true;
+String warningText = "";
+
+Future updatePlan(int difficulty, int pain, BuildContext context) async {
   ExercisePlan plan = weekPlan[DateTime.now().weekday - 1];
   var low = [];
   var high = [];
+  var zeros = 0;
+
+  notPushed = true;
 
   // 0 increase by 3, 1 increase by 2, 2 increase by 1, 3 nothing, 4 decrease by 1  max reps?????
   plan.setReps = plan.getReps + (3 - difficulty);
+  for (int bpm in workoutHeartRatesDB) {
+    if (bpm < (heartRateMax - 10) && bpm != 0) {
+      low.add(bpm);
+    } else if (bpm > (heartRateMax + 10)) {
+      high.add(bpm);
+    } else if (bpm == 0) {
+      zeros++;
+    }
+  }
 
   if (pain < 5) {
     // Between 0-4 - check heart rate
-    for (int bpm in workoutHeartRatesDB) {
-      if (bpm < (heartRateMax - 10) && bpm != 0) {
-        low.add(bpm);
-      } else if (bpm > (heartRateMax + 10)) {
-        high.add(bpm);
-      }
-    }
 
-    if (high.length > (workoutHeartRatesDB.length / 3)) {
-      // Above 90 for over a 3rd drop them down.
-      if (plan.getType == 'Running') {
-        plan.setType = "Jogging";
-      } else if (plan.getType == 'Jogging') {
-        plan.setType = "Walking";
-      } else if (plan.getType == 'Walking') {
-        plan.setType = "Swimming";
-      } else {
-        //talk to your doctor
-      }
-    } else if (low.length > (workoutHeartRatesDB.length / 2)) {
-      // Below 77 for over half bump up the intensity
-      if (plan.getType == 'Running') {
-        if (plan.getRest >= 20) {
-          plan.setRest = plan.getRest - 10;
+    if (zeros != workoutHeartRatesDB.length) {
+      if (high.length > (workoutHeartRatesDB.length / 3)) {
+        // Above 90 for over a 3rd drop them down.
+        if (plan.getType == 'Running') {
+          plan.setType = "Jogging";
+        } else if (plan.getType == 'Jogging') {
+          plan.setType = "Walking";
+        } else if (plan.getType == 'Walking') {
+          plan.setType = "Swimming";
+        } else {
+          //talk to your doctor
+          notPushed = false;
+          warningText = "Your heart rate is peaking to a concerning level. Please seek help from a medical professional";
         }
-        //recommend sprinting
-      } else if (plan.getType == 'Jogging') {
-        plan.setType = "Running";
-      } else if (plan.getType == 'Walking') {
-        plan.setType = "Jogging";
-      } else {
-        plan.setType = "Walking";
+      } else if (low.length > (workoutHeartRatesDB.length / 2)) {
+        // Below 77 for over half bump up the intensity
+        if (plan.getType == 'Running') {
+          if (plan.getRest >= 20) {
+            plan.setRest = plan.getRest - 10;
+          }
+          //recommend sprinting
+        } else if (plan.getType == 'Jogging') {
+          plan.setType = "Running";
+        } else if (plan.getType == 'Walking') {
+          plan.setType = "Jogging";
+        } else {
+          plan.setType = "Walking";
+        }
       }
     }
-  } else if (pain < 7 && pain > 4) {
+  } else if ((pain < 7 && pain > 4) && (zeros != workoutHeartRatesDB.length)) {
     // Between 5 or 6 - Drop the intensity
     if (plan.getType == 'Running') {
       plan.setType = "Jogging";
@@ -387,9 +405,14 @@ Future updatePlan(int difficulty, int pain) async {
       plan.setType = "Swimming";
     } else {
       //talk to your doctor
+      notPushed = false;
+      warningText = "Your heart rate is peaking to a concerning level. Please seek help from a medical professional";
     }
-  } else {
+  } else if (pain > 7) {
     // Between 7 - 10 - Talk to a doctor
+    notPushed = false;
+    warningText =
+        "You are experiencing a concerning level of pain. Please seek help from a medical professional and confirm it's still safe to use Wearable Intelligence";
   }
   for (int i = 1; i < 6; i++) {
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).updateExercisePlan(i.toString(), plan);

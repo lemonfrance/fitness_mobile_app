@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wearable_intelligence/Services/database.dart';
+import 'package:wearable_intelligence/Services/evaluation.dart';
 import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
