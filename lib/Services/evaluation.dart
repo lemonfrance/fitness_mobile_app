@@ -24,7 +24,8 @@ class EvaluationService {
 
   Future getTodaysData(String date) async {
     try {
-      evaluationCollection.doc(uid).collection("completedWorkouts").doc(date);
+      var value = await evaluationCollection.doc(userId).collection("completedWorkouts").doc(date).get();
+      value.get("0");
       exercisedToday = true;
     } catch (e) {
       exercisedToday = false;
