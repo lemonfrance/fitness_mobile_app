@@ -209,11 +209,12 @@ class _PostExerciseState extends State<PostExercise> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    widget.zeros = 0;
 
     for (int bpm in workoutHeartRatesDB) {
-      if (bpm < (heartRateMax - 10) && bpm != 0) {
+      if (bpm < (heartRateMin) && bpm != 0) {
         widget.low.add(bpm);
-      } else if (bpm > (heartRateMax + 10)) {
+      } else if (bpm > (heartRateMax)) {
         widget.high.add(bpm);
       } else if (bpm == 0) {
         widget.zeros++;

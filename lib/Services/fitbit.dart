@@ -144,7 +144,7 @@ class FitBitService {
         headers: {'Authorization': 'Bearer ${authToken}'});
 
     try {
-      for (int i = 0; i < (jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length; i++) {
+      for (int i = 0; i < (jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length-1; i++) {
         workoutHeartRates[i] = new heartRates(i.toString(), jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"]);
         workoutHeartRatesDB[i] = jsonDecode(response.body)["activities-heart-intraday"]["dataset"][i]["value"];
       }
