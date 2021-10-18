@@ -1,11 +1,10 @@
 class ExercisePlan {
   String type;
-  String description;
   String heartRate;
   int reps;
   int rest;
 
-  ExercisePlan(this.type, this.description, this.heartRate, this.reps, this.rest);
+  ExercisePlan(this.type, this.heartRate, this.reps, this.rest);
 
   String get getType{
     return this.type;
@@ -13,10 +12,6 @@ class ExercisePlan {
 
   set setType(String type){
     this.type = type;
-  }
-
-  String get getDescription{
-    return this.description;
   }
 
   String get getHeartRate{

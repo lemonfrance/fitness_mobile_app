@@ -9,7 +9,10 @@ import '../Services/fitbit.dart';
 import 'postExercise.dart';
 
 class Tracker extends StatefulWidget {
-  Tracker() : super();
+  Tracker(this.title, this.image) : super();
+
+  final String title;
+  final String image;
 
   @override
   _TrackerState createState() => _TrackerState();
@@ -26,7 +29,7 @@ class _TrackerState extends State<Tracker> {
 
   int reps = weekPlan[DateTime.now().weekday - 1].getReps;
   int exerciseTime = 60;
-  int restTime = 60;
+  int restTime = weekPlan[DateTime.now().weekday - 1].getRest;
 
   Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
@@ -91,7 +94,7 @@ class _TrackerState extends State<Tracker> {
           Align(
             alignment: Alignment.topLeft,
             child: SvgPicture.asset(
-              exerciseTimer ? 'assets/images/walking.svg' : 'assets/images/rest.svg',
+              exerciseTimer ? widget.image : 'assets/images/rest.svg',
               width: width - 140,
             ),
           ),
@@ -166,6 +169,17 @@ class _TrackerState extends State<Tracker> {
             children: [
               ListView(
                 children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(40, 20, 20, 0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colours.black, fontSize: 36),
+                      ),
+                    ),
+                    // This might need to change since they can click on the dates.
+                  ),
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(children: [

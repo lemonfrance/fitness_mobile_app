@@ -100,7 +100,7 @@ class FitBitService {
 
   Future getHeartRateInformation() async {
     http.Response response = await http
-        .get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/7d.json'), headers: {'Authorization': 'Bearer ${authToken}'});
+        .get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d.json'), headers: {'Authorization': 'Bearer ${authToken}'});
 
     heartRateMin = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["min"];
     heartRateMax = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][2]["max"];
@@ -110,17 +110,30 @@ class FitBitService {
     totalHours = 0;
     try {
       for (int i = 0; i < 4; i++) {
-        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
-        calories += calories;
-      }
-      for (int i = 7; i > 0; i--) {
-        var date = DateTime.now().subtract(Duration(days: i));
-        weekActivityMinutes[date.weekday - 1] = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"];
-        int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"].round();
-        totalHours += time;
+        int calorie = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
+        calories += calorie;
       }
     } catch (e) {
-      print(e);
+      print("Error fetching calories: " + e.toString());
+    }
+
+    try {
+      http.Response response = await http
+          .get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/7d.json'), headers: {'Authorization': 'Bearer ${authToken}'});
+
+      for (int i = 7; i > 0; i--) {
+        var date = DateTime.now().subtract(Duration(days: i));
+        if (jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"] != null) {
+          int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"].round();
+          totalHours += time;
+        }
+
+        if (jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"] != null) {
+          weekActivityMinutes[date.weekday - 1] = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"].round();
+        }
+      }
+    } catch (e) {
+      print("Error fetching total hours: " + e.toString());
     }
   }
 
@@ -142,10 +155,8 @@ class FitBitService {
   }
 
   Future getHeartRateDay() async {
-    var start = DateFormat("HH:mm").format(DateTime.now().subtract(Duration(days: 1)));
-    var end = DateFormat("HH:mm").format(DateTime.now());
-    http.Response response = await http.get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d/1min/time/$start/$end.json'),
-        headers: {'Authorization': 'Bearer ${authToken}'});
+    http.Response response = await http
+        .get(Uri.parse('https://api.fitbit.com/1/user/${user_id}/activities/heart/date/today/1d.json'), headers: {'Authorization': 'Bearer ${authToken}'});
 
     try {
       for (int i = 0; i < (jsonDecode(response.body)["activities-heart-intraday"]["dataset"]).length / 60; i++) {

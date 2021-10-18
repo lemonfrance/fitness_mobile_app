@@ -22,11 +22,11 @@ class _MyHomePageState extends State<MyHomePage> {
   late double width;
 
   List _typeAssets = [
-    {"type": "Walking", "icon": 'assets/images/walkingIcon.svg'},
-    {"type": "Running", "icon": 'assets/images/runningIcon.svg'},
-    {"type": "Swimming", "icon": 'assets/images/swimmingIcon.svg'},
-    {"type": "Jogging", "icon": 'assets/images/runningIcon.svg'},
-    {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg'},
+    {"type": "Walking", "icon": 'assets/images/walkingIcon.svg', "image": 'assets/images/walking.svg'},
+    {"type": "Running", "icon": 'assets/images/runningIcon.svg', "image": 'assets/images/running.svg'},
+    {"type": "Swimming", "icon": 'assets/images/swimmingIcon.svg', "image": 'assets/images/swimming.svg'},
+    {"type": "Jogging", "icon": 'assets/images/runningIcon.svg', "image": 'assets/images/running.svg'},
+    {"type": "Rest", "icon": 'assets/images/rechargeIcon.svg', "image": 'assets/images/rest.svg'},
   ];
 
   Widget logInScreen() {
@@ -130,7 +130,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget homeScreen() {
+    int x = 0;
+    String image = "";
     var date = DateTime.now();
+
+    // Dynamically get the icon
+    while (image == "" && x < (_typeAssets.length)) {
+      // Check if the icon name matches the type of exercise
+      if (_typeAssets[x]["type"] == weekPlan[date.weekday - 1].getType) {
+        image = _typeAssets[x]["image"];
+      } else {
+        x++;
+      }
+    }
+
     return loading
         ? Loading()
         : Container(
@@ -212,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 10),
                             child: SvgPicture.asset(
-                              'assets/images/walking.svg',
+                              image,
                               width: width - 80,
                             ),
                           ),
@@ -236,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: weekPlan.length,
+                        itemCount: 7, // only fetch next 7 days
                         itemBuilder: (context, index) {
                           return scheduleTile(index);
                         },

@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wearable_intelligence/models/exercisePlan.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
-import 'package:wearable_intelligence/utils/onboardingQuestions.dart';
-
 
 class DatabaseService {
-
   final String uid;
   DatabaseService({required this.uid});
 
@@ -26,16 +23,15 @@ class DatabaseService {
       'weight': '',
       'gender': '',
       'birthDate': '',
-      'totalHours':0,
-      'refreshToken':'',
-      'authToken':'',
-      'fitbitId':'',
-      'fitnessLevel':0
+      'totalHours': 0,
+      'refreshToken': '',
+      'authToken': '',
+      'fitbitId': '',
+      'fitnessLevel': 0
     });
   }
 
-  Future updateUserFitBitData(String firstName, String lastName, int age, double height, double weight,
-  String gender, String birthDate) async {
+  Future updateUserFitBitData(String firstName, String lastName, int age, double height, double weight, String gender, String birthDate) async {
     return await wearIntelCollection.doc(uid).update({
       'firstName': firstName,
       'lastName': lastName,
@@ -48,17 +44,11 @@ class DatabaseService {
   }
 
   Future updateToken(String refreshToken, String authToken, String userId) async {
-    return await wearIntelCollection.doc(uid).update({
-      'refreshToken': refreshToken,
-      'authToken': authToken,
-      'fitbitId': userId
-    });
+    return await wearIntelCollection.doc(uid).update({'refreshToken': refreshToken, 'authToken': authToken, 'fitbitId': userId});
   }
 
-  Future setLevel(int level) async{
-    return await wearIntelCollection.doc(uid).update(
-      {'fitnessLevel':level}
-    );
+  Future setLevel(int level) async {
+    return await wearIntelCollection.doc(uid).update({'fitnessLevel': level});
   }
 
   Future getFitbitUser() async {
@@ -72,7 +62,7 @@ class DatabaseService {
   }
 
   Future getUserData() async {
-    return await wearIntelCollection.doc(uid).get().then((value){
+    return await wearIntelCollection.doc(uid).get().then((value) {
       print(value.data());
     });
   }
@@ -120,28 +110,24 @@ class DatabaseService {
   Future getExercisePlan() async {
     weekPlan = [];
     final value = await wearIntelCollection.doc(uid).collection("ExercisePlan").get();
-    for(DocumentSnapshot doc in value.docs){
-      weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("description"), doc.get("heartRate"), doc.get("reps"), doc.get("rest")));
+    for (DocumentSnapshot doc in value.docs) {
+      weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("heartRate"), doc.get("reps"), doc.get("rest")));
     }
   }
 
-  Future createExercisePlan(String day, String type, String description, String heartRate, int reps, int rest) async{
-    await wearIntelCollection.doc(uid).collection("ExercisePlan").doc(day).set({
-      'type': type,
-      'description': description,
-      'heartRate': heartRate,
-      'reps': reps,
-      'rest' : rest
-    });
+  Future createExercisePlan(String day, String type, String heartRate, int reps, int rest) async {
+    await wearIntelCollection
+        .doc(uid)
+        .collection("ExercisePlan")
+        .doc(day)
+        .set({'type': type, 'heartRate': heartRate, 'reps': reps, 'rest': rest});
   }
 
-  Future updateExercisePlan(String day, ExercisePlan plan) async{
-    await wearIntelCollection.doc(uid).collection("ExercisePlan").doc(day).update({
-      'type': plan.getType,
-      'description': plan.getDescription,
-      'heartRate': plan.getHeartRate,
-      'reps': plan.getReps,
-      'rest' : plan.getRest
-    });
+  Future updateExercisePlan(String day, ExercisePlan plan) async {
+    await wearIntelCollection
+        .doc(uid)
+        .collection("ExercisePlan")
+        .doc(day)
+        .update({'type': plan.getType, 'heartRate': plan.getHeartRate, 'reps': plan.getReps, 'rest': plan.getRest});
   }
 }
