@@ -111,16 +111,16 @@ class DatabaseService {
     weekPlan = [];
     final value = await wearIntelCollection.doc(uid).collection("ExercisePlan").get();
     for (DocumentSnapshot doc in value.docs) {
-      weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("description"), doc.get("heartRate"), doc.get("reps"), doc.get("rest")));
+      weekPlan.add(new ExercisePlan(doc.get("type"), doc.get("heartRate"), doc.get("reps"), doc.get("rest")));
     }
   }
 
-  Future createExercisePlan(String day, String type, String description, String heartRate, int reps, int rest) async {
+  Future createExercisePlan(String day, String type, String heartRate, int reps, int rest) async {
     await wearIntelCollection
         .doc(uid)
         .collection("ExercisePlan")
         .doc(day)
-        .set({'type': type, 'description': description, 'heartRate': heartRate, 'reps': reps, 'rest': rest});
+        .set({'type': type, 'heartRate': heartRate, 'reps': reps, 'rest': rest});
   }
 
   Future updateExercisePlan(String day, ExercisePlan plan) async {
@@ -128,6 +128,6 @@ class DatabaseService {
         .doc(uid)
         .collection("ExercisePlan")
         .doc(day)
-        .update({'type': plan.getType, 'description': plan.getDescription, 'heartRate': plan.getHeartRate, 'reps': plan.getReps, 'rest': plan.getRest});
+        .update({'type': plan.getType, 'heartRate': plan.getHeartRate, 'reps': plan.getReps, 'rest': plan.getRest});
   }
 }

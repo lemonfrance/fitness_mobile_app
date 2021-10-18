@@ -23,7 +23,7 @@ class _VitalsState extends State<Vitals> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(height: 20),
-            workoutHeartRates[0].time == ''
+            dayHeartRates.length == 0
                 ? Padding(
                     padding: EdgeInsets.only(right: 20, left: 20),
                     child: MaterialButton(

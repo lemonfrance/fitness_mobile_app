@@ -110,8 +110,8 @@ class FitBitService {
     totalHours = 0;
     try {
       for (int i = 0; i < 4; i++) {
-        int calories = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
-        calories += calories;
+        int calorie = jsonDecode(response.body)["activities-heart"][0]["value"]["heartRateZones"][i]["caloriesOut"].round();
+        calories += calorie;
       }
     } catch (e) {
       print("Error fetching calories: " + e.toString());
@@ -125,13 +125,11 @@ class FitBitService {
         var date = DateTime.now().subtract(Duration(days: i));
         if (jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"] != null) {
           int time = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"].round();
-          print("hi: " + time.toString());
           totalHours += time;
         }
 
         if (jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"] != null) {
           weekActivityMinutes[date.weekday - 1] = jsonDecode(response.body)["activities-heart"][i - 1]["value"]["heartRateZones"][2]["minutes"].round();
-          print("interesting: " + weekActivityMinutes[date.weekday - 1].toString());
         }
       }
     } catch (e) {
