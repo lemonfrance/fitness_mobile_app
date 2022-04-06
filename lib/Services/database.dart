@@ -21,12 +21,15 @@ class DatabaseService {
       'age': '',
       'height': '',
       'weight': '',
+      'waistCircumference', '',
       'gender': '',
       'birthDate': '',
       'totalHours': 0,
       'refreshToken': '',
       'authToken': '',
       'fitbitId': '',
+      'appleHealthEnabled': '',
+      'samsungHealthEnabled': '',
       'fitnessLevel': 0
     });
   }
