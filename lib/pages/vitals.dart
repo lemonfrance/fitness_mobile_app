@@ -3,6 +3,7 @@ import 'package:wearable_intelligence/Services/fitbit.dart';
 import 'package:wearable_intelligence/components/activeMinutesGaph.dart';
 import 'package:wearable_intelligence/components/heartrateGraph.dart';
 import 'package:wearable_intelligence/components/progressTile.dart';
+import 'package:wearable_intelligence/components/plantProgress.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
@@ -58,7 +59,7 @@ class _VitalsState extends State<Vitals> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ProgressTile("Calories Burned", calories),
+                PlantProgress(),
                 ProgressTile("Total Hours", totalHours),
               ],
             ),
