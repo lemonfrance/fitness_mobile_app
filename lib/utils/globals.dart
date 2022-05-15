@@ -20,6 +20,8 @@ int restingHeartRate = 0;
 int pageIndex = 1;
 int level = 0;
 bool firstFitbit = false;
+//added rewards
+int solarOrbsObtained = 3;
 
 var weekPlan = [];
 var weekActivityMinutes = [0, 0, 0, 0, 0, 0, 0];
