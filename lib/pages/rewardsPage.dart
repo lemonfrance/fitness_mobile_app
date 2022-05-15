@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
+import 'package:wearable_intelligence/utils/globals.dart';
 
 
 class rewardsPage extends StatefulWidget {
@@ -12,9 +13,65 @@ class rewardsPage extends StatefulWidget {
 }
 
 class _rewardsPageState extends State<rewardsPage> {
+  int solarOrbsPerLevel=10; //Solar orbs you need to collect per level
+
+  //what if solar orbs obtained exceed solarOrbsPerLevel?
+
+  List<Widget> generateOrbsRows(){
+    int numOfColumns = 5;
+    int numOfRows = (solarOrbsPerLevel/numOfColumns).floor();
+    int orbCounter = solarOrbsObtained;
+    int filledOrbNum=0;
+
+    List<Widget> rows = [];
+
+    for (var i = 0; i < numOfRows; i++) {
+      //produce 5 orbs in a row
+      //if orbs obtained is larger than/equal to column count, produce %numOfColumns% amount of filled orbs
+      if (orbCounter >= numOfColumns){
+        filledOrbNum = numOfColumns;
+        orbCounter-=numOfColumns;
+      }
+      //else produce %orbCounter% amount of filled orbs & %numOfColumns-orbCounter% amount of filled orbs
+      else{
+        filledOrbNum = orbCounter;
+        orbCounter = 0;
+      }
+
+      rows.add(
+          Container( child: Row(
+          children: List.generate(
+              numOfColumns,
+                  (index) {
+                      if(index < filledOrbNum) {
+                        return Expanded(
+                            child: Image.asset(
+                                'assets/images/orbfill.png', height: 35, width: 35)
+                        );
+                      }
+                      else{
+                        return Expanded(
+                            child: Image.asset(
+                                'assets/images/unfilledorb.png', height: 35, width: 35)
+                        );
+                      }
+                  }
+          )
+      ))
+      );
+
+      rows.add(Divider(
+          height: 10,
+          color: Colors.transparent));
+    }
+
+    return rows;
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = (MediaQuery.of(context).size.width - 75) / 2;
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('My Rewards'),
@@ -33,7 +90,7 @@ class _rewardsPageState extends State<rewardsPage> {
                     color: Colors.transparent,
                   ),
                   Text(
-                    "Awesome Work!",
+                    "Awesome work!",
                     style: AppTheme.theme.textTheme.headline2!.copyWith(
                         color: Colours.black, fontWeight: FontWeight.bold),
                   ),
@@ -58,7 +115,7 @@ class _rewardsPageState extends State<rewardsPage> {
                     color: Colors.transparent,
                   ),
                   Text(
-                    "_ solar orbs left to collect!",
+                    (solarOrbsPerLevel-solarOrbsObtained).toString()+" solar orbs left to collect",
                     style: AppTheme.theme.textTheme.headline4!
                         .copyWith(color: Colours.black),
                   ),
@@ -66,26 +123,12 @@ class _rewardsPageState extends State<rewardsPage> {
                     height: 60,
                     color: Colors.transparent,
                   ),
-                  Container(
-                      child: Row(
-                    children: List.generate(
-                        3,
-                        (index) => Expanded(
-                            child: Image.asset('assets/images/unfilledorb.png',
-                                height: 80, width: 80))),
-                  )),
-                  Divider(
-                    height: 10,
-                    color: Colors.transparent,
+
+                  //generateOrbsRows(): display filled and unfilled orbs
+                  ListBody(
+                    children: generateOrbsRows()
                   ),
-                  Container(
-                      child: Row(
-                    children: List.generate(
-                        3,
-                        (index) => Expanded(
-                            child: Image.asset('assets/images/unfilledorb.png',
-                                height: 80, width: 80))),
-                  )),
+
                 ],
               ),
             ),
