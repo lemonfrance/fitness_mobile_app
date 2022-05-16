@@ -31,6 +31,8 @@ class _TrackerState extends State<Tracker> {
   int exerciseTime = 60;
   int restTime = weekPlan[DateTime.now().weekday - 1].getRest;
 
+  //Produces generic tiles, given an icon and a title string
+  //used for showing reps and heart rate
   Widget tile(IconData icon, String title) {
     double width = MediaQuery.of(context).size.width;
 
@@ -64,6 +66,8 @@ class _TrackerState extends State<Tracker> {
     );
   }
 
+  //Produces a timed exercise tile
+  //used for timing scheduled exercises
   Widget timerTile(bool exerciseTimer) {
     double width = MediaQuery.of(context).size.width;
 
@@ -72,6 +76,8 @@ class _TrackerState extends State<Tracker> {
       height: width / 1.7,
       child: Stack(
         children: [
+
+          //timed exercise tile
           Align(
             alignment: Alignment.bottomRight,
             child: Container(
@@ -91,6 +97,8 @@ class _TrackerState extends State<Tracker> {
               ),
             ),
           ),
+
+          //exercise/rest photo
           Align(
             alignment: Alignment.topLeft,
             child: SvgPicture.asset(
@@ -98,6 +106,8 @@ class _TrackerState extends State<Tracker> {
               width: width - 140,
             ),
           ),
+
+          //exercise timer
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
@@ -143,11 +153,14 @@ class _TrackerState extends State<Tracker> {
               ),
             ),
           ),
+
+
         ],
       ),
     );
   }
 
+  //gets number of exercises left
   String getRepText() {
     if (reps > 1) {
       return "$reps reps left";
@@ -167,8 +180,12 @@ class _TrackerState extends State<Tracker> {
           backgroundColor: AppTheme.theme.backgroundColor,
           body: Stack(
             children: [
+
+              //A list of tiles: title, heart rate and reps left, list of exercises
               ListView(
                 children: [
+
+                  //Title tile
                   Padding(
                     padding: EdgeInsets.fromLTRB(40, 20, 20, 0),
                     child: Align(
@@ -180,6 +197,8 @@ class _TrackerState extends State<Tracker> {
                     ),
                     // This might need to change since they can click on the dates.
                   ),
+
+                  //Tiles for heart rate and reps left
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Column(children: [
@@ -188,6 +207,8 @@ class _TrackerState extends State<Tracker> {
                       tile(Icons.directions_walk, getRepText()),
                     ]),
                   ),
+
+                  //Timed exercise tiles with timer
                   Padding(
                     padding: EdgeInsets.only(left: 15, right: 20, bottom: 100),
                     child: Column(
@@ -200,10 +221,15 @@ class _TrackerState extends State<Tracker> {
                   ),
                 ],
               ),
+
+
+              //Exercise Start/Pause Button
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: EdgeInsets.only(bottom: 20),
+
+                  // Start Exercise Button
                   child: (ended || start)
                       ? MaterialButton(
                           minWidth: width * 0.6,
@@ -229,6 +255,8 @@ class _TrackerState extends State<Tracker> {
                             }
                           },
                         )
+
+                      //Pause Exercise Button, turned from Start button
                       : MaterialButton(
                           minWidth: width * 0.6,
                           height: 50,
@@ -248,6 +276,8 @@ class _TrackerState extends State<Tracker> {
                             });
                           },
                         ),
+
+
                 ),
               ),
             ],
