@@ -206,48 +206,49 @@ class _TrackerState extends State<Tracker> {
                   padding: EdgeInsets.only(bottom: 20),
                   child: (ended || start)
                       ? MaterialButton(
-                          minWidth: width * 0.6,
-                          height: 50,
-                          elevation: 10,
-                          shape: StadiumBorder(),
-                          color: Colours.highlight,
-                          child: Text(
-                            start ? "Start" : "Show Stats",
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
-                          ),
-                          onPressed: () async {
-                            if (start) {
-                              start ? exerciseController.start() : nextPage(context);
-                              setState(() {
-                                start = false;
-                              });
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
-                              );
-                            }
-                          },
-                        )
+                    minWidth: width * 0.6,
+                    height: 50,
+                    elevation: 10,
+                    shape: StadiumBorder(),
+                    color: Colours.highlight,
+                    child: Text(
+                      start ? "Start" : "Show Stats",
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
+                    ),
+                    onPressed: () async {
+                      if (start) {
+                        start ? exerciseController.start() : nextPage(context);
+                        setState(() {
+                          start = false;
+                        });
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
+                        );
+                      }
+                    },
+                  )
                       : MaterialButton(
-                          minWidth: width * 0.6,
-                          height: 50,
-                          elevation: 10,
-                          shape: StadiumBorder(),
-                          color: Colours.lightBlue,
-                          child: Text(
-                            paused ? "Play" : "Pause",
-                            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              paused
-                                  ? (rest ? restController.resume() : exerciseController.resume())
-                                  : (rest ? restController.pause() : exerciseController.pause());
-                              paused = !paused;
-                            });
-                          },
-                        ),
+                    minWidth: width * 0.6,
+                    height: 50,
+                    elevation: 10,
+                    shape: StadiumBorder(),
+                    color: Colours.lightBlue,
+                    child: Text(
+                      paused ? "Start" : "Pause",
+                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
+                    ),
+                    onPressed: () {
+                      showAlertDialog(context);
+                      setState(() {
+                        paused
+                            ? (rest ? restController.resume() : exerciseController.resume())
+                            : (rest ? restController.pause() : exerciseController.pause());
+                        paused = !paused;
+                      });
+                    },
+                  ),
                 ),
               ),
             ],
@@ -257,6 +258,36 @@ class _TrackerState extends State<Tracker> {
           return false;
         });
   }
+}
+
+void showAlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget noButton = TextButton(
+    child: Text("No"),
+    onPressed:  () {},
+  );
+  Widget yesButton = TextButton(
+    child: Text("Yes"),
+    onPressed:  () {},
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("End Exercise"),
+    content: Text("Are you sure you want to stop this exercise?"),
+    actions: [
+      noButton,
+      yesButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
 
 Future nextPage(BuildContext context) async {
