@@ -6,6 +6,7 @@ import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 import '../Services/fitbit.dart';
+import '../wearableIntelligence.dart';
 import 'postExercise.dart';
 
 class Tracker extends StatefulWidget {
@@ -236,7 +237,7 @@ class _TrackerState extends State<Tracker> {
                     shape: StadiumBorder(),
                     color: Colours.lightBlue,
                     child: Text(
-                      paused ? "Start" : "Pause",
+                      paused ? "Start" : "End",
                       style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
                     ),
                     onPressed: () {
@@ -264,17 +265,26 @@ void showAlertDialog(BuildContext context) {
   // set up the buttons
   Widget noButton = TextButton(
     child: Text("No"),
-    onPressed:  () {},
+    onPressed:  () => Navigator.pop(context, true),
   );
   Widget yesButton = TextButton(
     child: Text("Yes"),
-    onPressed:  () {},
+    onPressed:  () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WearableIntelligence("Wearable Intelligence"),
+          // we need to put a line here where it sends data to the DB to state the user did not complete the exercise
+        ),
+      );
+    },
   );
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text("End Exercise"),
-    content: Text("Are you sure you want to stop this exercise?"),
+    content: Text("Are you sure you want to stop this exercise?\n"
+        "\nClick 'No' and the timer will be paused until you are ready to resume your exercise"),
     actions: [
       noButton,
       yesButton,
