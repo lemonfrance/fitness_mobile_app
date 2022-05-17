@@ -162,6 +162,53 @@ class _TrackerState extends State<Tracker> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    void showAlertDialog(BuildContext context) {
+      // set up the buttons
+      Widget noButton = TextButton(
+        child: Text("No"),
+        onPressed:  () {
+          Navigator.pop(context, false);
+          setState(() {
+            paused
+                ? rest ? restController.resume() : exerciseController.resume()
+                : rest ? restController.pause() : exerciseController.pause();
+            paused = !paused;
+          });
+        }
+      );
+      Widget yesButton = TextButton(
+        child: Text("Yes"),
+        onPressed:  () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WearableIntelligence("Wearable Intelligence"),
+              // we need to put a line here where it sends data to the DB to state the user did not complete the exercise
+            ),
+          );
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text("Paused Exercise"),
+        content: Text("Do you want to stop exercising?\n"
+            "\nTo resume your exercise, please click 'No'"),
+        actions: [
+          noButton,
+          yesButton,
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
 
     return WillPopScope(
         child: Scaffold(
@@ -237,17 +284,18 @@ class _TrackerState extends State<Tracker> {
                     shape: StadiumBorder(),
                     color: Colours.lightBlue,
                     child: Text(
-                      paused ? "Start" : "End",
+                      paused ? "Start" : "Pause",
                       style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
                     ),
                     onPressed: () {
                       showAlertDialog(context);
                       setState(() {
                         paused
-                            ? (rest ? restController.resume() : exerciseController.resume())
-                            : (rest ? restController.pause() : exerciseController.pause());
+                            ? rest ? restController.resume() : exerciseController.resume()
+                            : rest ? restController.pause() : exerciseController.pause();
                         paused = !paused;
                       });
+
                     },
                   ),
                 ),
@@ -259,45 +307,6 @@ class _TrackerState extends State<Tracker> {
           return false;
         });
   }
-}
-
-void showAlertDialog(BuildContext context) {
-  // set up the buttons
-  Widget noButton = TextButton(
-    child: Text("No"),
-    onPressed:  () => Navigator.pop(context, true),
-  );
-  Widget yesButton = TextButton(
-    child: Text("Yes"),
-    onPressed:  () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WearableIntelligence("Wearable Intelligence"),
-          // we need to put a line here where it sends data to the DB to state the user did not complete the exercise
-        ),
-      );
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("End Exercise"),
-    content: Text("Are you sure you want to stop this exercise?\n"
-        "\nClick 'No' and the timer will be paused until you are ready to resume your exercise"),
-    actions: [
-      noButton,
-      yesButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
 }
 
 Future nextPage(BuildContext context) async {
