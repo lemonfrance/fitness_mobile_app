@@ -1,44 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 class ProgressTile extends StatelessWidget {
-  String title;
+  String measureUnit;
+  String icon;
   int data;
 
-  ProgressTile(this.title, this.data);
+  ProgressTile(this.measureUnit, this.icon, this.data);
 
   @override
   Widget build(BuildContext context) {
     double width = (MediaQuery.of(context).size.width - 75) / 2;
     return Container(
       width: width,
-      height: width * 1.1,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            blurRadius: 5,
-            offset: Offset(3, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      height: width * 0.2,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SvgPicture.asset(icon, width:width*0.12, height:width*0.12, color: Colors.pink),
+          VerticalDivider(width:15,color:Colors.transparent),
           Text(
-            data.toString(),
-            style: TextStyle(fontSize: 30, color: Colours.darkBlue),
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colours.darkBlue,
-            ),
+            data.toString()+" "+measureUnit,
+            style: TextStyle(fontSize: 20, color: Colours.darkBlue),
             textAlign: TextAlign.center,
           ),
         ],
