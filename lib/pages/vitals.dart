@@ -28,6 +28,7 @@ class _VitalsState extends State<Vitals> {
                 ? Padding(
                     padding: EdgeInsets.only(right: 20, left: 20),
                     child: MaterialButton(
+
                       onPressed: () async {
                         await FitBitService().getHeartRateDay();
                         await FitBitService().getHeartRateInformation();
@@ -54,18 +55,35 @@ class _VitalsState extends State<Vitals> {
                       ),
                     ),
                   )
-                : HeartrateGraph(false),
-            Container(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                PlantProgress(),
-                ProgressTile("Total Hours", totalHours),
-              ],
-            ),
-            Container(height: 20),
-            ActiveMinutesGraph(),
-            Container(height: 20),
+                : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    PlantProgress(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        //PlantProgressMsg
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          width: 200,
+                          height: 100,
+                          color: Colors.white,
+                          child:Text("Great job! Lorem ipsum dolor sit amet.",textScaleFactor: 1.2,)
+                        ),
+                        ProgressTile("hrs", "assets/images/time.svg", totalHours),
+                        ProgressTile("bpm", "assets/images/heartBeat.svg", heartRate),
+                        ProgressTile("cal", "assets/images/calories.svg", calories),
+                      ]
+                    )
+
+                  ],
+                ),
+                Container(height: 20),
+                ActiveMinutesGraph(),
+                Container(height: 20),
+                HeartrateGraph(false),
+                Container(height: 20)
           ],
         ),
       ),
