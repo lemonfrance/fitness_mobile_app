@@ -46,7 +46,8 @@ dependencies:
   circular_countdown_timer: ^0.2.0
   flutter_vibrate: ^1.1.0
   scroll_app_bar: ^2.0.0
-
+  #added a new dependency
+  bubble: ^1.2.1
 
 
 #  firebase_core: ^0.4.0
