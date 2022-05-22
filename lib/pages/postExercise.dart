@@ -100,19 +100,17 @@ class _PostExerciseState extends State<PostExercise> {
     String feedbackString;
 
     if (widget.low.length > (workoutHeartRatesDB.length / 2)) {
-      feedbackString = "Your heart rate was below the desired heart rate zone. Your plan will adjust to increase the intensity";
-      double gap = (widget.low.length-(workoutHeartRatesDB.length / 2));
-      solarOrbsObtained += ((1/gap)*3).ceil();
+      feedbackString = "Your heart rate was below the desired heart rate zone. Your plan will adjust to increase the intensity\n+1 water drop";
+      waterDropsGained+=1;
     } else if (widget.high.length > (workoutHeartRatesDB.length / 3)) {
-      feedbackString = "Your heart rate was above the desired heart rate zone. Your plan will adjust to reduce the intensity";
-      double gap = (widget.high.length-(workoutHeartRatesDB.length / 3));
-      solarOrbsObtained += ((1/gap)*3).ceil();
+      feedbackString = "Your heart rate was above the desired heart rate zone. Your plan will adjust to reduce the intensity\n+1 water drop";
+      waterDropsGained+=1;
     } else if ((workoutHeartRates.length == 0) || (workoutHeartRates[0].time == '')) {
       feedbackString = "We do not have access to your heart data. Navigate to Fitbit, sync your data and return to Wearable Intelligence";
-      solarOrbsObtained = 0;
     } else {
-      feedbackString = "You spent most of your workout in the desired heart rate zone, great work";
-      solarOrbsObtained += 3;
+      feedbackString = "You spent most of your workout in the desired heart rate zone, great work!\n+1 water drop\n+1 solar orbs";
+      solarOrbsGained+=1;
+      waterDropsGained+=1;
     }
 
 
