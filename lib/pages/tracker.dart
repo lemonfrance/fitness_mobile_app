@@ -6,10 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
+import 'package:wearable_intelligence/wearableIntelligence.dart';
 
 import '../Services/fitbit.dart';
 import 'postExercise.dart';
 
+// ignore: must_be_immutable
 class Tracker extends StatefulWidget {
   Tracker(this.title, this.image) : super();
 
@@ -23,14 +25,14 @@ class Tracker extends StatefulWidget {
 }
 
 class _TrackerState extends State<Tracker> {
-  //CountDownController restController = CountDownController();
+  CountDownController restController = CountDownController();
   CountDownController exerciseController = CountDownController();
 
   bool start = true;
   bool ended = false;
 
   bool paused = false;
-  //bool rest = false;
+  bool rest = false;
 
   int reps = weekPlan[DateTime.now().weekday - 1].getReps;
   int exerciseTime = 60;
@@ -38,6 +40,53 @@ class _TrackerState extends State<Tracker> {
 
   Timer setTimerText = Timer.periodic(Duration(), (Timer timer){});
   Timer setPlantMsg = Timer.periodic(Duration(), (Timer timer){});
+
+  void showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget noButton = TextButton(
+        child: Text("No"),
+        onPressed:  () {
+          Navigator.pop(context, false);
+          setState(() {
+            paused
+                ? rest ? restController.resume() : exerciseController.resume()
+                : rest ? restController.pause() : exerciseController.pause();
+            paused = !paused;
+          });
+        }
+    );
+    Widget yesButton = TextButton(
+      child: Text("Yes"),
+      onPressed:  () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WearableIntelligence("Wearable Intelligence"),
+            // we need to put a line here where it sends data to the DB to state the user did not complete the exercise
+          ),
+        );
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Paused Exercise"),
+      content: Text("Do you want to stop exercising?\n"
+          "\nTo resume your exercise, please click 'No'"),
+      actions: [
+        noButton,
+        yesButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -172,6 +221,7 @@ class _TrackerState extends State<Tracker> {
                             start = false;
                           });
                         } else{ //if timer ongoing
+                          showAlertDialog(context);
                           exerciseController.pause();
                           setState(() {
                             paused = true;
@@ -183,7 +233,9 @@ class _TrackerState extends State<Tracker> {
                       icon: Image.asset('assets/images/plantdesign.png',filterQuality: FilterQuality.low),
                       iconSize: width*0.5,
                       onPressed: () async {
+                        showAlertDialog(context);
                         setState(() {
+                          // ignore: unnecessary_statements
                           (exerciseController.resume());
                           paused = !paused;
                         });
@@ -202,6 +254,7 @@ class _TrackerState extends State<Tracker> {
     double width = MediaQuery.of(context).size.width;
     if(ended){
       setTimerText.cancel();
+      // ignore: unnecessary_statements
       setPlantMsg.cancel;
     }
     return WillPopScope(
