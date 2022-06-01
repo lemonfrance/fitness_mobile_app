@@ -20,6 +20,9 @@ int restingHeartRate = 0;
 int pageIndex = 1;
 int level = 0;
 bool firstFitbit = false;
+//added rewards: TODO must get values from DB
+int solarOrbsGained = 0;
+int waterDropsGained = 0;
 
 var weekPlan = [];
 var weekActivityMinutes = [0, 0, 0, 0, 0, 0, 0];
