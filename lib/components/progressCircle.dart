@@ -12,20 +12,17 @@ class ProgressCircle extends StatefulWidget {
 }
 
 class _ProgressState extends State<ProgressCircle> {
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return CircularPercentIndicator(
-      radius: width * 0.7,
-      lineWidth: 20.0,
+      radius: width * 0.05,
+      lineWidth: 2.5,
       animation: true,
       percent: widget._percentage / 100,
-      center: new Text(
-        widget._percentage.toString() + "% progress",
-        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-      ),
       circularStrokeCap: CircularStrokeCap.round,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       progressColor: widget._colour,
     );
   }

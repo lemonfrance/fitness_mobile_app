@@ -6,6 +6,7 @@ import 'package:wearable_intelligence/utils/globals.dart';
 import 'package:wearable_intelligence/utils/styles.dart';
 
 import '../Services/fitbit.dart';
+import '../wearableIntelligence.dart';
 import 'postExercise.dart';
 
 class Tracker extends StatefulWidget {
@@ -161,6 +162,53 @@ class _TrackerState extends State<Tracker> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    void showAlertDialog(BuildContext context) {
+      // set up the buttons
+      Widget noButton = TextButton(
+        child: Text("No"),
+        onPressed:  () {
+          Navigator.pop(context, false);
+          setState(() {
+            paused
+                ? rest ? restController.resume() : exerciseController.resume()
+                : rest ? restController.pause() : exerciseController.pause();
+            paused = !paused;
+          });
+        }
+      );
+      Widget yesButton = TextButton(
+        child: Text("Yes"),
+        onPressed:  () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WearableIntelligence("Wearable Intelligence"),
+              // we need to put a line here where it sends data to the DB to state the user did not complete the exercise
+            ),
+          );
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text("Paused Exercise"),
+        content: Text("Do you want to stop exercising?\n"
+            "\nTo resume your exercise, please click 'No'"),
+        actions: [
+          noButton,
+          yesButton,
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
 
     return WillPopScope(
         child: Scaffold(
@@ -206,48 +254,50 @@ class _TrackerState extends State<Tracker> {
                   padding: EdgeInsets.only(bottom: 20),
                   child: (ended || start)
                       ? MaterialButton(
-                          minWidth: width * 0.6,
-                          height: 50,
-                          elevation: 10,
-                          shape: StadiumBorder(),
-                          color: Colours.highlight,
-                          child: Text(
-                            start ? "Start" : "Show Stats",
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
-                          ),
-                          onPressed: () async {
-                            if (start) {
-                              start ? exerciseController.start() : nextPage(context);
-                              setState(() {
-                                start = false;
-                              });
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
-                              );
-                            }
-                          },
-                        )
+                    minWidth: width * 0.6,
+                    height: 50,
+                    elevation: 10,
+                    shape: StadiumBorder(),
+                    color: Colours.highlight,
+                    child: Text(
+                      start ? "Start" : "Show Stats",
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colours.white),
+                    ),
+                    onPressed: () async {
+                      if (start) {
+                        start ? exerciseController.start() : nextPage(context);
+                        setState(() {
+                          start = false;
+                        });
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PostExercise("Post workout stats")),
+                        );
+                      }
+                    },
+                  )
                       : MaterialButton(
-                          minWidth: width * 0.6,
-                          height: 50,
-                          elevation: 10,
-                          shape: StadiumBorder(),
-                          color: Colours.lightBlue,
-                          child: Text(
-                            paused ? "Play" : "Pause",
-                            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              paused
-                                  ? (rest ? restController.resume() : exerciseController.resume())
-                                  : (rest ? restController.pause() : exerciseController.pause());
-                              paused = !paused;
-                            });
-                          },
-                        ),
+                    minWidth: width * 0.6,
+                    height: 50,
+                    elevation: 10,
+                    shape: StadiumBorder(),
+                    color: Colours.lightBlue,
+                    child: Text(
+                      paused ? "Start" : "Pause",
+                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colours.white),
+                    ),
+                    onPressed: () {
+                      showAlertDialog(context);
+                      setState(() {
+                        paused
+                            ? rest ? restController.resume() : exerciseController.resume()
+                            : rest ? restController.pause() : exerciseController.pause();
+                        paused = !paused;
+                      });
+
+                    },
+                  ),
                 ),
               ),
             ],
